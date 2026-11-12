@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/aero-core"]
+resolver = "3"
