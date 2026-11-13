@@ -2,6 +2,7 @@
 //!
 //! Pure simulation helpers, independent of rendering and file access.
 
+pub mod atmosphere;
 pub mod attitude;
 pub mod units;
 

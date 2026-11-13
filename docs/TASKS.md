@@ -61,7 +61,8 @@ Verification: angle conversions, independent body-to-NED axis checks, compositio
 
 ## T3: ISA atmosphere
 Goal: temperature, pressure, density, speed of sound as functions of altitude (0 to 20 km), plus Mach number and dynamic pressure.
-Tests: compare against a **cited** ISA table (e.g. US Standard Atmosphere 1976 / ICAO). Sanity values the owner will check by hand: sea level 288.15 K, 101325 Pa, 1.225 kg/m^3; at 11 km about 216.65 K, about 22632 Pa, about 0.364 kg/m^3. Altitudes beyond range return an error, not a guess.  [ ]
+Tests: compare against a **cited** ISA table (e.g. US Standard Atmosphere 1976 / ICAO). Sanity values the owner will check by hand: sea level 288.15 K, 101325 Pa, 1.225 kg/m^3; at 11 km about 216.65 K, about 22632 Pa, about 0.364 kg/m^3. Altitudes beyond range return an error, not a guess.  [x]
+Verification: all five published checkpoints pass with the owner's 5e-5 relative pressure/density tolerance; all digits were rechecked against the scanned pages. The documented 5 km discrepancy persists with exact listed constants. Deliberate lapse-rate, gravity, altitude-definition and gas-constant mistakes are rejected. Both explicitly named altitude APIs accept [0, 20000] m inclusive in their own height systems. See `data/reference/atmosphere/README.md` and the answered question in docs/QUESTIONS.md.
 
 ## T4: Rigid-body dynamics (no aerodynamics yet)
 Goal: 6-DoF equations of motion in body axes, with a fixed-step RK4 integrator and a state struct that can be serialized later.

@@ -5,6 +5,9 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 ## Environment (v0.1)
 - Flat, non-rotating Earth; constant gravity.
 - International Standard Atmosphere, no wind, no turbulence.
+- The dry-air atmosphere has two explicit APIs: `isa_at_geopotential_altitude` accepts finite geopotential H in [0, 20000] m inclusive; `isa_at_geometric_altitude` accepts finite geometric Z in [0, 20000] m inclusive and converts H = r0 Z / (r0 + Z) after checking that range. Z = 20000 corresponds to H = 19937.272279 m. No generic altitude input silently chooses a definition; out-of-range and non-finite inputs are errors.
+- T3 compares temperature, pressure, density and sound speed against U.S. Standard Atmosphere 1976, Tables I and III (four geopotential rows and one geometric row). This verifies those checkpoints, not weather or real-aircraft behaviour. Sources, values, measured errors and deliberate-error checks are in `data/reference/atmosphere/README.md`.
+- At H = 5000 m the PDF prints **54019 Pa**, while the equation gives **54019.912103762079 Pa**: difference **+0.912103762079 Pa** (same absolute magnitude), relative difference **1.688486944e-5**. On 2026-11-13 the owner selected **5e-5 relative tolerance for pressure and density**, accommodating the recorded printed-table discrepancy while rejecting the requested lapse-rate, gravity, height-definition and gas-constant mistakes. No other row needs a larger tolerance. All transcribed digits were rechecked and unchanged. Using the exact listed R*, M0 and g0 with 50-digit arithmetic gives 54019.912103762073475... Pa, so does not resolve the discrepancy. Tabulation/printing or undocumented calculation differences remain hypotheses; their cause is unverified. This is not a D9 aircraft-validation tolerance.
 
 ## Aircraft (v0.1)
 - Rigid airframe (no flexing, no flutter).
