@@ -42,7 +42,8 @@ Acceptance: the three quality gates in AGENTS.md pass, with at least one trivial
 
 ## T1: Continuous integration
 Goal: GitHub Actions runs fmt, clippy (`-D warnings`), and tests on every push and pull request.
-Acceptance: workflow file added; explain in plain language what each step does.  [ ]
+Acceptance: workflow file added; explain in plain language what each step does.  [x]
+Verification: `.github/workflows/ci.yml` has both triggers and all three mandatory gates; the commands pass locally. A hosted GitHub Actions run has not been observed because nothing has been pushed.
 
 ## T0b: Rename to the project name
 Goal: apply the project name "Showdown of Aerial Systems" across the repo, crates, README and docs.
