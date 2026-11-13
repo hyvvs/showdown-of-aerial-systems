@@ -2,7 +2,9 @@
 
 An aircraft design and flight simulation project written in Rust, intended to
 share one aircraft description between engineering analysis and a flyable
-simulation. The project name and license are still undecided.
+simulation. The license is still undecided.
+
+The chosen crate prefix `soas` stands for **Showdown of Aerial Systems**; applying it is scheduled in T0b.
 
 The workspace currently contains one dependency-free library, `crates/aero-core`,
 and a smoke test for its package identity. Physics and applications will be added

@@ -3,6 +3,8 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
+H1 and H2 run alongside development. H3 and D9 are required only before T10; T0 to T9 are not blocked by owner tasks.
+H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
 ## H1 (owner): Tooling
@@ -13,9 +15,24 @@ Done when: `cargo --version` and `git --version` work.  [ ]
 See docs/LEARNING.md, weeks 1 to 2.
 Done when: you can answer the self-check questions there in your own words.  [ ]
 
-## H3 (owner): Reference data for the Cessna 172
-Collect published Cessna 172 numbers (stall speeds, climb rate, cruise speed, geometry, weights) into `data/reference/c172/README.md`, with a **source for every number**. Also choose validation tolerances (decision D9).
+## H3 (owner): Power-off reference data
+Candidate first reference aircraft: the Navion from [NASA CR-96008](https://ntrs.nasa.gov/citations/19690022405); fallback: Cessna 172. Collect published geometry, loading and aerodynamic data plus power-off stall, glide, trim and static-margin comparison cases into `data/reference/<selected-aircraft>/README.md`, with a **source for every number** and missing inputs identified. Also choose validation tolerances (decision D9). Propulsion parameters are not required for v0.1.
 The agent may help format the file but must not supply numbers from memory.  [ ]
+
+## H4 (owner): Audit F-104 and Navion source coverage
+Check whether the F-104 and Navion sections of Gary L. Teper's [NASA CR-96008, *Aircraft Stability and Control Data* (1969)](https://ntrs.nasa.gov/citations/19690022405) contain geometry, mass, inertia and derivatives versus Mach; list what is missing and identify any related NTRS reports needed to fill gaps. Record the aircraft variant, loading, flight conditions, Mach/altitude coverage, units and source axes for each usable item.
+The introduction states that derivatives use the "axis system of the data source"; do not assume those axes match this project's body or instantaneous stability axes. The source's introduction and contents were verified online on 2026-11-13; completeness and suitability remain for the owner to assess.
+Done when: the owner records a source/page coverage checklist for both aircraft, including missing inputs and required source-axis transformations. D8 stays OPEN until H4 is complete; T11 is blocked until then.  [ ]
+
+## Reference model inputs needed (Navion candidate; C172 fallback)
+Beyond performance numbers, H3 must collect the following, with sources, units, applicability and any unavailable inputs explicitly identified:
+
+- **Variant:** exact aircraft variant, model year, airframe configuration and modifications; matching report, pilot operating handbook or flight manual edition.
+- **Loading:** empty and test mass, occupants, payload and fuel distribution, centre of gravity and datum, inertia tensor about the centre of gravity, and the source's axes and off-diagonal sign convention.
+- **Flight conditions:** altitude and its definition, pressure, temperature or density, wind, airspeed definition, flap and gear configuration, and the documented power-off condition for each reference result.
+- **Aerodynamic parameters:** reference wing area, span and chord, aerodynamic reference point, lift intercept and slope, lift limit and stall treatment, drag polar and efficiency factor, pitching-moment coefficients, elevator effectiveness, and lateral/directional and rate derivatives where the model needs them; include Mach/altitude indexing, angle units, signs, source axes and valid ranges.
+- **Propulsion parameters:** not required for v0.1 power-off comparisons. Published turbojet/afterburner thrust and fuel-flow data are needed separately for T9 and powered v0.2 work.
+- **Comparison scenarios:** reproducible power-off stall, glide, trim and static-margin cases, with matching loading, atmosphere and configuration; reference procedures, measured outputs and airspeed definitions; matching JSBSim aircraft/version and owner-generated runs. Collect evidence for the owner's D9 tolerance choice without selecting tolerances here.
 
 ---
 ## T0: Workspace skeleton
@@ -27,8 +44,15 @@ Acceptance: the three quality gates in AGENTS.md pass, with at least one trivial
 Goal: GitHub Actions runs fmt, clippy (`-D warnings`), and tests on every push and pull request.
 Acceptance: workflow file added; explain in plain language what each step does.  [ ]
 
+## T0b: Rename to the project name
+Goal: apply the project name "Showdown of Aerial Systems" across the repo, crates, README and docs.
+Deliverables: use repo slug `showdown-of-aerial-systems` and crate prefix `soas` (D1), with the first crate named `soas-core`; update manifests, imports, tests, README and docs to match, preserving historical references to the former placeholder.
+Notes: the owner has chosen the slug/prefix. Perform the rename only when T0b is explicitly started, not while recording the decision.
+Acceptance: naming is consistent and the three quality gates in AGENTS.md pass.  [ ]
+
 ## T2: Rotation and attitude helpers
 Goal: body-to-NED rotation with quaternions; Euler angle conversion (3-2-1) for I/O only.
+Deliverables: `Radians` and `Degrees` newtypes with conversion tests.
 Tests (must be able to fail): known 90-degree rotations map axes as expected; Euler to quaternion to Euler round-trips; quaternion stays unit length after many composed rotations; document behaviour near pitch of +/-90 degrees.
 Notes: use the conventions in docs/CONVENTIONS.md exactly. Ask if anything is ambiguous.  [ ]
 
@@ -38,17 +62,22 @@ Tests: compare against a **cited** ISA table (e.g. US Standard Atmosphere 1976 /
 
 ## T4: Rigid-body dynamics (no aerodynamics yet)
 Goal: 6-DoF equations of motion in body axes, with a fixed-step RK4 integrator and a state struct that can be serialized later.
+Deliverables: parameterised time step with default `1/400 s` (`0.0025 s`, D10); signed inertia tensor entries about the CG in body axes and a constructor from products of inertia (D11), with tests for off-diagonal negation, symmetry and unchanged diagonal moments.
 Tests: free fall matches the analytic solution; torque-free rotation of a symmetric body conserves angular momentum magnitude; quaternion norm drift stays within a stated tolerance over very many steps; halving the step size reduces integration error by roughly the expected factor for RK4.
 Notes: explain the equations of motion in docs/LEARNING.md in plain language.  [ ]
 
 ## T5: Aircraft file format v0 (requires decisions D3 and D4)
-Goal: define and load a minimal aircraft description: mass, inertia, CG, reference area/span/chord, simple linear aerodynamic coefficients.
-First step: agent proposes options for D3/D4 with trade-offs and **waits**. Then implement.
+Goal: define and load a minimal aircraft description: mass, inertia, CG, reference area/span/chord, aerodynamic coefficients and coefficient tables indexed by Mach (and altitude where needed).
+First step: use the decided D3 JSON format with a `format_version` field and unit suffixes in field names; apply the D4 units policy. `serde_json` is pre-approved.
+Deliverables: support the Mach/altitude coefficient tables and document their interpolation rules, units, source axes and supported ranges, including the policy outside tabulated ranges.
 Tests: round-trip load/save; invalid files give clear errors; units are explicit in field names.  [ ]
 
 ## T6: Simple aerodynamic model (requires decision D6)
 Goal: forces and moments from `CL = CL0 + CLalpha*alpha` (limited at CLmax), `CD = CD0 + CL^2/(pi*e*AR)`, `Cm = Cm0 + Cmalpha*alpha + Cmde*de`; transform wind to body axes; apply to the rigid body.
-Tests: steady glide gives the expected lift-to-drag ratio; level-flight force balance at the computed trim; the stall-speed formula matches the simulated 1-g stall onset within a stated tolerance; transformation tests for each axis sign.
+Inputs/deliverables: take Mach and altitude; look up the aerodynamic coefficients in T5's tables with linear interpolation between nodes and documented behaviour outside the tabulated range. Supporting tables does not extend v0.1 beyond its "Mach > 0.8 not modeled" limit.
+Tests: steady glide gives the expected lift-to-drag ratio; a hand-constructed case gives lift = weight at a stated alpha and airspeed, with hand-calculated expected lift and specified mass (no trim solver); the stall-speed formula matches the simulated 1-g stall onset within a stated tolerance; transformation tests for each axis sign.
+Table tests: exact coefficient values at nodes; linear values between nodes along each indexed dimension; behaviour outside the range matches the documented policy.
+Additional deliverables/tests: apply D12's instantaneous stability/wind frames and wind force components; apply D13's named low-speed threshold, zero fallback angles, clamped asin and explicit non-finite input errors, including boundary tests; test each D6 surface sign separately (elevator: negative pitch, aileron: positive roll, rudder: negative yaw).
 Update docs/ASSUMPTIONS.md.  [ ]
 
 ## T7: Headless runner
@@ -57,16 +86,21 @@ Tests: same input produces byte-identical output on one machine (determinism tes
 
 ## T8: Trim solver and static stability numbers
 Goal: find trim alpha and elevator for a given airspeed; report static margin.
-Tests: hand-made aircraft with a known analytic answer; trim results make forces and moments balance to a tight tolerance.  [ ]
+Tests: hand-made aircraft with a known analytic answer; level-flight force balance at the computed trim, with forces and moments balancing to a tight tolerance.  [ ]
 
-## T9: Engine and propeller model v0
-Goal: simple piston engine plus fixed-pitch propeller giving thrust versus airspeed (not `power / speed`).
-Notes: agent must cite its propeller model and list parameters needing real data; no invented numbers.  [ ]
+## T9: Turbojet with afterburner model v0
+Goal: simple turbojet with afterburner: thrust as a table of Mach, altitude and throttle, plus fuel flow.
+Notes: cite the source for the propulsion model and every thrust/fuel-flow value; list missing data and model limits. No invented numbers. This is not required for the power-off v0.1 comparisons in T10.  [ ]
 
-## T10: Compare against reference (needs H3)
-Goal: tests and a small plotting helper comparing C172 results to the reference data and to JSBSim output the owner generates.
+## T10: Compare against reference (needs H3 and D9)
+Goal: v0.1 power-off comparisons only: stall, glide, trim and static margin, using the Navion candidate from NASA CR-96008 or the fallback Cessna 172, the H3 reference data, and JSBSim output the owner generates. Propulsion parameters and powered climb/cruise comparisons are not required.
 Notes: Python is allowed here **only for plotting from CSV**. The owner checks JSBSim's license before any JSBSim files or derived data are committed.
 Done when: a comparison table and plots are committed and docs/ASSUMPTIONS.md "Validation status" is filled in.  [ ]
+
+## T11: Data-driven F-104-class aircraft in the headless sim
+Goal: a data-driven F-104-class aircraft in the v0.2 headless simulation, using published derivatives versus Mach from NASA CR-96008 and related NTRS reports, with altitude dependence where supported by the sources.
+Blocked until H4 is complete. Use the audited source coverage and missing-input list; do not invent missing aircraft data.
+Deliverables/tests: trace each input to its source, conditions, units and axis system; transform source-axis forces, moments and derivatives into the project's body axes, with tests for the transformations and signs; exercise the published Mach-table nodes and interpolation in a headless scenario. Document coverage and limitations in docs/ASSUMPTIONS.md.  [ ]
 
 ---
 Stage 2 tasks (lifting line, vortex lattice, validation) will be written when T10 is done.

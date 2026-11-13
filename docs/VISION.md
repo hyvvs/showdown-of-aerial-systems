@@ -5,6 +5,8 @@ Working title: **aero** (placeholder).
 ## One sentence
 An open-source, browser-friendly tool where you design an aircraft (fixed wing, flying wing, supersonic jet, VTOL), get an honest engineering analysis, and fly it, with the same aircraft file feeding both.
 
+The hero demo is an **F-104-class supersonic jet** (D14), targeted for v0.2. v0.1 remains the subsonic foundation, with an explicit **"Mach > 0.8 not modeled"** warning.
+
 ## The core loop
 ```
 Aircraft description (wings, tail, fuselage, engines, mass, gear)
@@ -33,13 +35,15 @@ Our angle: **open source, free to try in a browser, every number traceable and v
 - Target is **conceptual-design fidelity**: good for "does it fly, how fast does it stall, is it stable", with typical errors of tens of percent. That is the same class as AVL/OpenVSP.
 - It is **not** DCS-level fidelity, which depends on manufacturer data and flight-test tables for a specific aircraft.
 - Every release publishes a validation page: predicted vs. reference values, with error plots and a list of what the model ignores (`docs/ASSUMPTIONS.md`).
-- Transonic flight (about Mach 0.8 to 1.2) is low-confidence and is flagged as such in reports and UI.
+- Mach > 0.8 is not modeled in v0.1. Supersonic modeling starts in v0.2; transonic flight (about Mach 0.8 to 1.2), when introduced, is low-confidence and is flagged as such in reports and UI.
 - Reports include a clear "conceptual estimates only, not for certification or flight safety" notice.
 
 ## Aircraft scope (in order of release)
-1. v0.1: subsonic fixed wing, including conventional and flying-wing layouts.
-2. v0.2: supersonic (separate Mach-regime estimator modules behind one interface).
+1. v0.1: subsonic fixed wing, with power-off comparisons against the Navion candidate from NASA CR-96008 (fallback: Cessna 172).
+2. v0.2: supersonic (separate Mach-regime estimator modules behind one interface), including the F-104-class hero demo subject to the H4 source audit.
 3. v0.3: VTOL (rotor model, transition, hover controller).
+
+Flying-wing validation is deferred until after v0.2, in the ROADMAP.md Parking lot.
 
 ## Releases after v0.3 (owner's ranking)
 1. v0.4: Import 3D models; real-life export; landing gear; structural, mass, and cost estimates.

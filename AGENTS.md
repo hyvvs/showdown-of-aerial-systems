@@ -24,7 +24,7 @@ Read, in order: this file, `docs/CONVENTIONS.md`, `docs/DECISIONS.md`, `docs/TAS
 2. **Never invent numbers.** Every physical constant, coefficient, or reference value must have a source cited in a comment or in `data/reference/`. If you do not have a source, write `TODO(source)` and tell the owner. Do not "fill in plausible values".
 3. **Tests first, and tests that can fail.** Write the test (analytic result, published value, or reference-tool output) before the implementation. A test that cannot fail is worthless.
 4. **Conventions are law.** Follow `docs/CONVENTIONS.md` exactly (axes, units, signs, angle units). If you think a convention is wrong or missing, ask; do not silently deviate.
-5. **Dependencies.** Pre-approved: `nalgebra`, `serde` (with derive), `thiserror`, `approx` (dev), `proptest` (dev). Ask before adding anything else, and say why.
+5. **Dependencies.** Pre-approved: `nalgebra`, `serde` (with derive), `serde_json`, `thiserror`, `approx` (dev), `proptest` (dev). Ask before adding anything else, and say why.
 6. **No `unsafe`** unless the owner approves. If approved, every block gets a `// SAFETY:` comment.
 7. **Keep `aero-core` pure.** No file I/O, rendering, networking, threads, wall-clock time, or unseeded randomness in the simulation core. No iteration over `HashMap` in simulation logic (non-deterministic order). Use fixed time steps.
 8. **Do not overclaim.** When you add a model simplification, add it to `docs/ASSUMPTIONS.md`. Never describe results as "accurate" without saying what they were compared against and the error.
@@ -47,13 +47,20 @@ docs/                project docs
 ```
 Later crates (do not create early): `aero-estimator`, `aero-designer`, `aero-web`.
 
+## Batch mode
+- Run the listed tasks in order. For each task: write tests first, implement, run the three quality gates, make one local git commit `Task <ID>: <title>`, set its status in `docs/TASKS.md`, and add a **Concepts introduced** entry to `docs/LEARNING.md` (the owner's **Understood** and **Still unclear** columns stay blank).
+- Never push, merge, or change remotes.
+- Stop immediately, with no further tasks, if: a decision that the current task requires is OPEN; a number has no source; a gate still fails after 3 honest fix attempts; a test would have to be weakened; the task needs something not specified; or a non-approved dependency is needed. Never guess to keep going. D2 (license), D8 and D9 are not required by T1 to T9 and must not stop those tasks.
+- When stopping, append to `docs/QUESTIONS.md`: task, what blocked, and options with trade-offs.
+- At the end of a batch, give one report with a section per task in the usual format below, then: **Least confident about**, **Assumptions I made**, and **Commands for the owner to verify**.
+
 ## When you finish a task, report in this format
 1. **What changed** (plain language, 5 lines max)
 2. **Files touched**
 3. **Tests**: what each new test checks and why it can fail; paste the test summary
 4. **Assumptions and unknowns** (anything you were unsure about)
 5. **Sources cited** (new references added)
-6. **Concepts to understand**: 2 to 3 bullets explaining the key ideas in this change, so the owner can learn from it
+6. **Concepts to understand**: 2 to 3 bullets explaining the key ideas in this change, so the owner can learn from it. In `docs/LEARNING.md`, the agent lists **Concepts introduced** only; the owner fills in **Understood** and **Still unclear**.
 7. **Questions for the owner** (if any)
 Then update the status in `docs/TASKS.md` and add a short entry to `docs/LEARNING.md`.
 

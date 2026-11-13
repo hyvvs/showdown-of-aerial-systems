@@ -21,8 +21,12 @@ You are building this while learning. The aim: be able to review what the agent 
 8. What does the stall speed formula assume?
 
 ## Log
-Add an entry after each task: date, task, what I understood, what I did not, and questions for the agent.
+After each task, the agent adds the date, task and **Concepts introduced** only, leaving **Understood** and **Still unclear** blank. The owner fills in those two fields in their own words, including any questions for the agent.
 
-| Date | Task | Understood | Still unclear |
-|---|---|---|---|
-| 2026-11-12 | T0 | Agent notes for owner review: a Cargo workspace groups Rust packages; a library has no executable entry point; the package-name test failed with an intentionally wrong manifest name and passed after correction. All three quality gates passed. | Owner understanding has not been checked. Project name (D1) and license (D2) remain open. |
+| Date | Task | Concepts introduced | Understood | Still unclear |
+|---|---|---|---|---|
+| 2026-11-12 | T0 | Cargo workspace: a group of Rust packages; library crate: reusable code without an executable entry point; package-identity test: checks the manifest's package name. |  |  |
+| 2026-11-13 | Documentation corrections and owner decisions | Task dependencies: what must be ready before a task starts; hand-constructed force checks versus trim (a solved steady-flight balance); angle newtypes: distinct Rust types for radians and degrees with explicit conversions. |  |  |
+| 2026-11-13 | Binding conventions and batch-mode documentation | Signed tensor entries versus products of inertia; low-speed fallback angles and explicit errors for non-finite inputs; batch stop conditions and local per-task commits. |  |  |
+| 2026-11-13 | Hero-aircraft and release-scope documentation | Mach-indexed coefficient tables and interpolation; source-axis derivatives must be transformed before use in body axes; a future hero demo and source-data availability do not establish current model coverage. |  |  |
+| 2026-11-13 | Batch-rule clarification and documentation baseline | A task's prerequisites determine which open decisions block it; stable, unique decision IDs keep references unambiguous; a local documentation commit records an agreed baseline. |  |  |
