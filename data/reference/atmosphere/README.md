@@ -97,6 +97,7 @@ before conversion. Thus Z = 20000 maps to H = 19937.272279 m; H = 20000 is a
 separate endpoint (approximately Z = 20063.124 m). There is no unnamed altitude
 API or implicit choice. Negative, above-limit and non-finite heights are errors.
 
-Mach = airspeed / sound speed and dynamic pressure = 0.5*density*airspeed^2
-follow docs/CONVENTIONS.md. Their hand-constructed tests are synthetic
-mathematical cases, not measurements.
+Mach number is defined by convention as airspeed divided by the local speed
+of sound: Mach = V / a. Dynamic pressure = 0.5*density*airspeed^2 follows
+docs/CONVENTIONS.md. Their hand-constructed tests are synthetic mathematical
+cases, not measurements.

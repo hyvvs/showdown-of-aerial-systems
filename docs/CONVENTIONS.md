@@ -13,7 +13,7 @@ Items marked **DECISION NEEDED** must be settled by the owner (see docs/DECISION
 
 ## Coordinate frames (aerospace standard)
 - **Body frame**: x forward (out of the nose), y right (starboard wing), z down. Origin at the aircraft reference point; the dynamics origin is the centre of gravity. Document which point a file refers to.
-- **World frame**: NED (x North, y East, z Down). Flat, non-rotating Earth for v0.1. Altitude `h = -z`.
+- **World frame**: NED (x North, y East, z Down). Flat, non-rotating Earth for v0.1. Simulator altitude is **geometric**, `h = -z`.
 - Rendering uses a different convention in many engines (often y up). **Convert only at the render boundary**, in one place.
 - **Instantaneous stability frame (D12, option A):** x follows the air-relative velocity projected onto the body x-z plane, y equals body y, and z completes the right-handed frame. This is the instantaneous frame, not a body-fixed frame aligned with an earlier reference condition.
 - **Wind frame (D12):** x follows the full air-relative velocity, z equals stability z, and y completes the right-handed frame. The frames coincide at zero sideslip.
@@ -46,6 +46,7 @@ Items marked **DECISION NEEDED** must be settled by the owner (see docs/DECISION
 
 ## Atmosphere and gravity (v0.1)
 - International Standard Atmosphere (ISA), no wind, supported from sea level to 20 km initially (error outside that range).
+- The simulator uses `isa_at_geometric_altitude` with geometric `h = -z` in metres. Its supported altitude range is [0, 20000] geometric metres inclusive; the geopotential API is for explicitly identified reference calculations.
 - Constant gravity `g0 = 9.80665 m/s^2`, flat Earth.
 
 ## Numerics
