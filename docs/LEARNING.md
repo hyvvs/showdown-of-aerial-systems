@@ -34,3 +34,42 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 | 2026-11-13 | T0b | Project display names, repository slugs and Rust package names are separate identifiers; the Cargo workspace, package manifest and generated lockfile must agree; a package-identity test detects an incomplete rename. |  |  |
 | 2026-11-13 | T2 | Radians and degrees are distinct types with checked conversions; a body-to-NED quaternion rotates body vectors into world coordinates, and composition order matters; at singular pitch, Euler roll and yaw cannot be determined separately even though the quaternion remains valid. |  |  |
 | 2026-11-13 | T3 | Geometric height and geopotential height are different atmosphere inputs; Mach compares airspeed with sound speed, while dynamic pressure scales with density and speed squared; a relative comparison tolerance accommodates a documented table discrepancy and must still reject deliberate physical mistakes. |  |  |
+| 2026-11-13 | T4 | Six degrees of freedom couple position, body velocity, orientation and body angular rates; inertia links turning moments to changes in spin, with signed cross-axis entries; RK4 samples four intermediate rates and step-size convergence checks how numerical error decreases. |  |  |
+
+## T4 concepts introduced: equations of motion in plain language
+
+An aircraft can move in three directions and rotate about three axes. These
+are its six degrees of freedom. The state records where its centre of gravity
+is, how fast it moves, which way it points, and how fast it turns. It contains
+values that can later be saved, rather than references to a running program.
+
+The position equation says that velocity changes position. We store velocity
+along the aircraft's forward, right and down axes, so orientation first converts
+it into North, East and Down directions before updating world position.
+
+The velocity equation says that force divided by mass changes speed and
+direction. Gravity points down in the world and must be rotated into the
+aircraft's axes before adding it. There is also a correction for the fact that
+the aircraft's axes turn: a velocity that stays fixed in the world can have
+changing forward and sideways components as the nose swings around. That
+correction describes changing coordinates; it is not another applied force.
+
+The rotation equation is the turning counterpart of force equals mass times
+acceleration. A moment is a turning influence. Inertia describes resistance to
+changes in rotation and how rotation about different axes couples together.
+Off-diagonal tensor entries carry signs and are the negatives of the products
+of inertia defined in D11. Even without a turning moment, a non-spherical body
+can have changing body-axis angular rates while its angular momentum stays
+fixed in the world. The equation includes that coupling.
+
+The attitude equation uses the body angular rates to change the quaternion,
+our four-component orientation representation. Its length must remain one to
+represent a rotation, so it is normalized after every step. Euler angles are
+useful for display, but are not the variables being advanced here.
+
+RK4 estimates the changing rates at the start, twice near the middle, and at
+the end of each step, then combines them. Forces are recalculated at those
+intermediate states. For smooth motion, halving the step should reduce the
+accumulated error by about sixteen times. Checking that pattern against an
+analytic answer tests the integrator; it does not validate an aircraft model.
+Sources and mathematical details: `data/reference/dynamics/README.md`.

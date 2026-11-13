@@ -68,7 +68,8 @@ Verification: all five published checkpoints pass with the owner's 5e-5 relative
 Goal: 6-DoF equations of motion in body axes, with a fixed-step RK4 integrator and a state struct that can be serialized later.
 Deliverables: parameterised time step with default `1/400 s` (`0.0025 s`, D10); signed inertia tensor entries about the CG in body axes and a constructor from products of inertia (D11), with tests for off-diagonal negation, symmetry and unchanged diagonal moments.
 Tests: free fall matches the analytic solution; torque-free rotation of a symmetric body conserves angular momentum magnitude; quaternion norm drift stays within a stated tolerance over very many steps; halving the step size reduces integration error by roughly the expected factor for RK4.
-Notes: explain the equations of motion in docs/LEARNING.md in plain language.  [ ]
+Notes: explain the equations of motion in docs/LEARNING.md in plain language.  [x]
+Verification: tilted free fall, torque-free symmetric-top rates/angular momentum, all force/moment axes, full signed inertia construction/use, invalid inputs and 100000-step quaternion normalization pass. Step-halving ratios approach 16; at default 0.0025 s, the one-second synthetic spinning free-fall case has position error 5.585205047472e-8 m and orientation error 6.666444063441e-10 rad. D10 remains unchanged; this is not a general aircraft-accuracy claim. See `data/reference/dynamics/README.md`.
 
 ## T5: Aircraft file format v0 (requires decisions D3 and D4)
 Goal: define and load a minimal aircraft description: mass, inertia, CG, reference area/span/chord, aerodynamic coefficients and coefficient tables indexed by Mach (and altitude where needed).

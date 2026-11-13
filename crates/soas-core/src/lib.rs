@@ -4,6 +4,7 @@
 
 pub mod atmosphere;
 pub mod attitude;
+pub mod dynamics;
 pub mod units;
 
 #[cfg(test)]

@@ -13,6 +13,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
 
+## Rigid-body integration (T4)
+- Six degrees of freedom about the CG: three translations and three rotations; constant mass and a full signed body-axis inertia tensor. Applied forces exclude gravity; moments are about the CG. Constant NED-down gravity is added exactly once. No aerodynamic, propulsion, contact or fuel-burn model is added by T4.
+- Classical fixed-step RK4, parameterized with the unchanged D10 default 0.0025 s. All four stages evaluate the state-based load callback; callers must keep it pure and deterministic. Quaternion components are advanced with the coupled state and normalized after each step; Euler angles are never integrated. Non-finite inputs or intermediates are explicit errors.
+- State contains only position, body velocity, body-to-NED attitude and body angular rates, with units/frames in names; serialization support is deferred. Mass properties and step size are separate. The caller tracks time by step count; the present load callback has no explicit time argument.
+- Inertia validation checks finite, exactly symmetric, positive-definite entries and a finite inverse. It does not prove physical realizability or correct source axes; those still require data validation. Products-of-inertia construction negates all off-diagonals (D11).
+- Synthetic spinning free fall at 1 s gave fourth-order step-halving ratios about 16. At 0.0025 s, measured position error was 5.585205047472e-8 m and orientation error 6.666444063441e-10 rad. This supports retaining the default for this smooth test, not arbitrary future aircraft dynamics; repeat convergence checks for new force models. Maximum quaternion norm error over 100000 steps was 2.220446049e-16 (limit 5e-15); the symmetric-top angular-momentum magnitude drift was 9.830333712e-16 relative over 10 s. These are numerical analytic checks, not real-aircraft validation or exact long-term conservation guarantees. Sources, synthetic inputs and test limits: `data/reference/dynamics/README.md`.
+
 ## Attitude helpers
 - Body-to-NED Hamilton unit quaternions are checked against analytic right-handed axis rotations. Composition renormalizes the quaternion.
 - Euler angles are for I/O only. Roll/yaw output is rejected when `abs(cos(pitch)) <= 64 * f64::EPSILON`; near this singularity the individual angles are ill-conditioned. This numerical guard does not limit the quaternion orientation.
