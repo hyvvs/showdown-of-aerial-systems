@@ -1,0 +1,74 @@
+# Synthetic test aircraft: numeric value ledger
+
+Every entry below is a TEST VALUE for mathematical software tests. None is real aircraft data. Coordinates use the file datum; inertia is about its CG. Repeated numbers are labeled separately. The format version is test metadata.
+
+| JSON path | Value | Label |
+|---|---:|---|
+| `/format_version` | 0 | SYNTHETIC TEST VALUE |
+| `/mass_kg` | 10.0 | SYNTHETIC TEST VALUE |
+| `/cg_body_m/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/cg_body_m/1` | 0.0 | SYNTHETIC TEST VALUE |
+| `/cg_body_m/2` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/0/0` | 8.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/0/1` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/0/2` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/1/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/1/1` | 10.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/1/2` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/2/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/2/1` | 0.0 | SYNTHETIC TEST VALUE |
+| `/inertia_body_kg_m2/2/2` | 12.0 | SYNTHETIC TEST VALUE |
+| `/reference_area_m2` | 2.0 | SYNTHETIC TEST VALUE |
+| `/reference_span_m` | 4.0 | SYNTHETIC TEST VALUE |
+| `/reference_chord_m` | 0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamic_reference_point_body_m/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamic_reference_point_body_m/1` | 0.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamic_reference_point_body_m/2` | 0.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/mach_nodes/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/mach_nodes/1` | 0.8 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/geometric_altitude_nodes_m/0` | 0.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/geometric_altitude_nodes_m/1` | 20000.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cl0` | 0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cl_alpha_per_rad` | 4.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cl_max` | 1.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cd0` | 0.02 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/oswald_efficiency` | 0.8 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cm0` | 0.01 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cm_alpha_per_rad` | -0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cm_elevator_per_rad` | -1.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/cy_beta_per_rad` | -0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/roll_aileron_per_rad` | 0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/0/yaw_rudder_per_rad` | -0.15 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cl0` | 0.4 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cl_alpha_per_rad` | 6.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cl_max` | 1.4 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cd0` | 0.02 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/oswald_efficiency` | 0.8 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cm0` | 0.01 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cm_alpha_per_rad` | -0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cm_elevator_per_rad` | -1.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/cy_beta_per_rad` | -0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/roll_aileron_per_rad` | 0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/0/1/yaw_rudder_per_rad` | -0.15 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cl0` | 0.3 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cl_alpha_per_rad` | 5.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cl_max` | 1.3 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cd0` | 0.02 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/oswald_efficiency` | 0.8 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cm0` | 0.01 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cm_alpha_per_rad` | -0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cm_elevator_per_rad` | -1.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/cy_beta_per_rad` | -0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/roll_aileron_per_rad` | 0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/0/yaw_rudder_per_rad` | -0.15 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cl0` | 0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cl_alpha_per_rad` | 7.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cl_max` | 1.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cd0` | 0.02 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/oswald_efficiency` | 0.8 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cm0` | 0.01 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cm_alpha_per_rad` | -0.5 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cm_elevator_per_rad` | -1.0 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/cy_beta_per_rad` | -0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/roll_aileron_per_rad` | 0.2 | SYNTHETIC TEST VALUE |
+| `/aerodynamics/coefficients/1/1/yaw_rudder_per_rad` | -0.15 | SYNTHETIC TEST VALUE |
