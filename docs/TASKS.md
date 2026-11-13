@@ -75,7 +75,8 @@ Verification: tilted free fall, torque-free symmetric-top rates/angular momentum
 Goal: define and load a minimal aircraft description: mass, inertia, CG, reference area/span/chord, aerodynamic coefficients and coefficient tables indexed by Mach (and altitude where needed).
 First step: use the decided D3 JSON format with a `format_version` field and unit suffixes in field names; apply the D4 units policy. `serde_json` is pre-approved.
 Deliverables: support the Mach/altitude coefficient tables and document their interpolation rules, units, source axes and supported ranges, including the policy outside tabulated ranges.
-Tests: round-trip load/save; invalid files give clear errors; units are explicit in field names.  [ ]
+Tests: round-trip load/save; invalid files give clear errors; units are explicit in field names.  [x]
+Verification: 10 tests cover JSON round-trip, required version/units/axes, mass/inertia/geometry, table shapes/nodes/control signs and non-finite save errors. Synthetic fixture labels every numeric value in its companion ledger. Pure text conversion and the linear/bilinear interpolation/error-outside-range contract are documented in `docs/AIRCRAFT_FORMAT.md`; lookup is T6.
 
 ## T6: Simple aerodynamic model (requires decision D6)
 Goal: forces and moments from `CL = CL0 + CLalpha*alpha` (limited at CLmax), `CD = CD0 + CL^2/(pi*e*AR)`, `Cm = Cm0 + Cmalpha*alpha + Cmde*de`; transform wind to body axes; apply to the rigid body.

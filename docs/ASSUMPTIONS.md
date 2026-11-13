@@ -12,6 +12,9 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 ## Aircraft (v0.1)
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
+- T5's version-zero JSON stores SI values with explicit frames, a signed inertia tensor about the CG, and moments about a separately identified aerodynamic reference point. JSON conversion is text-only; filesystem access stays outside the pure core. Unknown fields/versions, invalid shapes, non-finite numbers and invalid required bounds are errors on load and save. Numeric validation is not proof of physical realizability or provenance.
+- Coefficients use rectangular Mach/optional-geometric-altitude tables. The contract is linear/bilinear interpolation, exact at nodes and errors outside tabulated ranges; a Mach-only table is altitude-independent within the simulator's supported range. T5 validates the table; T6 supplies lookup. Full format: `docs/AIRCRAFT_FORMAT.md`.
+- Every value in the test aircraft is explicitly synthetic, with a per-value ledger. It is not a real-aircraft model and supplies no evidence toward H3/D9/T10 validation.
 
 ## Rigid-body integration (T4)
 - Six degrees of freedom about the CG: three translations and three rotations; constant mass and a full signed body-axis inertia tensor. Applied forces exclude gravity; moments are about the CG. Constant NED-down gravity is added exactly once. No aerodynamic, propulsion, contact or fuel-burn model is added by T4.
