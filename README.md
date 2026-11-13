@@ -7,9 +7,9 @@ simulation. The license is still undecided.
 The crate prefix `soas` stands for **Showdown of Aerial Systems**.
 The repository slug is `showdown-of-aerial-systems`.
 
-The workspace currently contains one dependency-free library, `crates/soas-core`,
-and a smoke test for its package identity. Physics and applications will be added
-in later tasks.
+The workspace contains one simulation library, `crates/soas-core`, with tests for
+the implemented helpers. Headless and browser applications will be added in
+later tasks.
 
 ## Development
 

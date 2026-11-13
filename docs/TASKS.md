@@ -56,7 +56,8 @@ Verification: the package-name test failed with the old manifest name and passed
 Goal: body-to-NED rotation with quaternions; Euler angle conversion (3-2-1) for I/O only.
 Deliverables: `Radians` and `Degrees` newtypes with conversion tests.
 Tests (must be able to fail): known 90-degree rotations map axes as expected; Euler to quaternion to Euler round-trips; quaternion stays unit length after many composed rotations; document behaviour near pitch of +/-90 degrees.
-Notes: use the conventions in docs/CONVENTIONS.md exactly. Ask if anything is ambiguous.  [ ]
+Notes: use the conventions in docs/CONVENTIONS.md exactly. Ask if anything is ambiguous.  [x]
+Verification: angle conversions, independent body-to-NED axis checks, composition order, Euler round-trips, singular-pitch errors and 100,000 normalized compositions pass. All three quality gates pass with `CARGO_INCREMENTAL=0`; the filesystem hardlink warning was reported explicitly.
 
 ## T3: ISA atmosphere
 Goal: temperature, pressure, density, speed of sound as functions of altitude (0 to 20 km), plus Mach number and dynamic pressure.

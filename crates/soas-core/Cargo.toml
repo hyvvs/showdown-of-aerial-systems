@@ -3,3 +3,6 @@ name = "soas-core"
 version = "0.1.0"
 edition = "2024"
 publish = false
+
+[dependencies]
+nalgebra = { version = "0.34.1", default-features = false, features = ["std"] }

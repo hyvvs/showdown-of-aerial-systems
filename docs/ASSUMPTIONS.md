@@ -10,6 +10,11 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
 
+## Attitude helpers
+- Body-to-NED Hamilton unit quaternions are checked against analytic right-handed axis rotations. Composition renormalizes the quaternion.
+- Euler angles are for I/O only. Roll/yaw output is rejected when `abs(cos(pitch)) <= 64 * f64::EPSILON`; near this singularity the individual angles are ill-conditioned. This numerical guard does not limit the quaternion orientation.
+- Numerical test tolerances and synthetic angles are not real-aircraft validation tolerances.
+
 ## Aerodynamics (initial model)
 - Quasi-steady aerodynamics (no unsteady effects).
 - Linear lift and moment curves until a simple stall limit; post-stall behaviour is crude.

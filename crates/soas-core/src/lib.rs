@@ -1,7 +1,9 @@
 //! Simulation core for Showdown of Aerial Systems.
 //!
-//! This crate currently contains only the workspace smoke test. Flight mechanics
-//! will be added in later tasks, independently of rendering and file access.
+//! Pure simulation helpers, independent of rendering and file access.
+
+pub mod attitude;
+pub mod units;
 
 #[cfg(test)]
 mod tests {
