@@ -176,7 +176,7 @@ impl CoefficientTable {
 }
 
 impl AeroCoefficients {
-    fn validate(&self, path: &str) -> Result<(), AircraftError> {
+    pub(crate) fn validate(&self, path: &str) -> Result<(), AircraftError> {
         for (field, value) in self.fields() {
             finite([value].into_iter(), &format!("{path}.{field}"))?;
         }

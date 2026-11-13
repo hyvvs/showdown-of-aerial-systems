@@ -69,7 +69,9 @@ so each direction can be tested separately.
   Mach 0.8 does not authorize their simulation: T6 rejects that region with
   **"Mach > 0.8 not modeled"**.
 
-T5 validates and round-trips the table. T6 implements/tests lookup and interpolation.
+T5 validates and round-trips the table. T6 implements/tests lookup and interpolation
+through `aerodynamics::lookup_coefficients`; the coupled model computes its Mach
+and geometric altitude from each RK4 stage state.
 This policy is an implementation contract for the requested v0 tables, not a
 resolution of any other OPEN decision in DECISIONS.md.
 

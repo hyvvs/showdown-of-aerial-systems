@@ -6,7 +6,7 @@
 
 use crate::{atmosphere::STANDARD_GRAVITY_MPS2, attitude::Attitude};
 use nalgebra::{Matrix3, Quaternion, UnitQuaternion, Vector3};
-use std::{error::Error, fmt};
+use std::{convert::Infallible, error::Error, fmt};
 
 /// Owner decision D10; this is a numerical default, not an aircraft constant.
 pub const DEFAULT_STEP_S: f64 = 1.0 / 400.0;
@@ -122,6 +122,31 @@ impl fmt::Display for DynamicsError {
 
 impl Error for DynamicsError {}
 
+/// Distinguish a rigid-body calculation error from a caller's load-model error.
+#[derive(Debug)]
+pub enum StepError<E> {
+    Dynamics(DynamicsError),
+    Loads(E),
+}
+
+impl<E: fmt::Display> fmt::Display for StepError<E> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Dynamics(error) => error.fmt(f),
+            Self::Loads(error) => write!(f, "load model: {error}"),
+        }
+    }
+}
+
+impl<E: Error + 'static> Error for StepError<E> {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::Dynamics(error) => Some(error),
+            Self::Loads(error) => Some(error),
+        }
+    }
+}
+
 /// The step size is fixed for this integrator. Construct another instance to
 /// compare a different step; no adaptive stepping or wall-clock time is used.
 #[derive(Debug, Clone, Copy)]
@@ -161,11 +186,25 @@ impl FixedStepRk4 {
         state: &State,
         loads: impl Fn(&State) -> Loads,
     ) -> Result<State, DynamicsError> {
+        self.try_step(state, |stage| Ok::<_, Infallible>(loads(stage)))
+            .map_err(|error| match error {
+                StepError::Dynamics(error) => error,
+                StepError::Loads(never) => match never {},
+            })
+    }
+
+    /// Fallible load model, evaluated at every stage. A failure aborts the
+    /// entire step without changing the input or substituting a zero load.
+    pub fn try_step<E>(
+        &self,
+        state: &State,
+        loads: impl Fn(&State) -> Result<Loads, E>,
+    ) -> Result<State, StepError<E>> {
         let norm = state.attitude_body_to_ned.quaternion().norm();
         // Numerical invariant guard, not a new physical tolerance. nalgebra's
         // UnitQuaternion normally guarantees this; detect unchecked misuse.
         if !norm.is_finite() || (norm - 1.0).abs() > 64.0 * f64::EPSILON {
-            return Err(DynamicsError::InvalidAttitude);
+            return Err(StepError::Dynamics(DynamicsError::InvalidAttitude));
         }
         let start = Stage::from(state);
         let h = self.step_s;
@@ -179,22 +218,23 @@ impl FixedStepRk4 {
             .add_scaled(&k3, h / 3.0)
             .add_scaled(&k4, h / 6.0)
             .to_state()
+            .map_err(StepError::Dynamics)
     }
 
-    fn derivative(
+    fn derivative<E>(
         &self,
         stage: &Stage,
-        loads: &impl Fn(&State) -> Loads,
-    ) -> Result<Stage, DynamicsError> {
-        let state = stage.to_state()?;
-        let applied = loads(&state);
+        loads: &impl Fn(&State) -> Result<Loads, E>,
+    ) -> Result<Stage, StepError<E>> {
+        let state = stage.to_state().map_err(StepError::Dynamics)?;
+        let applied = loads(&state).map_err(StepError::Loads)?;
         if !all_finite(
             applied
                 .force_body_n
                 .iter()
                 .chain(applied.moment_body_nm.iter()),
         ) {
-            return Err(DynamicsError::NonFinite);
+            return Err(StepError::Dynamics(DynamicsError::NonFinite));
         }
         let attitude = state.attitude_body_to_ned;
         let velocity = state.velocity_body_mps;
@@ -219,7 +259,7 @@ impl FixedStepRk4 {
             quaternion: quaternion_dot,
             omega: omega_dot,
         };
-        derivative.validate_finite()?;
+        derivative.validate_finite().map_err(StepError::Dynamics)?;
         Ok(derivative)
     }
 }

@@ -13,7 +13,7 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
 - T5's version-zero JSON stores SI values with explicit frames, a signed inertia tensor about the CG, and moments about a separately identified aerodynamic reference point. JSON conversion is text-only; filesystem access stays outside the pure core. Unknown fields/versions, invalid shapes, non-finite numbers and invalid required bounds are errors on load and save. Numeric validation is not proof of physical realizability or provenance.
-- Coefficients use rectangular Mach/optional-geometric-altitude tables. The contract is linear/bilinear interpolation, exact at nodes and errors outside tabulated ranges; a Mach-only table is altitude-independent within the simulator's supported range. T5 validates the table; T6 supplies lookup. Full format: `docs/AIRCRAFT_FORMAT.md`.
+- Coefficients use rectangular Mach/optional-geometric-altitude tables. T6 implements linear/bilinear interpolation for every coefficient, exact at nodes and errors outside tabulated ranges; a Mach-only table is altitude-independent within the simulator's supported range. Full format: `docs/AIRCRAFT_FORMAT.md`.
 - Every value in the test aircraft is explicitly synthetic, with a per-value ledger. It is not a real-aircraft model and supplies no evidence toward H3/D9/T10 validation.
 
 ## Rigid-body integration (T4)
@@ -30,10 +30,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## Aerodynamics (initial model)
 - Quasi-steady aerodynamics (no unsteady effects).
-- Linear lift and moment curves until a simple stall limit; post-stall behaviour is crude.
-- Subsonic only until v0.2; compressibility handled by a correction below about Mach 0.7 to 0.8.
+- Linear lift and pitching-moment coefficients per T6, an upper CLmax cap, and quadratic induced drag. The cap is not a validated post-stall model; no negative-stall curve is specified. Side force is linear in beta; rolling/yawing control moments use linear derivatives. No rate derivatives, aerodynamic damping or physical control stops are added.
+- Subsonic only until v0.2. Mach dependence comes from the supplied coefficient table; no additional compressibility correction is implemented or claimed by T6.
 - **Mach > 0.8 is out of scope until v0.2.** v0.1 must display the explicit warning "Mach > 0.8 not modeled"; Mach-indexed input tables do not imply supersonic support.
 - No ground effect, no propwash on tail, no aeroelastic effects.
+- The coupled model uses geometric h=-z and the geometric-altitude atmosphere API. It transforms wind forces (-drag,+side,-lift) to body axes and transfers reference-point moments to the CG using (reference-CG) cross force. Control signs follow D6. D13's 0.1 m/s placeholder, zero fallback and clamped asin are implemented; non-finite inputs error before fallback/clamping.
+- Every RK4 stage reevaluates aerodynamic loads, atmosphere and coefficients. Fallible loads abort the whole step; final-state validity is checked too. No silent zero-load substitution is used.
+- The shared synthetic aircraft's 0.5 s aero-coupled step-halving check gave ratios 16.117 to 16.934. At 1/400 s, differences against a 1/6400 s reference were 2.682651359844e-10 m position, 5.143524015678e-10 m/s body velocity, 6.439822566515e-12 rad attitude and 4.680008398830e-11 rad/s body rates. A 1/12800 s reference check stayed below 5% of each default-step estimate. This supports retaining D10 for this smooth synthetic case only; it is not aircraft validation or evidence about stall/table-boundary transitions. Inputs, sources, numerical bounds and full results: `data/reference/aerodynamics/README.md`.
 
 ## Propulsion
 - To be filled in when the engine model task starts. Note: thrust is not simply `power / speed` (that diverges at zero airspeed).

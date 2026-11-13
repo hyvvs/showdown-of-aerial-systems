@@ -84,7 +84,8 @@ Inputs/deliverables: take Mach and altitude; look up the aerodynamic coefficient
 Tests: steady glide gives the expected lift-to-drag ratio; a hand-constructed case gives lift = weight at a stated alpha and airspeed, with hand-calculated expected lift and specified mass (no trim solver); the stall-speed formula matches the simulated 1-g stall onset within a stated tolerance; transformation tests for each axis sign.
 Table tests: exact coefficient values at nodes; linear values between nodes along each indexed dimension; behaviour outside the range matches the documented policy.
 Additional deliverables/tests: apply D12's instantaneous stability/wind frames and wind force components; apply D13's named low-speed threshold, zero fallback angles, clamped asin and explicit non-finite input errors, including boundary tests; test each D6 surface sign separately (elevator: negative pitch, aileron: positive roll, rudder: negative yaw).
-Update docs/ASSUMPTIONS.md.  [ ]
+Update docs/ASSUMPTIONS.md.  [x]
+Verification: 19 tests cover every table coefficient and node/bounds policy, signed zero, low-speed/clamped-asin/non-finite rules, all control signs, wind/stability axes, side force/CG moment transfer, hand lift=weight, local glide and one-g upper-lift-limit boundary. The synthetic aircraft is coupled through fallible RK4 stage loads and geometric ISA. Aero-coupled halving ratios are about 16; D10 stays 0.0025 s. Full scenario, differences and limits: `data/reference/aerodynamics/README.md`. T7 has not started.
 
 ## T7: Headless runner
 Goal: `soas-cli run scenario --out run.csv` writes time histories.
