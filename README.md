@@ -1,12 +1,13 @@
-# aero (placeholder name)
+# Showdown of Aerial Systems
 
 An aircraft design and flight simulation project written in Rust, intended to
 share one aircraft description between engineering analysis and a flyable
 simulation. The license is still undecided.
 
-The chosen crate prefix `soas` stands for **Showdown of Aerial Systems**; applying it is scheduled in T0b.
+The crate prefix `soas` stands for **Showdown of Aerial Systems**.
+The repository slug is `showdown-of-aerial-systems`.
 
-The workspace currently contains one dependency-free library, `crates/aero-core`,
+The workspace currently contains one dependency-free library, `crates/soas-core`,
 and a smoke test for its package identity. Physics and applications will be added
 in later tasks.
 

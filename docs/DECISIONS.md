@@ -4,7 +4,7 @@ Agents: do not make an open decision yourself. Present options with trade-offs a
 
 | ID | Decision | Status | Notes / recommendation |
 |---|---|---|---|
-| D1 | Project name | DECIDED | "Showdown of Aerial Systems". "aero" was only a placeholder. Repo slug: `showdown-of-aerial-systems`; crate prefix: `soas`; first crate: `soas-core`. Renaming is deferred to T0b. |
+| D1 | Project name | DECIDED | "Showdown of Aerial Systems". "aero" was only a placeholder. Repo slug: `showdown-of-aerial-systems`; crate prefix: `soas`; first crate: `soas-core`. |
 | D2 | License | OPEN | Remains OPEN by owner choice. The repo stays private; no LICENSE file. Must be decided before the repo is made public. |
 | D3 | Aircraft file format | DECIDED | JSON, with a `format_version` field and unit suffixes in field names. Required before T5; `serde_json` is pre-approved in AGENTS.md. |
 | D4 | Units strategy | DECIDED | Required before T2; owner chose option B: SI internally, unit suffixes where ambiguous, and angle newtypes only for now. Full policy below. |

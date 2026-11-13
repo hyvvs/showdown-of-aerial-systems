@@ -3,7 +3,7 @@
 Read this file at the start of every session. It is short on purpose.
 
 ## What this project is
-Working title: **aero** (placeholder name, see docs/DECISIONS.md D1).
+Project name: **Showdown of Aerial Systems** (see docs/DECISIONS.md D1).
 An open-source, browser-friendly aircraft design + flight simulation tool, written in Rust.
 One aircraft description produces (a) an engineering analysis ("does it fly?") and (b) a flyable simulation.
 Full vision: `docs/VISION.md`. Current plan: `docs/ROADMAP.md`. Task queue: `docs/TASKS.md`.
@@ -26,7 +26,7 @@ Read, in order: this file, `docs/CONVENTIONS.md`, `docs/DECISIONS.md`, `docs/TAS
 4. **Conventions are law.** Follow `docs/CONVENTIONS.md` exactly (axes, units, signs, angle units). If you think a convention is wrong or missing, ask; do not silently deviate.
 5. **Dependencies.** Pre-approved: `nalgebra`, `serde` (with derive), `serde_json`, `thiserror`, `approx` (dev), `proptest` (dev). Ask before adding anything else, and say why.
 6. **No `unsafe`** unless the owner approves. If approved, every block gets a `// SAFETY:` comment.
-7. **Keep `aero-core` pure.** No file I/O, rendering, networking, threads, wall-clock time, or unseeded randomness in the simulation core. No iteration over `HashMap` in simulation logic (non-deterministic order). Use fixed time steps.
+7. **Keep `soas-core` pure.** No file I/O, rendering, networking, threads, wall-clock time, or unseeded randomness in the simulation core. No iteration over `HashMap` in simulation logic (non-deterministic order). Use fixed time steps.
 8. **Do not overclaim.** When you add a model simplification, add it to `docs/ASSUMPTIONS.md`. Never describe results as "accurate" without saying what they were compared against and the error.
 9. **Do not touch** `docs/VISION.md` or `docs/CONVENTIONS.md` without asking; propose edits instead.
 
@@ -40,12 +40,12 @@ Rust stable, edition 2024. Fix warnings; do not silence them without explanation
 
 ## Repo layout (create crates only when a task needs them)
 ```
-crates/aero-core/    simulation core: math helpers, atmosphere, rigid body, aero model (pure)
-crates/aero-cli/     headless runner (later task)
+crates/soas-core/    simulation core: math helpers, atmosphere, rigid body, aerodynamic model (pure)
+crates/soas-cli/     headless runner (later task)
 data/reference/      reference data and its sources (never fabricated)
 docs/                project docs
 ```
-Later crates (do not create early): `aero-estimator`, `aero-designer`, `aero-web`.
+Later crates (do not create early): `soas-estimator`, `soas-designer`, `soas-web`.
 
 ## Batch mode
 - Run the listed tasks in order. For each task: write tests first, implement, run the three quality gates, make one local git commit `Task <ID>: <title>`, set its status in `docs/TASKS.md`, and add a **Concepts introduced** entry to `docs/LEARNING.md` (the owner's **Understood** and **Still unclear** columns stay blank).

@@ -37,7 +37,7 @@ Beyond performance numbers, H3 must collect the following, with sources, units, 
 ---
 ## T0: Workspace skeleton
 Goal: a compiling Rust workspace with one library crate.
-Deliverables: root `Cargo.toml` (workspace), `crates/aero-core` (lib, no dependencies yet), `rust-toolchain.toml` (stable), `.gitignore`, a short `README.md` saying the name is a placeholder. **No LICENSE file** (decision D2 is open).
+Original deliverables (historical): root `Cargo.toml` (workspace), `crates/aero-core` (lib, no dependencies yet), `rust-toolchain.toml` (stable), `.gitignore`, a short `README.md` using the former placeholder name. T0b renamed the crate to `crates/soas-core`. **No LICENSE file** (decision D2 is open).
 Acceptance: the three quality gates in AGENTS.md pass, with at least one trivial test.  [x]
 
 ## T1: Continuous integration
@@ -48,8 +48,9 @@ Verification: `.github/workflows/ci.yml` has both triggers and all three mandato
 ## T0b: Rename to the project name
 Goal: apply the project name "Showdown of Aerial Systems" across the repo, crates, README and docs.
 Deliverables: use repo slug `showdown-of-aerial-systems` and crate prefix `soas` (D1), with the first crate named `soas-core`; update manifests, imports, tests, README and docs to match, preserving historical references to the former placeholder.
-Notes: the owner has chosen the slug/prefix. Perform the rename only when T0b is explicitly started, not while recording the decision.
-Acceptance: naming is consistent and the three quality gates in AGENTS.md pass.  [ ]
+Notes: the local crate and documentation names are updated. The working folder was left unchanged as requested. The owner creates or renames the private GitHub repository to the chosen slug and may rename the checkout folder manually if desired; no Git remote is configured here or changed by this task.
+Acceptance: naming is consistent and the three quality gates in AGENTS.md pass.  [x]
+Verification: the package-name test failed with the old manifest name and passed after renaming; all three gates pass for `soas-core`. Incremental compilation was disabled for the final local checks because this workspace filesystem cannot hardlink cache files.
 
 ## T2: Rotation and attitude helpers
 Goal: body-to-NED rotation with quaternions; Euler angle conversion (3-2-1) for I/O only.
@@ -82,7 +83,7 @@ Additional deliverables/tests: apply D12's instantaneous stability/wind frames a
 Update docs/ASSUMPTIONS.md.  [ ]
 
 ## T7: Headless runner
-Goal: `aero-cli run scenario --out run.csv` writes time histories.
+Goal: `soas-cli run scenario --out run.csv` writes time histories.
 Tests: same input produces byte-identical output on one machine (determinism test).  [ ]
 
 ## T8: Trim solver and static stability numbers

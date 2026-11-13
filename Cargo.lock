@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "aero-core"
+name = "soas-core"
 version = "0.1.0"

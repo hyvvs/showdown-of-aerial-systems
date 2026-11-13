@@ -1,4 +1,4 @@
-//! Simulation core for aero (working title).
+//! Simulation core for Showdown of Aerial Systems.
 //!
 //! This crate currently contains only the workspace smoke test. Flight mechanics
 //! will be added in later tasks, independently of rendering and file access.
@@ -7,6 +7,6 @@
 mod tests {
     #[test]
     fn package_name_matches_workspace_library() {
-        assert_eq!(env!("CARGO_PKG_NAME"), "aero-core");
+        assert_eq!(env!("CARGO_PKG_NAME"), "soas-core");
     }
 }

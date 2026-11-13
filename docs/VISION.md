@@ -1,6 +1,6 @@
 # Vision
 
-Working title: **aero** (placeholder).
+Project name: **Showdown of Aerial Systems**.
 
 ## One sentence
 An open-source, browser-friendly tool where you design an aircraft (fixed wing, flying wing, supersonic jet, VTOL), get an honest engineering analysis, and fly it, with the same aircraft file feeding both.
