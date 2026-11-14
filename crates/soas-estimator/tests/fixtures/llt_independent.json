@@ -1,0 +1,12 @@
+{
+  "data_note": "SYNTHETIC TEST VALUES supplied by owner, reproduced with independent Gaussian elimination; not aircraft data. See llt_independent_values.md",
+  "span_m": 12.0,
+  "chord_m": 2.0,
+  "alpha_rad": 0.08,
+  "zero_lift_angle_rad": -0.02,
+  "absolute_tolerance": 2e-12,
+  "checks": [
+    {"odd_terms": 4, "cl": 0.452728040191428, "cdi": 0.011377841172798, "efficiency": 0.955682861022209},
+    {"odd_terms": 128, "cl": 0.453042498536939, "cdi": 0.011414531397917, "efficiency": 0.953934767176948}
+  ]
+}
