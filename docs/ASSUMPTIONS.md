@@ -76,3 +76,9 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 | Case | Reference | Quantities compared | Error | Status |
 |---|---|---|---|---|
 | (none yet) | | | | |
+
+## Stage 2 estimator geometry (T12)
+- soas-estimator depends on soas-core for angle types; core has no reverse dependency. Geometry is pure and separate from the flight model. This does not start T10/T11 or validate a reference aircraft.
+- The station wing is symmetric about y=0, linearly interpolated on the right half and mirrored with x/z and local incidence unchanged. Body x is forward and z down. Span/area are reference planform quantities; twist/z offsets do not stretch them. Chord and section slope are positive; all coordinates/inputs must be finite, root y=0 and y strictly increasing.
+- MAC is the chord-squared integral divided by area, placed at the chord-area-weighted right-half leading-edge location; the left location mirrors y. For multiple panels it is an equivalent reference chord and need not equal the actual chord at that y. Sweep is the net root-to-tip quarter-chord angle, positive aft, with no aerodynamic sweep correction implied.
+- Section slope and zero-lift angle require explicit inputs and provenance. The optional explicit 2*pi/rad helper is thin-airfoil incompressible theory, not a universal measured value. Test section inputs are labeled synthetic. Geometry checks cannot establish attached flow, lift, stall, structural feasibility or section-data validity. Formulas/hand cases/ledgers: data/reference/estimator/geometry.md.

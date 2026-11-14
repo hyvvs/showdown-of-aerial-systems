@@ -49,6 +49,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T9b | Nondimensional rates compare rotation over a wing/chord travel time; negative direct rate derivatives oppose spin and give exponential roll decay in an isolated fixed-speed case; lift caps and surface travel saturation bound the model, so commanded and applied angles can differ. |  |  |
 
+| 2026-11-14 | T12 | A symmetric wing can be described by right-half stations and mirroring; area and MAC come from chord integrals, with MAC differing from average chord; body-axis geometry and cited section inputs must be explicit before estimating forces. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

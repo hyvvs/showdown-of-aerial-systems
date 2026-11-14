@@ -147,7 +147,8 @@ chord and its position, and quarter-chord sweep. Document station interpolation,
 mirroring, body-axis signs and reference definitions. Validate finite values,
 positive chord/section slope and strictly increasing nonnegative station y.
 Tests: independent rectangular and tapered hand cases, standard trapezoid MAC,
-distinct span/chord, interpolation/mirroring and invalid inputs. [ ]
+distinct span/chord, interpolation/mirroring and invalid inputs. [x]
+Verification: six tests pass for rectangular/tapered hand geometry, trapezoid MAC and position, body-axis sweep, station interpolation/mirroring, subdivision invariance, invalid/overflow/provenance cases and the cited thin-airfoil helper. Runtime has only the one-way soas-core dependency; serde_json is test-only. Full formulas, assumptions and failing-first evidence: `data/reference/estimator/geometry.md`.
 
 ## T13: Prandtl/Glauert lifting-line Fourier solution
 Goal: straight symmetric, incompressible, attached-flow wing; output CL, induced
