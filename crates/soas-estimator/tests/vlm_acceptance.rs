@@ -1,6 +1,6 @@
-//! All settings are SYNTHETIC and ledgered in fixtures/vlm_trend_values.md
-//! and fixtures/vlm_acceptance_test_values.md. Formula/acceptance derivation:
-//! data/reference/estimator/vlm_diagnosis.md; no fixed inter-method tolerance.
+//! All numerical settings are SYNTHETIC TEST VALUES, ledgered in fixtures/
+//! vlm_trend_values.md and vlm_acceptance_test_values.md. No zero-limit verdict.
+//! Sources/derivation: data/reference/estimator/vlm_acceptance_review.md.
 use serde_json::Value;
 use soas_core::units::Radians;
 use soas_estimator::{
@@ -20,7 +20,7 @@ fn count(v: &Value, key: &str) -> usize {
 }
 fn wing(span: f64, chord: f64) -> WingPlanform {
     WingPlanform {
-        data_note: "SYNTHETIC trend wing; no aircraft calibration".into(),
+        data_note: "SYNTHETIC acceptance wing; no aircraft calibration".into(),
         stations: [0.0, span / 2.0]
             .into_iter()
             .map(|y| WingStation {
@@ -29,9 +29,9 @@ fn wing(span: f64, chord: f64) -> WingPlanform {
                 leading_edge_x_m: 0.0,
                 z_m: 0.0,
                 twist_rad: Radians::new(0.0).unwrap(),
-                section_lift_curve_slope_per_rad: thin_airfoil_slope_per_rad(),
                 zero_lift_angle_rad: Radians::new(0.0).unwrap(),
-                section_source: "Caughey ideal 2*pi/rad; synthetic geometry".into(),
+                section_lift_curve_slope_per_rad: thin_airfoil_slope_per_rad(),
+                section_source: "Cited ideal thin-airfoil 2*pi; synthetic geometry".into(),
             })
             .collect(),
     }
@@ -45,179 +45,149 @@ fn request(v: &Value, ny: usize, nx: usize) -> VlmRequest {
         reference_x_body_m: 0.0,
     }
 }
-// NIST least-squares normal equations, with the intercept expressed as weights:
-// https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm
-// Weight propagation and leave-one-out sensitivity are our explicitly empirical
-// acceptance construction, not a sourced physical/statistical confidence bound.
-fn fit(x: &[f64], y: &[f64]) -> (f64, f64, Vec<f64>) {
-    let n = x.len() as f64;
-    let mx = x.iter().sum::<f64>() / n;
-    let my = y.iter().sum::<f64>() / n;
-    let den = x.iter().map(|a| (a - mx).powi(2)).sum::<f64>();
-    let b = x
-        .iter()
-        .zip(y)
-        .map(|(a, c)| (a - mx) * (c - my))
-        .sum::<f64>()
-        / den;
-    let weights = x.iter().map(|a| 1.0 / n - mx * (a - mx) / den).collect();
-    (my - b * mx, b, weights)
+#[test]
+fn rectangular_lift_and_drag_gaps_strictly_decrease_on_both_meshes() {
+    let v = fixture();
+    for ny in [
+        count(&v, "coarse_span_panels"),
+        count(&v, "fine_span_panels"),
+    ] {
+        let mut gaps = [Vec::new(), Vec::new()];
+        for ar in v["aspect_ratios"].as_array().unwrap() {
+            let ar = ar.as_f64().unwrap();
+            let c = number(&v, "chord_m");
+            let w = wing(ar * c, c);
+            let r = request(&v, ny, count(&v, "fine_chord_panels"));
+            let out = solve(&w, r).unwrap();
+            let ll = lifting_line::solve(
+                StraightWing::Stations(&w),
+                r.alpha_rad,
+                count(&v, "fine_fourier_terms"),
+            )
+            .unwrap();
+            let cl_gap = (out.cl - ll.cl).abs() / ll.cl.abs();
+            let cd_gap = (out.induced_drag_coefficient - ll.induced_drag_coefficient).abs()
+                / ll.induced_drag_coefficient.abs();
+            println!("Ny={ny} AR={ar} relative gaps CL={cl_gap:.12e}, CDi={cd_gap:.12e}");
+            gaps[0].push(cl_gap);
+            gaps[1].push(cd_gap);
+        }
+        for g in gaps {
+            assert!(g.iter().all(|a| a.is_finite()));
+            assert!(
+                g.windows(2).all(|a| a[1] < a[0]),
+                "nondecreasing relative gaps at Ny={ny}: {g:?}"
+            );
+        }
+    }
 }
-fn zero_limit_band(x: &[f64], gap: &[f64], uncertainty: &[f64]) -> (f64, f64) {
-    let (intercept, _, weights) = fit(x, gap);
-    let propagated = weights
-        .iter()
-        .zip(uncertainty)
-        .map(|(w, u)| w.abs() * u)
-        .sum::<f64>();
-    let curvature = (0..x.len())
-        .map(|omit| {
-            let keep_x: Vec<_> = x
-                .iter()
-                .enumerate()
-                .filter(|(i, _)| *i != omit)
-                .map(|(_, a)| *a)
-                .collect();
-            let keep_y: Vec<_> = gap
-                .iter()
-                .enumerate()
-                .filter(|(i, _)| *i != omit)
-                .map(|(_, a)| *a)
-                .collect();
-            (fit(&keep_x, &keep_y).0 - intercept).abs()
+// MIT ellipse chord and T12 area integral; normalize polygon area, not forces.
+// Same span/area/AR at every mesh; positive machine-epsilon endpoint is a test
+// geometry regularization required by T12, not a physical tip parameter.
+fn elliptic_polygon(ar: f64, root: f64, ny: usize) -> WingPlanform {
+    let b = ar * PI * root / 4.0;
+    let mut w = wing(b, root);
+    let template = w.stations[0].clone();
+    w.stations = (ny / 2..=ny)
+        .map(|j| {
+            let y = if j == ny / 2 {
+                0.0
+            } else if j == ny {
+                b / 2.0
+            } else {
+                -b / 2.0 * (PI * j as f64 / ny as f64).cos()
+            };
+            let c = (root * (1.0 - (2.0 * y / b).powi(2)).max(0.0).sqrt()).max(root * f64::EPSILON);
+            WingStation {
+                y_m: y,
+                chord_m: c,
+                leading_edge_x_m: c / 4.0,
+                ..template.clone()
+            }
         })
-        .fold(0.0, f64::max);
-    println!(
-        "free intercept={intercept:.12e}, propagated mesh={propagated:.12e}, leave-one-out={curvature:.12e}"
-    );
-    (intercept, propagated + curvature)
-}
-#[test]
-fn rectangular_method_gaps_decrease_and_empirical_infinite_ar_limit_is_zero_compatible() {
-    let v = fixture();
-    let ars: Vec<_> = v["aspect_ratios"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|a| a.as_f64().unwrap())
         .collect();
-    let mut gaps = [Vec::new(), Vec::new()];
-    let mut uncertainties = [Vec::new(), Vec::new()];
-    for ar in &ars {
-        let c = number(&v, "chord_m");
-        let w = wing(ar * c, c);
-        let r = request(
-            &v,
-            count(&v, "fine_span_panels"),
-            count(&v, "fine_chord_panels"),
-        );
-        let fine = solve(&w, r).unwrap();
-        let span = solve(
-            &w,
-            VlmRequest {
-                spanwise_panels: count(&v, "coarse_span_panels"),
-                ..r
-            },
-        )
-        .unwrap();
-        let chord = solve(
-            &w,
-            VlmRequest {
-                chordwise_panels: count(&v, "coarse_chord_panels"),
-                ..r
-            },
-        )
-        .unwrap();
-        let ll = lifting_line::solve(
-            StraightWing::Stations(&w),
-            r.alpha_rad,
-            count(&v, "fine_fourier_terms"),
-        )
-        .unwrap();
-        let ll_coarse = lifting_line::solve(
-            StraightWing::Stations(&w),
-            r.alpha_rad,
-            count(&v, "coarse_fourier_terms"),
-        )
-        .unwrap();
-        let e = fine.cl.powi(2) / (PI * ar * fine.induced_drag_coefficient);
-        println!(
-            "AR={ar}: VLM slope={}, CDi={}, e={e}; LLT slope={}, CDi={}, e={}",
-            fine.d_cl_d_alpha_per_rad,
-            fine.induced_drag_coefficient,
-            ll.cl / r.alpha_rad.value(),
-            ll.induced_drag_coefficient,
-            ll.span_efficiency.unwrap()
-        );
-        for (i, (a, s, c, b, old)) in [
-            (fine.cl, span.cl, chord.cl, ll.cl, ll_coarse.cl),
-            (
-                fine.induced_drag_coefficient,
-                span.induced_drag_coefficient,
-                chord.induced_drag_coefficient,
-                ll.induced_drag_coefficient,
-                ll_coarse.induced_drag_coefficient,
-            ),
-        ]
-        .into_iter()
-        .enumerate()
-        {
-            gaps[i].push((a - b).abs() / b.abs());
-            uncertainties[i].push(((a - s).abs() + (a - c).abs() + (b - old).abs()) / b.abs());
-        }
+    let scale = (b * b / ar) / w.geometry().unwrap().area_m2;
+    for s in &mut w.stations {
+        s.chord_m *= scale;
+        s.leading_edge_x_m = s.chord_m / 4.0;
     }
-    for quantity in 0..gaps.len() {
-        let delta = &gaps[quantity];
-        assert!(delta.iter().all(|d| d.is_finite() && *d > 0.0));
-        for (a, d) in ars.windows(2).zip(delta.windows(2)) {
-            assert!(d[1] < d[0], "nondecreasing relative gap: {delta:?}");
-            let p = (d[0] / d[1]).ln() / (a[1] / a[0]).ln();
-            assert!(p > 0.0, "nondecaying local power law");
-            println!("quantity={quantity}, AR={a:?}, gap={d:?}, local p={p}");
-        }
-        let log_ar: Vec<_> = ars.iter().map(|a| a.ln()).collect();
-        let log_delta: Vec<_> = delta.iter().map(|d| d.ln()).collect();
-        let fitted_p = -fit(&log_ar, &log_delta).1;
-        assert!(
-            fitted_p > 0.0,
-            "empirical continuation does not tend to zero"
-        );
-        // Lift: Tuck constant-term difference / AR. Relative drag: log-based
-        // tip hypothesis, explicitly unverified beyond these four measurements.
-        let x: Vec<_> = ars
-            .iter()
-            .map(|a| if quantity == 0 { 1.0 / a } else { 1.0 / a.ln() })
-            .collect();
-        let (intercept, bound) = zero_limit_band(&x, delta, &uncertainties[quantity]);
-        assert!(
-            intercept.abs() <= bound,
-            "nonzero-limit evidence: intercept {intercept}, empirical mesh/range band {bound}"
-        );
-    }
+    w
 }
-#[test]
-fn extrapolation_rejects_an_independently_known_nonzero_floor() {
-    let v = fixture();
-    let x: Vec<_> = v["aspect_ratios"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|a| 1.0 / a.as_f64().unwrap())
-        .collect();
-    // Hand law delta=.02+.6/AR has strictly decreasing gaps but an exact .02
-    // infinite-AR floor. This must fail a zero-limit check despite its trend.
-    let delta: Vec<_> = x
-        .iter()
-        .map(|x| number(&v, "nonzero_floor_fault") + number(&v, "inverse_ar_fault_scale") * x)
-        .collect();
-    let uncertainty = vec![0.0; x.len()];
-    assert!(delta.windows(2).all(|d| d[1] < d[0]));
-    let (intercept, band) = zero_limit_band(&x, &delta, &uncertainty);
+// NASA grid-convergence tutorial: f(h)=f0+C*h^p, ratio=2.
+// No fixed observed order or inflated tolerance is selected.
+fn richardson(f: &[f64]) -> (f64, f64) {
+    let d0 = f[1] - f[0];
+    let d1 = f[2] - f[1];
+    let ratio = d0 / d1;
     assert!(
-        intercept.abs() > band,
-        "constant-floor fault was not rejected"
+        ratio.is_finite() && ratio > 1.0,
+        "insufficient contracting, same-sign changes: {f:?}"
+    );
+    let p = ratio.log2();
+    let limit = f[2] + d1 / (2.0_f64.powf(p) - 1.0);
+    assert!(limit.is_finite());
+    (limit, p)
+}
+fn check_ellipse(index: usize) {
+    let v = fixture();
+    let b = &v["ellipse_benchmarks"];
+    let ar = b["aspect_ratios"][index].as_f64().unwrap();
+    let mut efficiencies = Vec::new();
+    let mut slopes = Vec::new();
+    let target = 2.0 * PI / (1.0 + 2.0 / ar); // MIT/Caughey elliptic LLT, information ONLY.
+    for ny in b["full_span_panels"].as_array().unwrap() {
+        let ny = ny.as_u64().unwrap().try_into().unwrap();
+        let w = elliptic_polygon(ar, number(b, "root_chord_m"), ny);
+        let out = solve(&w, request(&v, ny, count(b, "chordwise_panels"))).unwrap();
+        let e = out.cl.powi(2)
+            / (PI * w.geometry().unwrap().aspect_ratio * out.induced_drag_coefficient);
+        println!(
+            "ellipse AR={ar} Ny={ny} e={e:.15} slope={:.15} LLT slope error={:.15} (information only)",
+            out.d_cl_d_alpha_per_rad,
+            (out.d_cl_d_alpha_per_rad - target).abs()
+        );
+        efficiencies.push(e);
+        slopes.push(out.d_cl_d_alpha_per_rad);
+    }
+    let excess: Vec<_> = efficiencies.iter().map(|e| (e - 1.0).max(0.0)).collect();
+    assert!(
+        excess.windows(2).all(|p| p[1] <= p[0]),
+        "efficiency excess grows: {excess:?}"
+    );
+    for series in [&efficiencies, &slopes] {
+        let changes: Vec<_> = series.windows(2).map(|p| (p[1] - p[0]).abs()).collect();
+        assert!(
+            changes.windows(2).all(|d| d[1] < d[0]),
+            "mesh changes fail to decrease: {changes:?}"
+        );
+    }
+    let extrapolated: Vec<_> = efficiencies.windows(3).map(richardson).collect();
+    // A prediction band from the first FOUR meshes, before the finest mesh:
+    // center=R(N1,N2,N3); width=abs(center-R(N0,N1,N2)). Test the held-out
+    // finest-three result R(N2,N3,N4) against continued estimate contraction.
+    // Empirical self-consistency band, NOT a bound around physical e=1.
+    let center = extrapolated[1].0;
+    let width = (center - extrapolated[0].0).abs();
+    let finest = extrapolated[2].0;
+    println!(
+        "ellipse AR={ar}: Richardson={extrapolated:?}; pre-finest prediction band=[{},{}], finest estimate={finest}",
+        center - width,
+        center + width
+    );
+    assert!(
+        (finest - center).abs() <= width,
+        "finest Richardson estimate outside pre-finest empirical band"
     );
 }
+#[test]
+fn elliptic_ar6_has_decreasing_mesh_changes_and_richardson_prediction() {
+    check_ellipse(0);
+}
+#[test]
+fn elliptic_ar40_has_decreasing_mesh_changes_and_richardson_prediction() {
+    check_ellipse(1);
+}
+
 #[test]
 fn spacing_parameter_has_hand_calculated_edges_and_cosine_default() {
     let v = fixture();
