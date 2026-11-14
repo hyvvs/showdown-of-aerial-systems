@@ -132,3 +132,33 @@ References: the existing table contract in `docs/AIRCRAFT_FORMAT.md`; the
 bilinear weighted sum above is direct arithmetic. Fix 1's software references
 are the existing Serde data model / serde_json documentation. No new physical
 constants, aircraft data or dependencies are introduced by these checks.
+
+## Generic object discovery (Part 1)
+
+No generic regression existed before this batch; prior tests hand-listed paths.
+`crates/soas-core/tests/support/object_shapes.rs` now discovers every object
+recursively in every JSON file in each crate's tests/fixtures directory. The
+core/CLI `all_object_shapes.rs` tests replace each discovered object with its
+values in source order, independently, and require a named-object rejection.
+Source order is retained by a generic Serde visitor without new dependencies;
+alphabetizing values could hide array acceptance behind unrelated type errors.
+No object paths or field names are hand-listed. New fixture objects are included
+automatically, including engines, cells and throttle knots. All numeric values
+are reused unchanged from existing labeled fixture ledgers; no data were added.
+
+Baseline: aircraft fixtures contain 6 and 26 objects; scenario fixtures contain
+10 and 13. Both tests pass. A scratch copy bypassing only engine object guards
+failed with 20 accepted positional engine/table/sample objects; bypassing only
+throttle-knot guards failed with all 3 throttle records accepted:
+
+```text
+test every_discovered_aircraft_fixture_object_rejects_positional_values ... FAILED
+test result: FAILED. 0 passed; 1 failed
+
+test every_discovered_scenario_fixture_object_rejects_positional_values ... FAILED
+test result: FAILED. 0 passed; 1 failed
+```
+
+The scratch fault is not committed. Existing production guards already handle
+all current records, so no parser change was needed. This is regression
+coverage, not new schema behavior or physics validation.

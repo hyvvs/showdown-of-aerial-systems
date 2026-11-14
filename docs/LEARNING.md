@@ -45,6 +45,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T9 | Trilinear interpolation retains interactions between Mach, altitude and throttle; an offset thrust force turns the aircraft according to the CG-to-engine arm crossed with force; level trim solves throttle to balance drag while reported fuel flow leaves mass unchanged in this model. |  |  |
 
+| 2026-11-14 | Generic object regression | Recursive discovery covers newly added records without a path checklist; preserving source field order avoids unrelated type errors hiding positional decoding; deliberate faults establish that regression tests can fail. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

@@ -118,4 +118,6 @@ Deliverables/tests: trace each input to its source, conditions, units and axis s
 - Fix 2: off-centre mixed-difference interpolation and singleton-altitude coverage; scratch planar fault check. [x] All 12 pass in production; all 11 coefficient checks fail the deliberate planar variant. No production formula change was needed.
 - Fix 3: independent moment magnitudes and scratch span/chord swap check. [x] All six pass in production and fail the deliberate length swap. Every moment coefficient and control surface is covered; no production formula change was needed.
 
+- Generic object discovery: recursive fixture tests include engine/table/sample objects and throttle knots without hand-listed paths. Existing guards pass; scratch bypasses fail. [x]
+
 Stage 2 tasks (lifting line, vortex lattice, validation) will be written when T10 is done.
