@@ -200,6 +200,17 @@ impl FixedStepRk4 {
         state: &State,
         loads: impl Fn(&State) -> Result<Loads, E>,
     ) -> Result<State, StepError<E>> {
+        self.try_step_with_time(state, |_, stage| loads(stage))
+    }
+
+    /// Time-dependent pure loads receive the elapsed offset within this step:
+    /// 0, h/2, h/2, h. This is simulation time, never wall-clock time. Keeping
+    /// the existing callback APIs avoids changing state-only callers.
+    pub fn try_step_with_time<E>(
+        &self,
+        state: &State,
+        loads: impl Fn(f64, &State) -> Result<Loads, E>,
+    ) -> Result<State, StepError<E>> {
         let norm = state.attitude_body_to_ned.quaternion().norm();
         // Numerical invariant guard, not a new physical tolerance. nalgebra's
         // UnitQuaternion normally guarantees this; detect unchecked misuse.
@@ -208,10 +219,10 @@ impl FixedStepRk4 {
         }
         let start = Stage::from(state);
         let h = self.step_s;
-        let k1 = self.derivative(&start, &loads)?;
-        let k2 = self.derivative(&start.add_scaled(&k1, h / 2.0), &loads)?;
-        let k3 = self.derivative(&start.add_scaled(&k2, h / 2.0), &loads)?;
-        let k4 = self.derivative(&start.add_scaled(&k3, h), &loads)?;
+        let k1 = self.derivative(&start, &|s| loads(0.0, s))?;
+        let k2 = self.derivative(&start.add_scaled(&k1, h / 2.0), &|s| loads(h / 2.0, s))?;
+        let k3 = self.derivative(&start.add_scaled(&k2, h / 2.0), &|s| loads(h / 2.0, s))?;
+        let k4 = self.derivative(&start.add_scaled(&k3, h), &|s| loads(h, s))?;
         start
             .add_scaled(&k1, h / 6.0)
             .add_scaled(&k2, h / 3.0)

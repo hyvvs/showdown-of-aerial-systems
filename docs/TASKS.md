@@ -89,7 +89,8 @@ Verification: 19 tests cover every table coefficient and node/bounds policy, sig
 
 ## T7: Headless runner
 Goal: `soas-cli run scenario --out run.csv` writes time histories.
-Tests: same input produces byte-identical output on one machine (determinism test).  [ ]
+Tests: same input produces byte-identical output on one machine (determinism test).  [x]
+Verification: soas-cli runs versioned scenarios with timed piecewise-linear controls and unit-labeled, shortest-round-trip CSV. Seven tests cover process determinism, scenario/argument errors, file boundaries, time/angle conversions, stage times, cadence and CLmax/table-node convergence. No new external packages; only CLI file I/O. The transition case has irregular observed order, so D10 does not imply fourth order across events. See `docs/SCENARIOS.md` and `data/reference/aerodynamics/transitions.md`.
 
 ## T8: Trim solver and static stability numbers
 Goal: find trim alpha and elevator for a given airspeed; report static margin.

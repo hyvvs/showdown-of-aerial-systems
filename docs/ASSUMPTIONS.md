@@ -28,6 +28,12 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - Euler angles are for I/O only. Roll/yaw output is rejected when `abs(cos(pitch)) <= 64 * f64::EPSILON`; near this singularity the individual angles are ill-conditioned. This numerical guard does not limit the quaternion orientation.
 - Numerical test tolerances and synthetic angles are not real-aircraft validation tolerances.
 
+## Headless scenarios (T7)
+- Only soas-cli performs file I/O. Version-zero scenarios use geometric NED position, body velocity/rates, Euler degrees converted at the file boundary, and piecewise-linear per-surface degree schedules sampled at every RK4 stage time. All external packages were already present; argument parsing uses std.
+- Duration and output interval must align with the fixed step; no partial final integration step is substituted. Initial and final states are output. CSV uses a fixed unit-labeled column order, scalar-first quaternion and unrounded Rust f64 Display. Byte determinism is checked for the same inputs on one binary/machine only.
+- The runner buffers its samples and CSV in memory. Invalid scenarios/aircraft/simulation steps leave prior output untouched; disk writes themselves are not atomic. Scenario/aircraft input paths cannot also be output paths. Full contract: `docs/SCENARIOS.md`.
+- A synthetic run crossing CLmax and an internal altitude-table node gives irregular observed orders (1.1966, 1.3744, 2.2618, 0.1575, 5.9312, 1.5848), not stable fourth order. At 0.0025 s, endpoint differences versus 1/12800 s are 3.56616e-6 m position, 6.27742e-6 m/s velocity, 2.07997e-7 rad attitude and 1.91875e-6 rad/s rates. A second fine reference changes the combined estimate by 0.051% of the default estimate. D10 stays unchanged; do not assume a 16x gain on halving across nonsmooth transitions. Full scenario, event brackets and bounds: `data/reference/aerodynamics/transitions.md`.
+
 ## Aerodynamics (initial model)
 - Quasi-steady aerodynamics (no unsteady effects).
 - Linear lift and pitching-moment coefficients per T6, an upper CLmax cap, and quadratic induced drag. The cap is not a validated post-stall model; no negative-stall curve is specified. Side force is linear in beta; rolling/yawing control moments use linear derivatives. No rate derivatives, aerodynamic damping or physical control stops are added.

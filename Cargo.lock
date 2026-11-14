@@ -330,6 +330,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "soas-cli"
+version = "0.1.0"
+dependencies = [
+ "nalgebra",
+ "serde",
+ "serde_json",
+ "soas-core",
+]
+
+[[package]]
 name = "soas-core"
 version = "0.1.0"
 dependencies = [
