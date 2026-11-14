@@ -41,6 +41,7 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 | 2026-11-14 | T8 | Trim balances force along/across the flight path and pitching moment about the CG; body-axis thrust has both path-parallel and normal components; static margin compares small lift and CG-moment changes with elevator held fixed, so an aircraft can be trimmed yet statically unstable. |  |  |
 | 2026-11-14 | Review Fix 1 | A general serializer can accept representations that a particular file format forbids; shape checks distinguish named objects from legitimate vector/table arrays; parsing original text preserves duplicate-field and source-location diagnostics. |  |  |
 | 2026-11-14 | Review Fix 2 | Bilinear interpolation includes a mixed term that planar corner data cannot expose; an off-centre hand calculation can distinguish algorithms; injecting a deliberate fault in an isolated copy demonstrates that each regression test can fail. |  |  |
+| 2026-11-14 | Review Fix 3 | A moment coefficient needs dynamic pressure, area and the correct reference length to become a turning moment; roll/yaw use span while pitch uses mean chord; sign checks alone miss magnitude errors, so distinct lengths and isolated hand-calculated terms expose swaps. |  |  |
 
 ## T4 concepts introduced: equations of motion in plain language
 

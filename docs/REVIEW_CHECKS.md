@@ -78,6 +78,56 @@ used the correct bilinear formula. No planar code is committed and no numerical
 formula change is needed. `Fix 2: implementation` records the validated coverage
 and limitations, rather than changing correct simulation mathematics.
 
+## Fix 3: control/moment magnitudes
+
+`moment_magnitudes.rs` configures the SAME synthetic fixture with S=2 m^2,
+span b=6 m and mean chord c=0.5 m (b/c=12). The aerodynamic reference and CG
+coincide so force-arm moments cannot obscure coefficient scaling. All geometry,
+coefficients, angles and control deflections are labeled synthetic TEST VALUES.
+
+Independent density is the already sourced T3 sea-level equation value
+1.224999155887712 kg/m^3. At V=20 m/s, q=rho*V^2/2=244.9998311775424 Pa,
+q*S=489.9996623550848 N, q*S*b=2939.9979741305088 Nm and
+q*S*c=244.9998311775424 Nm. Expected SI magnitudes are calculated explicitly in
+comments and compared as literal numbers, not recovered from the model's q or
+moment outputs. Each isolated case sets the other moment coefficients to zero.
+
+| Isolated term / positive input | Hand coefficient | Expected moment (Nm) |
+|---|---:|---:|
+| Cm0=0.03 | Cm=0.03 | Pitch +7.349994935326272 |
+| Cmalpha=-0.6/rad, alpha=0.1 rad | Cm=-0.06 | Pitch -14.699989870652544 |
+| Cmde=-1.5/rad, elevator=0.2 rad | Cm=-0.3 | Pitch -73.49994935326272 |
+| Clda=0.25/rad, aileron=0.2 rad | Cl_roll=0.05 | Roll +146.99989870652544 |
+| Cndr=-0.4/rad, rudder=0.25 rad | Cn_yaw=-0.1 | Yaw -293.99979741305088 |
+
+The derivative/control cases also check negative inputs. A sixth test combines
+all terms: Cm=0.03-0.6*0.1-1.5*0.2=-0.33, giving pitch
+-80.84994428858899 Nm, with the roll/yaw values above. Each vector comparison
+uses a new 1e-11 Nm numerical test bound; no existing test/tolerance is changed.
+All five moment coefficients and all three surfaces are independently exercised.
+
+The actual implementation passed all six tests. A NEW isolated source copy
+exchanged span and chord only in moment normalization: roll/yaw used q*S*c and
+pitch used q*S*b. Its output included:
+
+```text
+Cm0: actual=[[0.0, 88.19993922391528, 0.0]] Nm,
+     hand expected=[[0.0, 7.349994935326272, 0.0]] Nm
+aileron: actual=[[-12.249991558877126, 0.0, 0.0]] Nm,
+         hand expected=[[-146.99989870652544, 0.0, 0.0]] Nm
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+The swapped formula preserves signs, demonstrating why sign-only tests are
+insufficient. Pitch magnitude is 12x too large and roll/yaw 12x too small.
+The faulted source was never committed; no production scaling change is needed.
+`Fix 3: implementation` records coverage/evidence and the assumptions update.
+The formulas remain q*S*b for roll/yaw and q*S*c for pitch, as required by the
+owner and the existing T6 moment-normalization references.
+
+Both scratch copies and their build outputs were removed after their isolated
+runs. The working checkout never contained either faulted source variant.
+
 References: the existing table contract in `docs/AIRCRAFT_FORMAT.md`; the
 bilinear weighted sum above is direct arithmetic. Fix 1's software references
 are the existing Serde data model / serde_json documentation. No new physical
