@@ -1,0 +1,15 @@
+{
+  "data_note": "EVERY numeric value is a SYNTHETIC TEST VALUE, not a real aircraft. Ideal thin-airfoil 2*pi/rad is an explicit cited theoretical input. See vlm_cases_values.md.",
+  "one_panel": {
+    "span_m": 4.0,
+    "chord_m": 2.0
+  },
+  "rectangular": {
+    "span_m": 8.0,
+    "chord_m": 1.0
+  },
+  "high_ar": {
+    "span_m": 40.0,
+    "chord_m": 1.0
+  }
+}
