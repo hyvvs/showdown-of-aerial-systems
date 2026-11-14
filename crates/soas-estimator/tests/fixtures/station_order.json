@@ -1,0 +1,8 @@
+{
+  "data_note": "All numbers are SYNTHETIC TEST VALUES; not aircraft data. See station_order_values.md",
+  "chord_m": 2.0,
+  "duplicate_interior": {"y_m": [0.0, 1.0, 1.0, 4.0], "error_field": "stations[2].y_m", "error_reason": "right-half stations must be nonnegative and strictly increasing"},
+  "descending_interior": {"y_m": [0.0, 2.0, 1.0, 4.0], "error_field": "stations[2].y_m", "error_reason": "right-half stations must be nonnegative and strictly increasing"},
+  "missing_root": {"y_m": [1.0, 2.0, 4.0], "error_field": "stations[0].y_m", "error_reason": "root must be at the symmetry plane y=0"},
+  "equal_root_tip": {"y_m": [0.0, 0.0], "error_field": "stations[1].y_m", "error_reason": "right-half stations must be nonnegative and strictly increasing"}
+}
