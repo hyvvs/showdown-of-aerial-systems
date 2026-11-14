@@ -40,6 +40,7 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 | 2026-11-14 | T7 | A headless runner translates files into pure simulation inputs and writes histories; piecewise-linear controls must be sampled at intermediate integration times; byte determinism and round-trip number formatting differ from numerical accuracy, which can lose its smooth-case order at lift/table transitions. |  |  |
 | 2026-11-14 | T8 | Trim balances force along/across the flight path and pitching moment about the CG; body-axis thrust has both path-parallel and normal components; static margin compares small lift and CG-moment changes with elevator held fixed, so an aircraft can be trimmed yet statically unstable. |  |  |
 | 2026-11-14 | Review Fix 1 | A general serializer can accept representations that a particular file format forbids; shape checks distinguish named objects from legitimate vector/table arrays; parsing original text preserves duplicate-field and source-location diagnostics. |  |  |
+| 2026-11-14 | Review Fix 2 | Bilinear interpolation includes a mixed term that planar corner data cannot expose; an off-centre hand calculation can distinguish algorithms; injecting a deliberate fault in an isolated copy demonstrates that each regression test can fail. |  |  |
 
 ## T4 concepts introduced: equations of motion in plain language
 
