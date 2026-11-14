@@ -209,6 +209,7 @@ Physical validity remains unassessed; this does not complete T10/T11.
 
 ---
 ## Review fixes (historical)
+- T13 Gap 1: independent rectangular CL/CDi/efficiency constants at 4/128 terms, immediate passing regression and failing n-squared scratch mutations; no production correction needed. [x]
 - Fix 1: named JSON records reject positional arrays; existing diagnostics and legal array shapes retained. [x]
 - Fix 2: off-centre mixed-difference interpolation and singleton-altitude coverage; scratch planar fault check. [x] All 12 pass in production; all 11 coefficient checks fail the deliberate planar variant. No production formula change was needed.
 - Fix 3: independent moment magnitudes and scratch span/chord swap check. [x] All six pass in production and fail the deliberate length swap. Every moment coefficient and control surface is covered; no production formula change was needed.

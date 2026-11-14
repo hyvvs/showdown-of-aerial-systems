@@ -180,3 +180,12 @@ Part 0 also pins the exact schema-1 CSV header in the CLI test; it already
 passes against production. No production output change was necessary. The
 33-column table is in SCENARIOS.md; consumers must select fields by header.
 The test adds no numeric fixture data or numerical test setting.
+
+## T13 Gap 1 — higher-mode induced-drag weight
+
+Owner-supplied independent rectangular CL/CDi/e constants at 4 and 128 odd
+terms are pinned with absolute tolerance 2e-12; derivation/provenance and all
+numerical ledgers are in data/reference/estimator/llt_independent.md. The new
+test passes immediately: production already weights energy by n. Scratch n^2
+mutations fail at both counts; no mutation is committed. All three gates pass
+(170 workspace tests). No existing tolerance or production formula changed.

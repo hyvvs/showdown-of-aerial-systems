@@ -59,6 +59,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T15 | A vortex lattice solves circulation so flow follows a wing surface; force positions determine pitching moment and neutral point while the far wake estimates induced drag; mesh error and method differences require separate evidence, and finite-data extrapolation is conditional even when a zero limit is compatible with the observations. |  |  |
 
+| 2026-11-14 | T13 Gap 1 | Higher Fourier modes affect induced drag even when lift stays unchanged; fixed results from an independent solver can detect a wrong mode weight; decimal reference rounding and numerical roundoff need an explicit small comparison budget. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
