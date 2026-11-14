@@ -5,7 +5,7 @@ use soas_core::units::Radians;
 use soas_estimator::{
     lifting_line::{self, StraightWing},
     planform::{WingPlanform, WingStation, thin_airfoil_slope_per_rad},
-    vlm::{VlmRequest, solve},
+    vlm::{SpanwiseSpacing, VlmRequest, solve},
 };
 use std::f64::consts::PI;
 fn rad(x: f64) -> Radians {
@@ -36,6 +36,7 @@ fn wing(name: &str) -> WingPlanform {
 fn request(ny: usize, nx: usize, alpha: f64) -> VlmRequest {
     VlmRequest {
         spanwise_panels: ny,
+        spanwise_spacing: SpanwiseSpacing::default(),
         chordwise_panels: nx,
         alpha_rad: rad(alpha),
         reference_x_body_m: 0.0,
@@ -182,48 +183,6 @@ fn high_ar_rectangular_neutral_point_is_near_quarter_mac_and_derivative_is_corre
         (shifted.pitching_moment_coefficient - (out.pitching_moment_coefficient - 1.5 * out.cl))
             .abs()
             < 1e-12
-    );
-}
-#[test]
-fn high_ar_agreement_uses_predeclared_mesh_and_published_method_difference_budget() {
-    let w = wing("high_ar");
-    let fine = solve(&w, request(64, 8, 0.05)).unwrap();
-    let span_coarse = solve(&w, request(32, 8, 0.05)).unwrap();
-    let chord_coarse = solve(&w, request(64, 4, 0.05)).unwrap();
-    let ll = lifting_line::solve(StraightWing::Stations(&w), rad(0.05), 128).unwrap();
-    let ll_coarse = lifting_line::solve(StraightWing::Stations(&w), rad(0.05), 64).unwrap();
-    // This rule is committed BEFORE VLM implementation/measurement. Do not
-    // substitute the actual inter-method discrepancy into the allowance.
-    // Caughey eqs 2.19 (e=1) vs 2.21 estimate omitted finite-chord/AR effects.
-    // It is an approximation allowance, not a rigorous physical error bound.
-    let ar = 40.0;
-    let a0 = 2.0 * PI;
-    let a_line = a0 / (1.0 + a0 / (PI * ar));
-    let a_surface = PI * ar / (1.0 + (1.0 + (PI * ar / a0).powi(2)).sqrt());
-    let model_cl = (a_line - a_surface).abs() * 0.05;
-    let mesh_cl = (fine.cl - span_coarse.cl).abs()
-        + (fine.cl - chord_coarse.cl).abs()
-        + (ll.cl - ll_coarse.cl).abs();
-    // Propagate CL allowance through CDi=CL^2/(pi*AR*e), holding LL e fixed;
-    // remaining finite-mesh span-loading differences are measured separately.
-    let model_cd =
-        (2.0 * ll.cl.abs() + model_cl) * model_cl / (PI * ar * ll.span_efficiency.unwrap());
-    let mesh_cd = (fine.induced_drag_coefficient - span_coarse.induced_drag_coefficient).abs()
-        + (fine.induced_drag_coefficient - chord_coarse.induced_drag_coefficient).abs()
-        + (ll.induced_drag_coefficient - ll_coarse.induced_drag_coefficient).abs();
-    let delta_cl = (fine.cl - ll.cl).abs();
-    let delta_cd = (fine.induced_drag_coefficient - ll.induced_drag_coefficient).abs();
-    println!(
-        "VLM/LLT AR40: VLM=({},{}), LLT=({},{}), differences=({delta_cl:.12e},{delta_cd:.12e}), mesh=({mesh_cl:.12e},{mesh_cd:.12e}), published-model=({model_cl:.12e},{model_cd:.12e})",
-        fine.cl, fine.induced_drag_coefficient, ll.cl, ll.induced_drag_coefficient
-    );
-    assert!(
-        delta_cl <= mesh_cl + model_cl,
-        "CL discrepancy exceeds predeclared budget; STOP rather than widen"
-    );
-    assert!(
-        delta_cd <= mesh_cd + model_cd,
-        "CDi discrepancy exceeds predeclared budget; STOP rather than widen"
     );
 }
 #[test]

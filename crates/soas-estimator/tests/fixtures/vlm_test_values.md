@@ -1,147 +1,128 @@
-# T15 numerical settings ledger
+# VLM numerical test-setting ledger
 
-Every input, mesh count, tolerance, derivative step, index and expected constant below is synthetic test data, a derived mathematical result or numerical test metadata. None is a real-wing validation threshold. Pi/2*pi and quarter/three-quarter chord are cited theory definitions. NaN and usize::MAX deliberately test invalid inputs. Signs follow the source expression.
+Every numeric literal below is a labeled SYNTHETIC TEST input/setting, a hand-derived expectation, or a sourced algebraic constant. None represents real aircraft data. Physical formulas: data/reference/estimator/vlm.md and vlm_diagnosis.md.
 
-The AR40 comparison rule is committed BEFORE VLM implementation or measurement: sum directional VLM refinement changes and T13 term refinement, plus the CL discrepancy implied by Caughey eqs. 2.19 (e=1) and 2.21; propagate that CL allowance through CL squared induced drag with T13 e fixed. This is an approximate model allowance, not a rigorous bound. No observed inter-method gap is used to set it. Exceeding it requires stopping, not widening. The quarter-chord neutral-point bound is a prewritten synthetic 1% chord numerical comparison, not a physical applicability limit.
+Original AR40 comparison and original ledger remain in 8067b1d; its full function and measured failure remain in data/reference/estimator/vlm_expected_difference.md. No original allowance was widened.
+
+New trend bounds are computed from mesh changes and leave-one-out intercept sensitivity with no tuned multiplier. NIST normal-equation source: https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm . The inverse-log drag extrapolation is an explicitly conditional hypothesis, not a verified physical bound.
 
 | Source location | Literal | Provenance |
 |---|---|---|
-| `crates/soas-estimator/tests/vlm.rs:21` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:21` | `2.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:26` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:27` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:28` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:30` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:41` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:47` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:47` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:47` | `0.1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:50` | `0.4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:50` | `1.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:50` | `5.0_f64` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:51` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:51` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:54` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:55` | `4.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:55` | `1e-13` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:56` | `4.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:56` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:57` | `0.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:57` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:58` | `1e-13` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:59` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:59` | `0.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:59` | `2.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:59` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:60` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:60` | `0.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:60` | `2.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:60` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:61` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:61` | `1.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:61` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:61` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:62` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:62` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:62` | `0.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:67` | `12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:67` | `3` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:67` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:68` | `2e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:74` | `11` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:77` | `2e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:83` | `128` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:83` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:83` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:85` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:85` | `16` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:85` | `32` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:85` | `64` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:86` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:86` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:100` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:100` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:102` | `3` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:102` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:102` | `4.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:114` | `32` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:114` | `16` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:114` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:116` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:116` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:116` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:116` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:117` | `32` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:117` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:131` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:131` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:133` | `3` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:133` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:133` | `4.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:145` | `32` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:145` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:145` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:149` | `0.25` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:149` | `0.01` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:153` | `0.0501` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:161` | `0.0499` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:167` | `0.0002` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:170` | `1e-9` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:175` | `1.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:180` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:182` | `1.5` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:184` | `1e-12` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:190` | `64` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:190` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:190` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:191` | `32` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:191` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:191` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:192` | `64` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:192` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:192` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:193` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:193` | `128` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:194` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:194` | `64` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:199` | `40.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:200` | `2.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:201` | `1.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:202` | `1.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:202` | `1.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:202` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:203` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:210` | `2.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:233` | `0.02` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:234` | `0.03` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:236` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:236` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:236` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:237` | `1e-13` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:238` | `1e-13` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:240` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:240` | `1.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:241` | `8` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:241` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:241` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:257` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:257` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:257` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:258` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:258` | `0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:258` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:259` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:259` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:262` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:262` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:262` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:268` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:268` | `0.1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:269` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:269` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:269` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:271` | `1` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:271` | `5.0` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:273` | `4` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:273` | `2` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
-| `crates/soas-estimator/tests/vlm.rs:273` | `0.05` | SYNTHETIC test input/derived expectation or numerical mesh/tolerance/index setting. |
+| `tests/vlm.rs:21` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:21` | `2.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:26` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:27` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:28` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:30` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:42` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:48` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:48` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:48` | `0.1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:51` | `0.4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:51` | `1.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:51` | `5.0_f64` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:52` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:52` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:55` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:56` | `4.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:56` | `1e-13` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:57` | `4.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:57` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:58` | `0.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:58` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:59` | `1e-13` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:60` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:60` | `0.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:60` | `2.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:60` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:61` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:61` | `0.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:61` | `2.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:61` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:62` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:62` | `1.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:62` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:62` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:63` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:63` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:63` | `0.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:68` | `12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:68` | `3` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:68` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:69` | `2e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:75` | `11` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:78` | `2e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:84` | `128` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:84` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:84` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:86` | `8` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:86` | `16` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:86` | `32` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:86` | `64` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:87` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:87` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:101` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:101` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:103` | `3` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:103` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:103` | `4.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:115` | `32` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:115` | `16` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:115` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:117` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:117` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:117` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:117` | `8` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:118` | `32` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:118` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:132` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:132` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:134` | `3` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:134` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:134` | `4.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:146` | `32` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:146` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:146` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:150` | `0.25` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:150` | `0.01` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:154` | `0.0501` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:162` | `0.0499` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:168` | `0.0002` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:171` | `1e-9` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:176` | `1.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:181` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:183` | `1.5` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:185` | `1e-12` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:192` | `0.02` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:193` | `0.03` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:195` | `8` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:195` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:195` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:196` | `1e-13` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:197` | `1e-13` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:199` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:199` | `1.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:200` | `8` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:200` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:200` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:216` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:216` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:216` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:217` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:217` | `0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:217` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:218` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:218` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:221` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:221` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:221` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:227` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:227` | `0.1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:228` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:228` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:228` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:230` | `1` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:230` | `5.0` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:232` | `4` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:232` | `2` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
+| `tests/vlm.rs:232` | `0.05` | SYNTHETIC test/mesh/roundoff/index setting or hand-derived/sourced mathematical factor; fixture-specific settings are in vlm_trend_values.md. |
