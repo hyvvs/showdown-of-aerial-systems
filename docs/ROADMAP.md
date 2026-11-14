@@ -23,6 +23,13 @@ The hero demo is an **F-104-class supersonic jet**, targeted for v0.2 (D14). v0.
   Analytic/synthetic checks establish software evidence only; outputs list
   assumptions and mark physical validity unassessed, without invented thresholds.
 - Lifting-line theory first (it has analytic test cases), then a vortex-lattice method with a compressibility correction.
+- Current authorized extension: T14 unit horseshoe influence coefficients, then
+  T15 planar vortex-lattice solver with mesh-convergence and moment/neutral-point
+  checks. Classical lifting line assumes a straight wing of high aspect ratio;
+  the hero aircraft's low-aspect-ratio swept wing is very different, motivating
+  this panel method. These tasks stay incompressible/attached/small-angle and do
+  not yet add the later compressibility correction or validate hero-wing results.
+  Mark those results "validity unassessed" until compared with data. No T10/T11.
 - Validate: the selected Navion or fallback Cessna 172 against power-off reference data and applicable AVL/OpenVSP output, within the v0.1 Mach limit. Flying-wing validation is parked until after v0.2.
 - Exit: published error plots; ASSUMPTIONS.md updated.
 

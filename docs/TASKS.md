@@ -165,6 +165,34 @@ wrong-section-slope variant fails elliptic tests in an uncommitted scratch copy.
 Update ASSUMPTIONS/LEARNING; report observed convergence and limits. [x]
 Verification: eight tests cover two independent elliptic hand cases (including local loading and e=1), zero lift, incidence signs, rectangular refinement/e<1, symmetry, assumptions/validity and invalid inputs. The scratch omitted-section-slope variant fails both elliptic cases with CL errors of factors 3 and 6. Rectangular CL/CDi converge by roughly 16x per term-count doubling; N=128 gives e=.953934767177. No physical validity threshold, OPEN decision or core-to-estimator dependency was added. Full sources, counts/ledgers and measured convergence: `data/reference/estimator/lifting_line.md`. This batch stops here; T10/T11 remain unstarted.
 
+## T14: Vortex-lattice influence coefficients
+Goal: unit-strength horseshoe induced velocity in soas-estimator from cited
+finite-segment Biot-Savart integrals, with trailing legs along freestream to
+infinity (or an explicit finite wake). State endpoint orientation, units and
+an explicit on-segment singularity error, never NaN or an invented core radius.
+Bound vortices occupy panel quarter chord; controls occupy three-quarter chord.
+Classical lifting line is a high-aspect-ratio straight-wing approximation;
+the low-aspect-ratio swept hero-wing geometry is very different. This motivates
+the more general panel method, without claiming its physical validation.
+Tests: independent horseshoe hand values on/off symmetry plane, all component
+signs, long-bound two-dimensional limit, singularities and mirrored symmetry.
+Use labeled fixture/test settings ledgers and tests/implementation commits. [ ]
+
+## T15: Planar-wing vortex-lattice solver
+Goal: T12 planar geometry with parameterized spanwise/chordwise panel counts;
+solve circulation from flow tangency including twist/section zero-lift angle.
+Return CL, induced CD (document Trefftz-plane or Kutta-Joukowski choice), pitching
+moment about an explicit reference point, and neutral-point x from dCm/dalpha.
+State planar, incompressible, attached-flow, small-angle assumptions; low-AR
+swept hero-wing results remain "validity unassessed" until compared with data.
+Tests: one-panel hand solution; mirrored strengths/zero roll; refinement in
+both mesh directions; rectangular neutral point near quarter MAC; high-AR
+agreement with T13 using a predeclared convergence-derived comparison budget,
+not a fitted passing tolerance; scratch quarter-chord-control fault must fail.
+No dependencies added. Cite formulas; ledger every fixture/test number; update
+assumptions/learning, report convergence, uncertainties and least confidence.
+Run T14 then T15 and stop. Do not start T10 or T11. [ ]
+
 ---
 ## Review fixes (historical)
 - Fix 1: named JSON records reject positional arrays; existing diagnostics and legal array shapes retained. [x]
@@ -175,4 +203,4 @@ Verification: eight tests cover two independent elliptic hand cases (including l
 
 - CSV contract review: exact schema-1 header test, 33-column documentation, two-sided lift-flag wording and identical-bit literal audit recorded. [x]
 
-Further Stage 2 tasks will be written when authorized; this batch stops after T13.
+Current authorized batch stops after T15; further Stage 2 work needs authorization.
