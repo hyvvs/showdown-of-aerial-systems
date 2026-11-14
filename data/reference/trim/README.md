@@ -17,12 +17,14 @@ These passages were verified online 2026-11-14. No real-aircraft numbers from
 either source are used. The atmosphere/gravity sources remain T3; aerodynamic
 equations and signed moment transfer remain T6. All aircraft configurations and
 conditions in the tests are explicitly SYNTHETIC TEST VALUES from configurations
-of the sole existing synthetic JSON fixture.
+of the original synthetic airframe fixture and T9's labeled synthetic engine fixture.
 
 ## What trim means here
 
-At the requested airspeed V and **geometric** height h, solve three unknowns:
-alpha, elevator and flight-path angle gamma. Gamma is positive climb. In the
+At the requested airspeed V and **geometric** height h, solve three unknowns.
+T9's `TrimMode::Level` solves alpha, elevator and throttle with gamma fixed at
+zero. `TrimMode::PowerOffGlide` solves alpha, elevator and flight-path angle
+gamma with every engine explicitly off. Gamma is positive climb. In the
 zero-bank, zero-sideslip, zero-body-rate condition, body pitch = alpha + gamma.
 The geometric-atmosphere API and the actual Mach/altitude tables are evaluated
 at that condition; coefficients are not silently replaced with sea-level values.
@@ -34,11 +36,15 @@ pitching moment about CG = 0
 W = mass * g0
 ```
 
-`TrimRequest.applied_thrust_n` is an optional **temporary constant body-x force
-through the CG**, default **0 N**. It is not an engine model, and includes no
-fuel flow, throttle law or propulsive interaction. Its sign follows +body x.
-The result always states the applied force explicitly, including zero. T7 run
-scenarios remain power-off; T8 does not add an engine or a CLI thrust command.
+T9 removed the temporary `applied_thrust_n` request field. For level flight,
+engine tables now supply the full body-axis force and CG moment; the equations
+above apply directly to a body-x engine through the CG. For inclined/offset
+engines, project the summed aerodynamic/engine force onto the path and upward
+normal and include the engine's `(position-CG) cross force` pitching moment.
+`TrimCondition.throttle` and `TrimSolution.propulsion` report the solved command,
+thrust and fuel flow. Glide mode bypasses ALL engines, including nonzero idle
+thrust. The reference numbers in the original T8 results below are historical;
+current powered targets/results are in `data/reference/propulsion/README.md`.
 
 This is local steady straight-flight balance at the specified atmosphere. A
 descending trim state changes altitude if integrated; constant density and
@@ -57,10 +63,12 @@ for the numerical linear solve; acceptance checks use the requested SI residual
 tolerances directly, not only a normalized objective or a small step.
 
 Default numerical settings (not physical parameters or D9 tolerances): initial
-(alpha,elevator,gamma) = (0.05,0,0) rad; 50 Newton iterations; force tolerance
-1e-8 N; moment tolerance 1e-8 Nm; difference step 1e-5 rad; at most 24 halvings
+(alpha,elevator,gamma) = (0.05,0,0) rad and throttle=0.5; 50 Newton iterations; force tolerance
+1e-8 N; moment tolerance 1e-8 Nm; angle difference step 1e-5 rad and
+throttle difference step 1e-5 dimensionless; at most 24 halvings
 per line search. Options expose the initial guess, iteration limit, tolerances
-and difference step. The derivative test also checks steps 1e-4 and 1e-6 rad.
+and difference steps. At throttle 0/1, a one-sided difference stays inside
+the supported command range; there is no table extrapolation. The derivative test also checks steps 1e-4 and 1e-6 rad.
 
 **There is no best-effort success result.** Singular Jacobian, exhausted
 iterations, failed residual reduction or unbalanced lateral loads returns
@@ -83,7 +91,8 @@ derivatives are per radian. Each perturbed evaluation looks up the same
 Mach/altitude table condition and evaluates its coefficient laws at the perturbed
 alpha. These tables are indexed by Mach/altitude, not alpha: we perturb the
 alpha-dependent coefficient evaluation, not the Mach index. Speed, geometric
-altitude and elevator stay fixed; elevator is NOT retrimmed at each perturbation.
+altitude, elevator and throttle stay fixed; engine derivatives are excluded,
+so this remains an aerodynamic static margin. Elevator is NOT retrimmed at each perturbation.
 Reference-to-CG moment transfer is included. A stencil touching the CLmax cap,
 nonpositive/unresolved lift slope or non-finite derivative returns an explicit
 undefined-margin error instead of an infinite or misleading margin.
@@ -95,7 +104,7 @@ changes during the perturbation. Effects not represented in the input tables
 cannot be inferred. Near stall, this cap model cannot establish physical static
 margin; a positive value does not prove dynamic stability or flight safety.
 
-## Analytic synthetic cases and results
+## Original T8 analytic synthetic cases and results (historical)
 
 The existing synthetic fixture is cloned and all table cells are set to its
 first coefficient cell for the analytic cases. Thus CL0=0.2, CLalpha=4/rad,
@@ -141,5 +150,11 @@ All ten tests and their failure modes:
 | Impossible/lateral balance | Returning success below available lift or with unbalanced roll/yaw moments. |
 | Invalid/undefined inputs | Non-finite/out-of-domain conditions, invalid tolerances, zero perturbation or capped lift producing a bogus margin. |
 
-The tests-only run initially failed because `soas_core::trim` did not exist.
+The current tests replace the temporary force with synthetic T=100*throttle N
+and fuel=.2*throttle kg/s for level flight, retaining the same analytic target
+and force/moment tolerances. The former 1e-14 check compared the result with the
+unchanged supplied force; it now compares the result with an engine evaluation
+at the solved command using the same 1e-14 tolerance.
+
+The original T8 tests-only run initially failed because `soas_core::trim` did not exist.
 No test tolerance was weakened to obtain these results.

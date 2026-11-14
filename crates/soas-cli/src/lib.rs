@@ -3,10 +3,11 @@
 use nalgebra::Vector3;
 use serde::Deserialize;
 use soas_core::{
-    aerodynamics::{AeroOutput, Controls, evaluate},
+    aerodynamics::{AeroOutput, Controls},
     aircraft::{Aircraft, from_json},
     attitude::{Euler321, from_euler321},
     dynamics::{DEFAULT_STEP_S, FixedStepRk4, State},
+    propulsion::{PropulsionOutput, evaluate_flight},
     units::{Degrees, Radians},
 };
 use std::{
@@ -37,6 +38,9 @@ pub struct Scenario {
     pub aircraft_path: PathBuf,
     pub initial_state: InitialState,
     pub controls: ControlSchedules,
+    /// Version 0 has no throttle schedule; version 1 requires named knots.
+    #[serde(default)]
+    pub throttle: Vec<ThrottleKnot>,
     pub duration_s: f64,
     #[serde(default = "default_step")]
     pub dt_s: f64,
@@ -86,6 +90,12 @@ impl InitialState {
 pub struct ControlKnot {
     pub time_s: f64,
     pub deflection_deg: f64,
+}
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ThrottleKnot {
+    pub time_s: f64,
+    pub throttle: f64,
 }
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -165,6 +175,11 @@ pub fn parse_scenario(text: &str) -> Result<Scenario, RunnerError> {
     let value: serde_json::Value =
         serde_json::from_str(text).map_err(|e| err(format!("scenario JSON: {e}")))?;
     require_json_object(&value, "root")?;
+    if let Some(knots) = value.get("throttle").and_then(serde_json::Value::as_array) {
+        for (i, knot) in knots.iter().enumerate() {
+            require_json_object(knot, &format!("throttle[{i}]"))?;
+        }
+    }
     if let Some(initial) = value.get("initial_state") {
         require_json_object(initial, "initial_state")?;
     }
@@ -180,6 +195,25 @@ pub fn parse_scenario(text: &str) -> Result<Scenario, RunnerError> {
     }
     let scenario: Scenario =
         serde_json::from_str(text).map_err(|e| err(format!("scenario JSON: {e}")))?;
+    match value
+        .get("format_version")
+        .and_then(serde_json::Value::as_u64)
+    {
+        Some(0) if value.get("throttle").is_some() => {
+            return Err(err(
+                "scenario format_version: version 0 has no throttle; use version 1",
+            ));
+        }
+        Some(1) if value.get("throttle").is_none() => {
+            return Err(err("scenario format_version: version 1 requires throttle"));
+        }
+        Some(v) if v > 1 => {
+            return Err(err(
+                "scenario format_version: only versions 0 and 1 are supported",
+            ));
+        }
+        _ => {}
+    }
     scenario.validate()?;
     Ok(scenario)
 }
@@ -194,9 +228,60 @@ fn require_json_object(value: &serde_json::Value, field: &str) -> Result<(), Run
     }
 }
 impl Scenario {
+    pub fn throttle_at(&self, time: f64) -> Result<f64, RunnerError> {
+        if self.format_version == 0 && self.throttle.is_empty() {
+            if time.is_finite() && (0.0..=self.duration_s).contains(&time) {
+                return Ok(0.0);
+            }
+            return Err(err("throttle: time outside scenario"));
+        }
+        if !time.is_finite()
+            || self.throttle.is_empty()
+            || time < self.throttle[0].time_s
+            || time > self.throttle.last().expect("nonempty").time_s
+        {
+            return Err(err("throttle: time outside schedule"));
+        }
+        for knot in &self.throttle {
+            if time == knot.time_s {
+                return Ok(knot.throttle);
+            }
+        }
+        for pair in self.throttle.windows(2) {
+            if time > pair[0].time_s && time < pair[1].time_s {
+                let t = (time - pair[0].time_s) / (pair[1].time_s - pair[0].time_s);
+                let v = (1.0 - t) * pair[0].throttle + t * pair[1].throttle;
+                if v.is_finite() && (0.0..=1.0).contains(&v) {
+                    return Ok(v);
+                }
+                return Err(err("throttle: invalid interpolated command"));
+            }
+        }
+        Err(err("throttle: invalid schedule"))
+    }
     fn validate(&self) -> Result<(u64, u64), RunnerError> {
-        if self.format_version != 0 {
-            return Err(err("scenario format_version: only version 0 is supported"));
+        if self.format_version > 1 || (self.format_version == 0 && !self.throttle.is_empty()) {
+            return Err(err(
+                "scenario format_version: version 0 has no throttle; version 1 requires throttle",
+            ));
+        }
+        if self.format_version == 1
+            && (self.throttle.is_empty()
+                || self.throttle[0].time_s != 0.0
+                || self
+                    .throttle
+                    .last()
+                    .is_none_or(|k| k.time_s < self.duration_s)
+                || self.throttle.iter().any(|k| {
+                    !k.time_s.is_finite()
+                        || !k.throttle.is_finite()
+                        || !(0.0..=1.0).contains(&k.throttle)
+                })
+                || self.throttle.windows(2).any(|k| k[0].time_s >= k[1].time_s))
+        {
+            return Err(err(
+                "throttle: finite increasing knots must start at 0, cover duration_s, with commands in [0, 1]",
+            ));
         }
         if self.aircraft_path.as_os_str().is_empty() {
             return Err(err("aircraft_path must not be empty"));
@@ -243,10 +328,17 @@ pub struct Sample {
     pub state: State,
     pub controls: Controls,
     pub aero: AeroOutput,
+    pub throttle: f64,
+    pub propulsion: PropulsionOutput,
 }
 
 pub fn simulate(scenario: &Scenario, aircraft: &Aircraft) -> Result<Vec<Sample>, RunnerError> {
     let (steps, output_steps) = scenario.validate()?;
+    if scenario.format_version == 0 && !aircraft.engines.is_empty() {
+        return Err(err(
+            "scenario version 0 is power-off only and requires an engine-less aircraft; use version 1 for engines",
+        ));
+    }
     let mass = aircraft.mass_properties().map_err(|e| err(e.to_string()))?;
     let integrator = FixedStepRk4::new(mass, scenario.dt_s).map_err(|e| err(e.to_string()))?;
     let mut state = scenario.initial_state.to_state()?;
@@ -258,15 +350,18 @@ pub fn simulate(scenario: &Scenario, aircraft: &Aircraft) -> Result<Vec<Sample>,
             index as f64 * scenario.dt_s
         };
         let controls = scenario.controls.at(time)?;
+        let throttle = scenario.throttle_at(time)?;
         // Validate every completed state, even when it is not output.
-        let aero = evaluate(aircraft, &state, controls)
+        let flight = evaluate_flight(aircraft, &state, controls, throttle)
             .map_err(|e| err(format!("simulation at {time} s: {e}")))?;
         if index % output_steps == 0 || index == steps {
             samples.push(Sample {
                 time_s: time,
                 state,
                 controls,
-                aero,
+                aero: flight.aero,
+                throttle,
+                propulsion: flight.propulsion,
             });
         }
         if index == steps {
@@ -290,7 +385,10 @@ pub fn simulate(scenario: &Scenario, aircraft: &Aircraft) -> Result<Vec<Sample>,
                     .controls
                     .at(stage_time)
                     .map_err(|e| e.to_string())?;
-                evaluate(aircraft, stage, controls)
+                let throttle = scenario
+                    .throttle_at(stage_time)
+                    .map_err(|e| e.to_string())?;
+                evaluate_flight(aircraft, stage, controls, throttle)
                     .map(|out| out.loads)
                     .map_err(|e| e.to_string())
             })
@@ -301,7 +399,7 @@ pub fn simulate(scenario: &Scenario, aircraft: &Aircraft) -> Result<Vec<Sample>,
 
 pub fn csv_text(samples: &[Sample]) -> String {
     let mut text = String::from(
-        "time_s,north_m,east_m,down_m,u_mps,v_mps,w_mps,qw_unitless,qx_unitless,qy_unitless,qz_unitless,p_radps,q_radps,r_radps,elevator_rad,aileron_rad,rudder_rad,mach_unitless,alpha_rad,beta_rad,cl_unitless,cd_unitless,lift_n,drag_n,side_n,lift_limited_unitless\n",
+        "time_s,north_m,east_m,down_m,u_mps,v_mps,w_mps,qw_unitless,qx_unitless,qy_unitless,qz_unitless,p_radps,q_radps,r_radps,elevator_rad,aileron_rad,rudder_rad,mach_unitless,alpha_rad,beta_rad,cl_unitless,cd_unitless,lift_n,drag_n,side_n,lift_limited_unitless,throttle_unitless,thrust_n,fuel_flow_kgps,afterburner_engines_unitless\n",
     );
     for sample in samples {
         let s = sample.state;
@@ -335,6 +433,10 @@ pub fn csv_text(samples: &[Sample]) -> String {
             a.drag_n,
             a.side_n,
             if a.stalled { 1.0 } else { 0.0 },
+            sample.throttle,
+            sample.propulsion.thrust_n,
+            sample.propulsion.fuel_flow_kgps,
+            sample.propulsion.afterburner_engines as f64,
         ];
         for (index, value) in values.into_iter().enumerate() {
             if index != 0 {

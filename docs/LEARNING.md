@@ -43,6 +43,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 | 2026-11-14 | Review Fix 2 | Bilinear interpolation includes a mixed term that planar corner data cannot expose; an off-centre hand calculation can distinguish algorithms; injecting a deliberate fault in an isolated copy demonstrates that each regression test can fail. |  |  |
 | 2026-11-14 | Review Fix 3 | A moment coefficient needs dynamic pressure, area and the correct reference length to become a turning moment; roll/yaw use span while pitch uses mean chord; sign checks alone miss magnitude errors, so distinct lengths and isolated hand-calculated terms expose swaps. |  |  |
 
+| 2026-11-14 | T9 | Trilinear interpolation retains interactions between Mach, altitude and throttle; an offset thrust force turns the aircraft according to the CG-to-engine arm crossed with force; level trim solves throttle to balance drag while reported fuel flow leaves mass unchanged in this model. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

@@ -1,14 +1,15 @@
-//! Version-zero JSON aircraft descriptions. Pure text in/text out: filesystem
+//! Versioned JSON aircraft descriptions. Pure text in/text out: filesystem
 //! access belongs to a future runner, not soas-core. Contract: docs/AIRCRAFT_FORMAT.md.
 //! Serialization API: https://docs.rs/serde_json/1/serde_json/;
 //! strict fields: https://serde.rs/container-attrs.html#deny_unknown_fields.
 
 use crate::dynamics::MassProperties;
+use crate::propulsion::Engine;
 use nalgebra::Matrix3;
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt};
 
-pub const FORMAT_VERSION: u32 = 0;
+pub const FORMAT_VERSION: u32 = 1;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -28,6 +29,9 @@ pub struct Aircraft {
     pub coefficient_axes: String,
     pub moments_about: String,
     pub aerodynamics: CoefficientTable,
+    /// Version 0 is explicitly engine-less; version 1 requires this JSON field.
+    #[serde(default)]
+    pub engines: Vec<Engine>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -106,7 +110,54 @@ pub fn from_json(text: &str) -> Result<Aircraft, AircraftError> {
             }
         }
     }
+    if let Some(engines) = value.get("engines").and_then(serde_json::Value::as_array) {
+        for (index, engine) in engines.iter().enumerate() {
+            let path = format!("engines[{index}]");
+            require_json_object(engine, &path)?;
+            if let Some(table) = engine.get("table") {
+                require_json_object(table, &format!("{path}.table"))?;
+                if let Some(rows) = table.get("samples").and_then(serde_json::Value::as_array) {
+                    for (h, row) in rows.iter().enumerate() {
+                        if let Some(columns) = row.as_array() {
+                            for (m, column) in columns.iter().enumerate() {
+                                if let Some(cells) = column.as_array() {
+                                    for (t, cell) in cells.iter().enumerate() {
+                                        require_json_object(
+                                            cell,
+                                            &format!("{path}.table.samples[{h}][{m}][{t}]"),
+                                        )?;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     let aircraft: Aircraft = serde_json::from_str(text).map_err(AircraftError::Json)?;
+    match value
+        .get("format_version")
+        .and_then(serde_json::Value::as_u64)
+    {
+        Some(0) => require(
+            value.get("engines").is_none(),
+            "format_version",
+            "version 0 is engine-less; use version 1 for an engines section",
+        )?,
+        Some(1) => require(
+            value.get("engines").is_some(),
+            "format_version",
+            "version 1 requires an engines array (empty is allowed)",
+        )?,
+        Some(_) => {
+            return Err(validation(
+                "format_version",
+                "only versions 0 and 1 are supported",
+            ));
+        }
+        None => {} // Typed parser retains missing/type/duplicate diagnostics.
+    }
     aircraft.validate()?;
     Ok(aircraft)
 }
@@ -123,16 +174,33 @@ pub fn to_json(aircraft: &Aircraft) -> Result<String, AircraftError> {
     // serde_json serializes some non-finite numbers as null; reject them BEFORE
     // serialization so an invalid in-memory model cannot silently change value.
     aircraft.validate()?;
-    serde_json::to_string_pretty(aircraft).map_err(AircraftError::Json)
+    if aircraft.format_version == 0 {
+        let mut value = serde_json::to_value(aircraft).map_err(AircraftError::Json)?;
+        value
+            .as_object_mut()
+            .expect("Aircraft is an object")
+            .remove("engines");
+        serde_json::to_string_pretty(&value).map_err(AircraftError::Json)
+    } else {
+        serde_json::to_string_pretty(aircraft).map_err(AircraftError::Json)
+    }
 }
 
 impl Aircraft {
     pub fn validate(&self) -> Result<(), AircraftError> {
         require(
-            self.format_version == FORMAT_VERSION,
+            self.format_version == 0 || self.format_version == FORMAT_VERSION,
             "format_version",
-            "only version 0 is supported",
+            "only versions 0 and 1 are supported",
         )?;
+        require(
+            self.format_version != 0 || self.engines.is_empty(),
+            "format_version",
+            "version 0 is engine-less; use version 1 for engines",
+        )?;
+        for (index, engine) in self.engines.iter().enumerate() {
+            engine.validate(&format!("engines[{index}]"))?;
+        }
         require(!self.name.trim().is_empty(), "name", "must not be empty")?;
         require(
             !self.data_note.trim().is_empty(),
@@ -254,7 +322,7 @@ impl AeroCoefficients {
     }
 }
 
-fn validate_nodes(nodes: &[f64], field: &str) -> Result<(), AircraftError> {
+pub(crate) fn validate_nodes(nodes: &[f64], field: &str) -> Result<(), AircraftError> {
     require(!nodes.is_empty(), field, "must contain at least one node")?;
     finite(nodes.iter().copied(), field)?;
     require(
@@ -272,7 +340,7 @@ fn positive(value: f64, field: &str) -> Result<(), AircraftError> {
     )
 }
 
-fn finite(values: impl Iterator<Item = f64>, field: &str) -> Result<(), AircraftError> {
+pub(crate) fn finite(values: impl Iterator<Item = f64>, field: &str) -> Result<(), AircraftError> {
     require(
         values.into_iter().all(f64::is_finite),
         field,
@@ -280,7 +348,11 @@ fn finite(values: impl Iterator<Item = f64>, field: &str) -> Result<(), Aircraft
     )
 }
 
-fn require(condition: bool, field: &str, reason: &'static str) -> Result<(), AircraftError> {
+pub(crate) fn require(
+    condition: bool,
+    field: &str,
+    reason: &'static str,
+) -> Result<(), AircraftError> {
     if condition {
         Ok(())
     } else {

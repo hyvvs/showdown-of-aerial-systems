@@ -9,7 +9,7 @@ Only std parses arguments; no additional external packages were added. Native
 paths are accepted through `args_os`. All file access is in soas-cli. Aircraft
 paths resolve relative to the scenario file's directory, or can be absolute.
 
-## Scenario JSON version 0
+## Scenario JSON versions 0 and 1
 
 The executable reads a JSON object with these fields. Unknown fields and
 versions are errors. `data_note` is optional provenance text; the example
@@ -27,8 +27,8 @@ schedule must be an object containing `time_s` and `deflection_deg`.
 
 | Field | Contract |
 |---|---|
-| `format_version` | Required integer 0. |
-| `aircraft_path` | Nonempty path to an aircraft-format-v0 JSON file. |
+| `format_version` | Required integer 0 (legacy power-off) or 1 (explicit throttle). Other versions error. |
+| `aircraft_path` | Nonempty path to an aircraft-format-0 or -1 JSON file. A version-0 scenario requires an engine-less aircraft; installed engines require a version-1 scenario. |
 | `initial_state.position_ned_m` | Finite North/East/Down coordinates; geometric altitude is -Down. |
 | `initial_state.velocity_body_mps` | Finite forward/right/down velocity components. No wind in v0.1. |
 | `initial_state.attitude_euler_deg` | Finite [roll,pitch,yaw] in degrees, 3-2-1 convention; converted with tested Degrees/Radians types at this boundary. |
@@ -37,12 +37,34 @@ schedule must be an object containing `time_s` and `deflection_deg`.
 | `duration_s` | Finite nonnegative duration, an integer multiple of dt_s. Zero means output initial state only. |
 | `dt_s` | Optional finite positive fixed step; default 0.0025 s (D10). |
 | `output_interval_s` | Finite positive integer multiple of dt_s, at least one step. |
+| `throttle` | Required nonempty array in version 1, forbidden in version 0. Each knot is a named object `{time_s, throttle}` with a finite command in `[0,1]`. Times start at 0, strictly increase and cover duration. |
 
 Controls interpolate linearly between knots; no extrapolation beyond schedule
 coverage. Knots need not coincide with step boundaries. Every RK4 stage gets the
 correct simulation time (start, midpoint, midpoint, end). The core timed callback
 receives an offset within the step, never wall-clock time. Existing state-only
 callbacks keep their previous interface and equations.
+
+Version 1 adds a separate dimensionless throttle schedule, sampled linearly
+at **every RK4 stage** just like surface schedules. Throttle knots cannot be
+positional arrays; the error names `throttle[index]`. Unknown, duplicate and
+missing fields retain original parser diagnostics. A version-1 file without
+the schedule is rejected, rather than assuming a power setting. Version 0 has
+no engine commands and is explicitly engine-less. An in-memory version-0
+scenario also cannot carry nonempty throttle knots.
+
+One command drives all engines. The aircraft file defines each dry/afterburner
+boundary; the boundary itself is dry, larger commands are afterburning.
+Throttle 0 is the tabulated idle condition, not an engine-off switch. Engine
+forces and CG moments are reevaluated with the stage's Mach and geometric
+altitude and added to the aerodynamic loads. Table/domain errors abort the
+run. Fuel flow is reported, with mass/CG/inertia held constant.
+
+Powered synthetic example (every numeric path has a companion TEST VALUE ledger):
+
+```text
+cargo run -p soas-cli -- run crates/soas-cli/tests/fixtures/synthetic_powered_scenario.json --out run.csv
+```
 
 Step/output indices are integers; timestamps come from index*dt, not accumulated
 floating-point addition. Integer-multiple checks allow only numerical roundoff
@@ -58,6 +80,11 @@ velocity mps, body rates radps, controls/alpha/beta rad, forces n. Quaternion
 components are scalar-first qw,qx,qy,qz and labeled unitless; coefficients and
 Mach are also unitless. The upper-lift-limit flag is numeric 0/1. Quaternions
 avoid undefined Euler output at singular pitch.
+
+T9 appends four columns for both scenario versions: `throttle_unitless`,
+`thrust_n` (sum of scalar engine thrusts), `fuel_flow_kgps` (total reported fuel
+flow), and `afterburner_engines_unitless` (integer count). They are zero for
+engine-less version-0 runs. Existing columns keep their order and meaning.
 
 All numbers use Rust's default f64 Display without an explicit precision:
 round-trip decimal digits, no deliberate rounding or timestamps from the clock.

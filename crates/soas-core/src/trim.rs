@@ -6,7 +6,8 @@ use crate::{
     aircraft::Aircraft,
     atmosphere::STANDARD_GRAVITY_MPS2,
     attitude::{Euler321, from_euler321},
-    dynamics::State,
+    dynamics::{Loads, State},
+    propulsion::{self, PropulsionOutput},
     units::Radians,
 };
 use nalgebra::{Matrix3, Vector3};
@@ -16,15 +17,21 @@ use std::{error::Error, f64::consts::FRAC_PI_2, fmt};
 pub struct TrimRequest {
     pub airspeed_mps: f64,
     pub geometric_altitude_m: f64,
-    /// Temporary constant body-x force through the CG, NOT a propulsion model.
-    /// None means zero; the sign follows +body x. No fuel flow is implied.
-    pub applied_thrust_n: Option<f64>,
+    pub mode: TrimMode,
+}
+/// Level solves alpha/elevator/throttle with gamma=0. PowerOffGlide solves
+/// alpha/elevator/gamma with ALL engines explicitly off (including idle thrust).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TrimMode {
+    Level,
+    PowerOffGlide,
 }
 #[derive(Debug, Clone, Copy)]
 pub struct TrimCondition {
     pub alpha_rad: Radians,
     pub elevator_rad: Radians,
     pub gamma_rad: Radians,
+    pub throttle: f64,
 }
 #[derive(Debug, Clone, Copy)]
 pub struct TrimOptions {
@@ -33,6 +40,7 @@ pub struct TrimOptions {
     pub force_tolerance_n: f64,
     pub moment_tolerance_nm: f64,
     pub difference_step_rad: Radians,
+    pub throttle_difference_step: f64,
 }
 impl Default for TrimOptions {
     fn default() -> Self {
@@ -43,11 +51,13 @@ impl Default for TrimOptions {
                 alpha_rad: rad(0.05),
                 elevator_rad: rad(0.0),
                 gamma_rad: rad(0.0),
+                throttle: 0.5,
             },
             max_iterations: 50,
             force_tolerance_n: 1e-8,
             moment_tolerance_nm: 1e-8,
             difference_step_rad: rad(1e-5),
+            throttle_difference_step: 1e-5,
         }
     }
 }
@@ -63,8 +73,7 @@ pub struct TrimSolution {
     pub state: State,
     pub residuals: TrimResiduals,
     pub iterations: usize,
-    /// Always explicit in the result, including the zero-thrust default.
-    pub applied_thrust_n: f64,
+    pub propulsion: PropulsionOutput,
 }
 #[derive(Debug, Clone, Copy)]
 pub struct StaticMargin {
@@ -114,11 +123,15 @@ impl Error for TrimError {
 struct Evaluation {
     state: State,
     aero: AeroOutput,
+    propulsion: PropulsionOutput,
+    loads: Loads,
     residuals: TrimResiduals,
 }
 
 /// Gamma is positive climb; body pitch = alpha + gamma. Solve the forward,
 /// nonvertical branch |alpha|,|gamma| < pi/2, with zero bank/sideslip/body rates.
+/// Level mode fixes gamma=0 and solves bounded throttle; PowerOffGlide fixes
+/// all engines off and solves gamma.
 /// Return success ONLY when force and CG moment residuals meet the requested
 /// tolerances. Singular Jacobian, failed line search or iteration exhaustion
 /// returns an error, never a best-effort TrimSolution.
@@ -134,18 +147,21 @@ pub fn solve_trim(
         || options.moment_tolerance_nm <= 0.0
         || options.difference_step_rad.value() <= 0.0
         || options.difference_step_rad.value() >= FRAC_PI_2
+        || !options.throttle_difference_step.is_finite()
+        || options.throttle_difference_step <= 0.0
+        || options.throttle_difference_step >= 1.0
     {
         return Err(TrimError::Invalid(
-            "tolerances and difference step must be finite and positive, difference step below pi/2",
+            "positive finite tolerances required; angle difference step must be in (0, pi/2), throttle difference step in (0, 1)",
         ));
     }
-    let mut x = vector(options.initial);
-    if !forward_branch(x) {
+    let mut x = vector(options.initial, request.mode);
+    if !forward_branch(x, request.mode) {
         return Err(TrimError::Invalid(
-            "initial alpha and gamma must be on the forward nonvertical branch",
+            "initial alpha must be forward nonvertical; level throttle must be in [0, 1], or glide gamma forward nonvertical",
         ));
     }
-    let mut current = at_condition(aircraft, request, options.initial)?;
+    let mut current = at_condition(aircraft, request, condition(x, request.mode)?)?;
     let weight = aircraft.mass_kg * STANDARD_GRAVITY_MPS2;
     let moment_scale =
         current.aero.dynamic_pressure_pa * aircraft.reference_area_m2 * aircraft.reference_chord_m;
@@ -163,9 +179,9 @@ pub fn solve_trim(
         {
             // The requested three equations describe longitudinal trim. Ensure
             // an asymmetric moment arm has not left unbalanced lateral loads.
-            if current.aero.loads.force_body_n.y.abs() > options.force_tolerance_n
-                || current.aero.loads.moment_body_nm.x.abs() > options.moment_tolerance_nm
-                || current.aero.loads.moment_body_nm.z.abs() > options.moment_tolerance_nm
+            if current.loads.force_body_n.y.abs() > options.force_tolerance_n
+                || current.loads.moment_body_nm.x.abs() > options.moment_tolerance_nm
+                || current.loads.moment_body_nm.z.abs() > options.moment_tolerance_nm
             {
                 return Err(failed(
                     iteration,
@@ -174,11 +190,11 @@ pub fn solve_trim(
                 ));
             }
             return Ok(TrimSolution {
-                condition: condition(x)?,
+                condition: condition(x, request.mode)?,
                 state: current.state,
                 residuals: r,
                 iterations: iteration,
-                applied_thrust_n: request.applied_thrust_n.unwrap_or(0.0),
+                propulsion: current.propulsion,
             });
         }
         if iteration == options.max_iterations {
@@ -188,22 +204,34 @@ pub fn solve_trim(
         let h = options.difference_step_rad.value();
         let mut jacobian = Matrix3::zeros();
         for column in 0..3 {
+            let delta = if column == 2 && request.mode == TrimMode::Level {
+                options.throttle_difference_step
+            } else {
+                h
+            };
             let mut plus = x;
-            plus[column] += h;
+            plus[column] += delta;
             let mut minus = x;
-            minus[column] -= h;
-            if !forward_branch(plus) || !forward_branch(minus) {
+            minus[column] -= delta;
+            // At throttle bounds use a one-sided stencil. Never evaluate an
+            // extrapolated engine command, and divide by the actual spacing.
+            if column == 2 && request.mode == TrimMode::Level {
+                plus.z = plus.z.min(1.0);
+                minus.z = minus.z.max(0.0);
+            }
+            if !forward_branch(plus, request.mode) || !forward_branch(minus, request.mode) {
                 return Err(failed(
                     iteration,
                     r,
                     "finite-difference stencil leaves the forward branch",
                 ));
             }
-            let p = at_condition(aircraft, request, condition(plus)?)?;
-            let m = at_condition(aircraft, request, condition(minus)?)?;
+            let p = at_condition(aircraft, request, condition(plus, request.mode)?)?;
+            let m = at_condition(aircraft, request, condition(minus, request.mode)?)?;
             jacobian.set_column(
                 column,
-                &((scaled(p.residuals, scales) - scaled(m.residuals, scales)) / (2.0 * h)),
+                &((scaled(p.residuals, scales) - scaled(m.residuals, scales))
+                    / (plus[column] - minus[column])),
             );
         }
         let Some(direction) = jacobian.lu().solve(&(-base)) else {
@@ -218,8 +246,8 @@ pub fn solve_trim(
         // deflection limit. No unspecified physical actuator bounds are added.
         for _ in 0..24 {
             let trial = x + direction * fraction;
-            if forward_branch(trial) {
-                let evaluated = at_condition(aircraft, request, condition(trial)?)?;
+            if forward_branch(trial, request.mode) {
+                let evaluated = at_condition(aircraft, request, condition(trial, request.mode)?)?;
                 if scaled(evaluated.residuals, scales).norm() < base.norm() {
                     accepted = Some((trial, evaluated));
                     break;
@@ -244,7 +272,8 @@ pub fn solve_trim(
 /// of TABLE-EVALUATED coefficients: -Cm_alpha / CL_alpha (Caughey eq. 3.21).
 /// Speed/Mach, geometric altitude, elevator and all other controls stay fixed.
 /// Cm uses the actual aerodynamic moment about the CG divided by q*S*chord,
-/// including reference-point transfer. Constant CG thrust adds no moment.
+/// including reference-point transfer. Propulsive derivatives are excluded;
+/// this remains an AERODYNAMIC control-fixed static margin, not powered stability.
 pub fn static_margin(
     aircraft: &Aircraft,
     request: TrimRequest,
@@ -300,9 +329,9 @@ fn at_condition(
     request: TrimRequest,
     c: TrimCondition,
 ) -> Result<Evaluation, TrimError> {
-    if !forward_branch(vector(c)) {
+    if !forward_branch(vector(c, request.mode), request.mode) {
         return Err(TrimError::Invalid(
-            "alpha/gamma outside forward nonvertical branch",
+            "alpha or mode-specific gamma/throttle outside supported range",
         ));
     }
     let alpha = c.alpha_rad.value();
@@ -331,12 +360,30 @@ fn at_condition(
         },
     )
     .map_err(TrimError::Model)?;
-    let thrust = request.applied_thrust_n.unwrap_or(0.0);
+    let propulsion = match request.mode {
+        TrimMode::Level => propulsion::evaluate(
+            aircraft,
+            aero.mach,
+            request.geometric_altitude_m,
+            c.throttle,
+        )
+        .map_err(|e| TrimError::Model(AeroError::Aircraft(e)))?,
+        TrimMode::PowerOffGlide => propulsion::zero_output(),
+    };
+    let loads = Loads {
+        force_body_n: aero.loads.force_body_n + propulsion.loads.force_body_n,
+        moment_body_nm: aero.loads.moment_body_nm + propulsion.loads.moment_body_nm,
+    };
     let weight = aircraft.mass_kg * STANDARD_GRAVITY_MPS2;
+    // Project the FULL force, so inclined engines contribute correctly in
+    // both directions and their r x F moment enters the pitch equation.
     let residuals = TrimResiduals {
-        parallel_force_n: thrust * cos - aero.drag_n - weight * gamma.sin(),
-        normal_force_n: aero.lift_n + thrust * sin - weight * gamma.cos(),
-        pitch_moment_nm: aero.loads.moment_body_nm.y,
+        parallel_force_n: loads.force_body_n.x * cos + loads.force_body_n.z * sin
+            - weight * gamma.sin(),
+        normal_force_n: loads.force_body_n.x * sin
+            - loads.force_body_n.z * cos
+            - weight * gamma.cos(),
+        pitch_moment_nm: loads.moment_body_nm.y,
     };
     if !residual_vector(residuals).iter().all(|v| v.is_finite()) {
         return Err(TrimError::Invalid("non-finite trim residual"));
@@ -344,6 +391,8 @@ fn at_condition(
     Ok(Evaluation {
         state,
         aero,
+        propulsion,
+        loads,
         residuals,
     })
 }
@@ -351,7 +400,6 @@ fn validate_request(request: TrimRequest) -> Result<(), TrimError> {
     if !request.airspeed_mps.is_finite()
         || request.airspeed_mps < MIN_AIRSPEED_FOR_ANGLES_MPS
         || !request.geometric_altitude_m.is_finite()
-        || !request.applied_thrust_n.unwrap_or(0.0).is_finite()
     {
         return Err(TrimError::Invalid(
             "finite inputs required; speed must reach the D13 angle threshold",
@@ -365,22 +413,35 @@ fn residual_vector(r: TrimResiduals) -> Vector3<f64> {
 fn scaled(r: TrimResiduals, scales: Vector3<f64>) -> Vector3<f64> {
     residual_vector(r).component_div(&scales)
 }
-fn vector(c: TrimCondition) -> Vector3<f64> {
+fn vector(c: TrimCondition, mode: TrimMode) -> Vector3<f64> {
     Vector3::new(
         c.alpha_rad.value(),
         c.elevator_rad.value(),
-        c.gamma_rad.value(),
+        match mode {
+            TrimMode::Level => c.throttle,
+            TrimMode::PowerOffGlide => c.gamma_rad.value(),
+        },
     )
 }
-fn condition(x: Vector3<f64>) -> Result<TrimCondition, TrimError> {
+fn condition(x: Vector3<f64>, mode: TrimMode) -> Result<TrimCondition, TrimError> {
     Ok(TrimCondition {
         alpha_rad: checked_rad(x.x)?,
         elevator_rad: checked_rad(x.y)?,
-        gamma_rad: checked_rad(x.z)?,
+        gamma_rad: checked_rad(if mode == TrimMode::PowerOffGlide {
+            x.z
+        } else {
+            0.0
+        })?,
+        throttle: if mode == TrimMode::Level { x.z } else { 0.0 },
     })
 }
-fn forward_branch(x: Vector3<f64>) -> bool {
-    x.iter().all(|v| v.is_finite()) && x.x.abs() < FRAC_PI_2 && x.z.abs() < FRAC_PI_2
+fn forward_branch(x: Vector3<f64>, mode: TrimMode) -> bool {
+    x.iter().all(|v| v.is_finite())
+        && x.x.abs() < FRAC_PI_2
+        && match mode {
+            TrimMode::Level => (0.0..=1.0).contains(&x.z),
+            TrimMode::PowerOffGlide => x.z.abs() < FRAC_PI_2,
+        }
 }
 fn failed(iterations: usize, residuals: TrimResiduals, reason: &'static str) -> TrimError {
     TrimError::NonConvergence {
