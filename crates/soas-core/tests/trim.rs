@@ -7,7 +7,9 @@ use soas_core::{
     aerodynamics::{Controls, evaluate, lookup_coefficients},
     aircraft::{Aircraft, from_json},
     atmosphere::{STANDARD_GRAVITY_MPS2 as G, isa_at_geometric_altitude},
-    trim::{TrimCondition, TrimError, TrimOptions, TrimRequest, solve_trim, static_margin},
+    trim::{
+        TrimCondition, TrimError, TrimMode, TrimOptions, TrimRequest, solve_trim, static_margin,
+    },
     units::Radians,
 };
 use std::f64::consts::PI;
@@ -29,11 +31,29 @@ fn request(thrust: Option<f64>) -> TrimRequest {
     TrimRequest {
         airspeed_mps: 20.0,
         geometric_altitude_m: 1000.0,
-        applied_thrust_n: thrust,
+        mode: if thrust.is_some() {
+            TrimMode::Level
+        } else {
+            TrimMode::PowerOffGlide
+        },
     }
 }
 fn analytic_case(level: bool) -> (Aircraft, TrimRequest, f64, f64, f64) {
     let mut a = constant_aircraft();
+    // T9 replaces the temporary external force with an explicit SYNTHETIC engine.
+    // T=100*throttle N and fuel=.2*throttle kg/s, independent of Mach/altitude.
+    a.format_version = 1;
+    a.engines = from_json(include_str!("fixtures/synthetic_jet.json"))
+        .unwrap()
+        .engines;
+    for row in &mut a.engines[0].table.samples {
+        for column in row {
+            for (sample, throttle) in column.iter_mut().zip([0.0, 0.6, 1.0]) {
+                sample.thrust_n = 100.0 * throttle;
+                sample.fuel_flow_kgps = 0.2 * throttle;
+            }
+        }
+    }
     let alpha: f64 = 0.1;
     let elevator = -0.04;
     let q_s =
@@ -62,7 +82,7 @@ fn analytic_power_off_glide_solves_alpha_elevator_and_gamma() {
     close(solution.condition.alpha_rad.value(), alpha, 1e-10);
     close(solution.condition.elevator_rad.value(), elevator, 1e-10);
     close(solution.condition.gamma_rad.value(), gamma, 1e-10);
-    assert_eq!(solution.applied_thrust_n, 0.0);
+    assert_eq!(solution.propulsion.thrust_n, 0.0);
     assert!(gamma < 0.0);
     println!(
         "power-off analytic trim: alpha={:.12} rad, elevator={:.12} rad, gamma={:.12} rad, iterations={}",
@@ -80,10 +100,30 @@ fn body_x_thrust_chosen_for_level_flight_solves_gamma_zero() {
     close(s.condition.alpha_rad.value(), alpha, 1e-10);
     close(s.condition.elevator_rad.value(), elevator, 1e-10);
     close(s.condition.gamma_rad.value(), 0.0, 1e-10);
-    close(s.applied_thrust_n, r.applied_thrust_n.unwrap(), 1e-14);
+    let expected_thrust = 0.5
+        * isa_at_geometric_altitude(1000.0).unwrap().density_kg_m3
+        * 400.0
+        * 2.0
+        * (0.02 + 0.36 / (PI * 0.8 * 8.0))
+        / alpha.cos();
+    close(s.propulsion.thrust_n, expected_thrust, 1e-8);
+    close(s.condition.throttle, expected_thrust / 100.0, 1e-10);
+    // Preserve the old 1e-14 result/input consistency check, now against the
+    // actual engine evaluation rather than echoing a removed request field.
+    let actual = soas_core::propulsion::evaluate(
+        &a,
+        s.state.velocity_body_mps.norm()
+            / isa_at_geometric_altitude(1000.0)
+                .unwrap()
+                .speed_of_sound_mps,
+        1000.0,
+        s.condition.throttle,
+    )
+    .unwrap();
+    close(s.propulsion.thrust_n, actual.thrust_n, 1e-14);
     println!(
         "level trim: thrust={:.12} N, gamma={:.12e} rad",
-        s.applied_thrust_n,
+        s.propulsion.thrust_n,
         s.condition.gamma_rad.value()
     );
 }
@@ -106,7 +146,7 @@ fn complete_body_force_and_all_moment_balances_are_tight_at_the_solution() {
             .state
             .attitude_body_to_ned
             .inverse_transform_vector(&(Vector3::z() * (a.mass_kg * G)));
-        let force = output.loads.force_body_n + Vector3::x() * s.applied_thrust_n + gravity;
+        let force = output.loads.force_body_n + Vector3::x() * s.propulsion.thrust_n + gravity;
         assert!(force.norm() < 1e-8, "{force:?}");
         assert!(output.loads.moment_body_nm.norm() < 1e-8);
         assert!(s.residuals.parallel_force_n.abs() < 1e-8);
@@ -196,7 +236,7 @@ fn trim_uses_current_mach_altitude_table_values_and_geometric_atmosphere() {
     let r = TrimRequest {
         airspeed_mps: speed,
         geometric_altitude_m: h,
-        applied_thrust_n: None,
+        mode: TrimMode::PowerOffGlide,
     };
     let s = solve_trim(&a, r, TrimOptions::default()).unwrap();
     close(s.condition.alpha_rad.value(), alpha, 1e-10);
@@ -265,7 +305,7 @@ fn invalid_conditions_options_and_undefined_stall_margin_are_errors() {
             ..r
         },
         TrimRequest {
-            applied_thrust_n: Some(f64::INFINITY),
+            geometric_altitude_m: f64::INFINITY,
             ..r
         },
         TrimRequest {
@@ -290,6 +330,7 @@ fn invalid_conditions_options_and_undefined_stall_margin_are_errors() {
         alpha_rad: rad(0.4),
         elevator_rad: rad(0.0),
         gamma_rad: rad(0.0),
+        throttle: 0.0,
     };
     assert!(static_margin(&a, r, condition, rad(1e-5)).is_err());
     assert!(static_margin(&a, r, condition, rad(0.0)).is_err());
