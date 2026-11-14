@@ -1,0 +1,16 @@
+LOAD ellipse_ar40_128x8.avl
+OPER
+A A 2.864788975654116
+B B 0
+R R 0
+P P 0
+Y Y 0
+X
+FT
+ellipse_ar40_128x8.ft.txt
+ST
+ellipse_ar40_128x8.st.txt
+FS
+ellipse_ar40_128x8.fs.txt
+
+QUIT

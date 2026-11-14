@@ -1,0 +1,16 @@
+LOAD rectangle_ar40_128x8.avl
+OPER
+A A 2.864788975654116
+B B 0
+R R 0
+P P 0
+Y Y 0
+X
+FT
+rectangle_ar40_128x8.ft.txt
+ST
+rectangle_ar40_128x8.st.txt
+FS
+rectangle_ar40_128x8.fs.txt
+
+QUIT

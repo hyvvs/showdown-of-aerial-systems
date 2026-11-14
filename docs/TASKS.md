@@ -188,11 +188,24 @@ State planar, incompressible, attached-flow, small-angle assumptions; low-AR
 swept hero-wing results remain "validity unassessed" until compared with data.
 Tests: one-panel hand solution; mirrored strengths/zero roll; refinement in
 both mesh directions; rectangular neutral point near quarter MAC; high-AR
-agreement with T13 using a predeclared convergence-derived comparison budget,
-not a fitted passing tolerance; scratch quarter-chord-control fault must fail.
-No dependencies added. Cite formulas; ledger every fixture/test number; update
-assumptions/learning, report convergence, uncertainties and least confidence.
-Run T14 then T15 and stop. Do not start T10 or T11. [ ]
+agreement with T13 using the owner-authorized decreasing-gap/zero-compatible
+trend test at AR6/10/20/40; preserve the original AR40 comparison as an
+expected-difference record, not a widened passing assertion. Scratch
+quarter-chord-control fault must fail. Span spacing is an explicit uniform/
+cosine parameter, default cosine. No dependencies added. Cite formulas;
+ledger every fixture/test number; update assumptions/learning and report
+convergence and least confidence. Run T14 then T15 and stop. No T10/T11. [x]
+Verification: seven original hand/symmetry/convergence/neutral-point/error tests
+and three new trend/analytic-nonzero-floor/spacing tests pass. All 169 workspace
+tests pass, with formatting and Clippy clean. Quarter-chord-control scratch
+variant fails on self-filament singularity. Diagnosis was docs-only commit
+d5d0d01; new tests were committed before spacing implementation in 88dfc0e.
+The original failure and its exact inputs/formula remain in 8067b1d and
+`data/reference/estimator/vlm_expected_difference.md`. Detailed experiments,
+conditional extrapolation derivation and uncertainty limits:
+`data/reference/estimator/vlm_diagnosis.md`. No AVL output was present; authored
+inputs/scripts and owner/license instructions are in `data/reference/avl/`.
+Physical validity remains unassessed; this does not complete T10/T11.
 
 ---
 ## Review fixes (historical)

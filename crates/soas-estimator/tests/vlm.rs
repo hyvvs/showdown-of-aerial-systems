@@ -3,7 +3,6 @@
 use serde_json::Value;
 use soas_core::units::Radians;
 use soas_estimator::{
-    lifting_line::{self, StraightWing},
     planform::{WingPlanform, WingStation, thin_airfoil_slope_per_rad},
     vlm::{SpanwiseSpacing, VlmRequest, solve},
 };

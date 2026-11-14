@@ -1,0 +1,20 @@
+SYNTHETIC TEST WING - AR40 rectangle 64x8; not aircraft data
+# Mach (incompressible synthetic setting)
+0.0
+# iYsym iZsym Zsym: full wing, no images
+0 0 0.0
+# Sref Cref Bref: synthetic SI geometry
+40.0 1.0 40.0
+# Xref Yref Zref: origin, AVL x aft and z up
+0.0 0.0 0.0
+# CDp: zero profile drag, inviscid comparison
+0.0
+SURFACE
+Synthetic rectangle
+# Nchord Cspace Nspan Sspace: uniform chord, full-span cosine
+8 0.0 64 1.0
+SECTION
+# Xle Yle Zle Chord Ainc: zero twist and alpha_L0
+0.0 -20.0 0.0 1.0 0.0
+SECTION
+0.0 20.0 0.0 1.0 0.0

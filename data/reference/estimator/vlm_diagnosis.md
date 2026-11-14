@@ -14,7 +14,9 @@ reference=(0,0,0). Ny counts the FULL wing; Nx is chordwise count. The original
 comparison remains 64x8, AR=40, alpha=0.05, T13=128 odd Fourier terms. The new
 sweep uses 128x8 consistently and does not change the original input.
 
-The appendix contains the exact scratch Rust program and numerical ledger.
+The appendix contains the scratch Rust program and numerical ledger. After the
+diagnosis commit, its final baseline cross-check call was adapted only to add
+the new default spacing field; no diagnostic geometry/settings changed.
 It reuses the existing T14/T13 APIs and recomputes the VLM equations with
 uniform/cosine spacing, an elliptic mesh and near-field drag. Rectangular
 cosine 64x8 reproduces production CL/CDi to 15 decimal places; this verifies
@@ -52,6 +54,7 @@ filesystem/build workaround was applied. Scratch files are not production.
 
 Sources checked online in this batch. No external code copied. T14's existing
 caveat about garbled extracted NASA PDF equation characters still applies.
+Least-squares formulas additionally follow [NIST section 4.4.3.1](https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm); the sensitivity-band construction is explicitly our empirical inference.
 No independent AVL result is available; this is software/theory diagnosis,
 not real-wing validation.
 
@@ -410,7 +413,7 @@ fn main(){
  }
  for ar in [6.,40.] {for ny in [32,64,256] {let (cl,cd,e,kj)=calc(ar,ny,8,true,true);println!("ellipse_mesh,{ar},{ny},8,cosine,{cl:.15},{cd:.15},{e:.15},{kj:.15},,,");}}
  for cosine in [false,true] {let (cl,cd,e,kj)=calc(40.,256,8,cosine,false);println!("spacing_tail,40,256,8,{},{cl:.15},{cd:.15},{e:.15},{kj:.15},,,",if cosine{"cosine"}else{"uniform"});}
- let w=rectangle(40.);let base=vlm::solve(&w,VlmRequest{spanwise_panels:64,chordwise_panels:8,alpha_rad:rad(0.05),reference_x_body_m:0.}).unwrap();
+ let w=rectangle(40.);let base=vlm::solve(&w,VlmRequest{spanwise_panels:64,chordwise_panels:8,alpha_rad:rad(0.05),reference_x_body_m:0.,spanwise_spacing:Default::default()}).unwrap();
  println!("baseline,40,64,8,cosine,{:.15},{:.15},,,,,",base.cl,base.induced_drag_coefficient);
 }
 ```

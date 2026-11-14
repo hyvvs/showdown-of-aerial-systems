@@ -57,6 +57,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T14 | A directed vortex filament induces velocity by the Biot-Savart law; horseshoe legs must have consistent incoming/bound/outgoing orientation; a mathematical filament is singular on its centerline, so explicit errors differ from a physical vortex-core model. |  |  |
 
+| 2026-11-14 | T15 | A vortex lattice solves circulation so flow follows a wing surface; force positions determine pitching moment and neutral point while the far wake estimates induced drag; mesh error and method differences require separate evidence, and finite-data extrapolation is conditional even when a zero limit is compatible with the observations. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
