@@ -176,7 +176,8 @@ the low-aspect-ratio swept hero-wing geometry is very different. This motivates
 the more general panel method, without claiming its physical validation.
 Tests: independent horseshoe hand values on/off symmetry plane, all component
 signs, long-bound two-dimensional limit, singularities and mirrored symmetry.
-Use labeled fixture/test settings ledgers and tests/implementation commits. [ ]
+Use labeled fixture/test settings ledgers and tests/implementation commits. [x]
+Verification: seven tests pass for scalar horseshoe hand values (all components, on/off symmetry), signs/orientation, long-segment 2D limit, ray limit, singularity errors, mirrored panels and invalid data. Semi-infinite wake legs remove a guessed wake-length setting; no core radius is introduced. Formula source/verification limits and ledgers: `data/reference/estimator/vortex.md`.
 
 ## T15: Planar-wing vortex-lattice solver
 Goal: T12 planar geometry with parameterized spanwise/chordwise panel counts;

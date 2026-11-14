@@ -55,6 +55,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | CSV contract review | A versioned header is a data contract while consumers select fields by name; decimal spellings can differ yet round to identical binary floating-point values; pinning exact output catches accidental schema drift. |  |  |
 
+| 2026-11-14 | T14 | A directed vortex filament induces velocity by the Biot-Savart law; horseshoe legs must have consistent incoming/bound/outgoing orientation; a mathematical filament is singular on its centerline, so explicit errors differ from a physical vortex-core model. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
