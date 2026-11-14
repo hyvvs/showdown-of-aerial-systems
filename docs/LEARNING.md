@@ -61,6 +61,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T13 Gap 1 | Higher Fourier modes affect induced drag even when lift stays unchanged; fixed results from an independent solver can detect a wrong mode weight; decimal reference rounding and numerical roundoff need an explicit small comparison budget. |  |  |
 
+| 2026-11-14 | T12 Gap 2 | Interior ordering errors need cases beyond root and tip; exact structured errors protect both rejection and diagnostics; removing independent root and ordering guards demonstrates which boundary each regression protects. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

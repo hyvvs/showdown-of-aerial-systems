@@ -189,3 +189,33 @@ numerical ledgers are in data/reference/estimator/llt_independent.md. The new
 test passes immediately: production already weights energy by n. Scratch n^2
 mutations fail at both counts; no mutation is committed. All three gates pass
 (170 workspace tests). No existing tolerance or production formula changed.
+
+## T12 Gap 2 — exact station-order/root errors
+
+The owner confirmed that the existing WingError struct (field/reason) should
+be asserted, without adding an enum, and equal spans means root and tip at
+y=0. Four standalone tests pin validation AND geometry entry-point errors:
+
+| Synthetic case | Expected field | Expected reason |
+|---|---|---|
+| duplicate interior [0,1,1,4] | stations[2].y_m | right-half stations must be nonnegative and strictly increasing |
+| descending interior [0,2,1,4] | stations[2].y_m | right-half stations must be nonnegative and strictly increasing |
+| first station not root [1,2,4] | stations[0].y_m | root must be at the symmetry plane y=0 |
+| equal root/tip [0,0] | stations[1].y_m | right-half stations must be nonnegative and strictly increasing |
+
+Every number is a SYNTHETIC TEST VALUE with its JSON/source-line ledger in
+tests/fixtures/station_order_values.md. All four pass immediately; production
+already validates correctly. The isolated target/t15-review/gap2 copy removes
+the order guard and the separate root guard; all four then fail because
+validate() incorrectly returns Ok(()). The root test specifically protects
+the root guard, not just the ordering guard. No mutation is committed.
+
+```text
+test result: FAILED. 0 passed; 4 failed; 0 ignored
+```
+
+No production correction, new error API, dependency, or tolerance change is
+needed. Test TEMP/TMP is checkout/target/batch-temp.
+
+Gap 2 final gates: formatting and Clippy pass; 174 workspace tests pass,
+0 failed, 0 ignored.
