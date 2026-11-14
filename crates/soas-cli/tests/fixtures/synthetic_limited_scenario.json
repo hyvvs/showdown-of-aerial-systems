@@ -1,0 +1,71 @@
+{
+  "format_version": 1,
+  "data_note": "EVERY NUMBER is a SYNTHETIC TEST VALUE; see synthetic_limited_scenario_values.md; no real aircraft flight.",
+  "aircraft_path": "../../../soas-core/tests/fixtures/synthetic_dynamic_aircraft.json",
+  "initial_state": {
+    "position_ned_m": [
+      0.0,
+      0.0,
+      -1000.0
+    ],
+    "velocity_body_mps": [
+      20.0,
+      1.0,
+      2.0
+    ],
+    "attitude_euler_deg": [
+      1.0,
+      4.0,
+      10.0
+    ],
+    "angular_rates_body_radps": [
+      0.05,
+      -0.03,
+      0.02
+    ]
+  },
+  "controls": {
+    "elevator": [
+      {
+        "time_s": 0.0,
+        "deflection_deg": 30.0
+      },
+      {
+        "time_s": 0.2,
+        "deflection_deg": 30.0
+      }
+    ],
+    "aileron": [
+      {
+        "time_s": 0.0,
+        "deflection_deg": 40.0
+      },
+      {
+        "time_s": 0.2,
+        "deflection_deg": 40.0
+      }
+    ],
+    "rudder": [
+      {
+        "time_s": 0.0,
+        "deflection_deg": -50.0
+      },
+      {
+        "time_s": 0.2,
+        "deflection_deg": -50.0
+      }
+    ]
+  },
+  "duration_s": 0.2,
+  "output_interval_s": 0.05,
+  "throttle": [
+    {
+      "time_s": 0.0,
+      "throttle": 0.0
+    },
+    {
+      "time_s": 0.2,
+      "throttle": 0.0
+    }
+  ]
+}
