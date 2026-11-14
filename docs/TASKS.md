@@ -188,24 +188,21 @@ State planar, incompressible, attached-flow, small-angle assumptions; low-AR
 swept hero-wing results remain "validity unassessed" until compared with data.
 Tests: one-panel hand solution; mirrored strengths/zero roll; refinement in
 both mesh directions; rectangular neutral point near quarter MAC; high-AR
-agreement with T13 using the owner-authorized decreasing-gap/zero-compatible
-trend test at AR6/10/20/40; preserve the original AR40 comparison as an
-expected-difference record, not a widened passing assertion. Scratch
-quarter-chord-control fault must fail. Span spacing is an explicit uniform/
-cosine parameter, default cosine. No dependencies added. Cite formulas;
-ledger every fixture/test number; update assumptions/learning and report
-convergence and least confidence. Run T14 then T15 and stop. No T10/T11. [x]
-Verification: seven original hand/symmetry/convergence/neutral-point/error tests
-and three new trend/analytic-nonzero-floor/spacing tests pass. All 169 workspace
-tests pass, with formatting and Clippy clean. Quarter-chord-control scratch
-variant fails on self-filament singularity. Diagnosis was docs-only commit
-d5d0d01; new tests were committed before spacing implementation in 88dfc0e.
-The original failure and its exact inputs/formula remain in 8067b1d and
-`data/reference/estimator/vlm_expected_difference.md`. Detailed experiments,
-conditional extrapolation derivation and uncertainty limits:
-`data/reference/estimator/vlm_diagnosis.md`. No AVL output was present; authored
-inputs/scripts and owner/license instructions are in `data/reference/avl/`.
-Physical validity remains unassessed; this does not complete T10/T11.
+agreement with T13 through strictly decreasing CL/CDi relative gaps across
+AR6/10/20/40 on two meshes (64x8 and 128x8). Preserve the original comparison
+unchanged as an expected-difference record. Zero-compatible extrapolation
+verdicts are informational only, with full/subset records. Elliptic AR6/40:
+nonincreasing efficiency excess, decreasing successive VLM mesh changes
+(owner clarification), and finest-three Richardson efficiency inside a
+prediction band derived from the first four meshes. No physical e=1 equality
+or guaranteed continuum-error band is claimed. Existing hand, spacing,
+symmetry, convergence, moment/neutral-point/error tests remain. [x]
+Review evidence: data/reference/estimator/vlm_gap_vs_mesh.md,
+vlm_subset_fits.md and vlm_acceptance_review.md. New tests pass immediately
+against unchanged production; scratch AR-drag-multiplier and zero-slope
+variants fail. All 175 workspace tests pass; formatting/Clippy pass. Every
+input/setting is ledgered. Original failing comparison remains in 8067b1d
+and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 
 ---
 ## Review fixes (historical)

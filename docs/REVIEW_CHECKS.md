@@ -181,7 +181,7 @@ passes against production. No production output change was necessary. The
 33-column table is in SCENARIOS.md; consumers must select fields by header.
 The test adds no numeric fixture data or numerical test setting.
 
-## T13 Gap 1 — higher-mode induced-drag weight
+## T13 Gap 1 â€” higher-mode induced-drag weight
 
 Owner-supplied independent rectangular CL/CDi/e constants at 4 and 128 odd
 terms are pinned with absolute tolerance 2e-12; derivation/provenance and all
@@ -190,7 +190,7 @@ test passes immediately: production already weights energy by n. Scratch n^2
 mutations fail at both counts; no mutation is committed. All three gates pass
 (170 workspace tests). No existing tolerance or production formula changed.
 
-## T12 Gap 2 — exact station-order/root errors
+## T12 Gap 2 â€” exact station-order/root errors
 
 The owner confirmed that the existing WingError struct (field/reason) should
 be asserted, without adding an enum, and equal spans means root and tip at
@@ -219,3 +219,25 @@ needed. Test TEMP/TMP is checkout/target/batch-temp.
 
 Gap 2 final gates: formatting and Clippy pass; 174 workspace tests pass,
 0 failed, 0 ignored.
+
+## b66b434 test-import and ledger audit
+
+Verified with `git show b66b434 -- crates/soas-estimator/tests/vlm.rs`: the
+only test-source change was removing the unused
+`lifting_line::{self, StraightWing}` import. Its ledger source line numbers
+were updated. No assertion, expected numeric value or tolerance changed.
+
+## T15 acceptance review
+
+The zero-compatible verdict is no longer asserted. Full/subset fit records
+are informational in data/reference/estimator/vlm_subset_fits.md; the drag
+verdict changes with subset. The original expected-difference record remains
+unchanged. Two-mesh AR trends and elliptic mesh/Richardson checks pass
+immediately; isolated AR-drag-multiplier and zero-slope variants fail.
+The owner approved decreasing VLM mesh changes instead of decreasing slope
+error against LLT, which the measurements contradicted. Coarse-derived
+prediction bands are self-consistency checks, not guaranteed error bounds or
+bands around physical e=1. Derivation: estimator/vlm_acceptance_review.md.
+Formatting, Clippy and all 175 workspace tests pass (0 failed, 0 ignored).
+New review headings use UTF-8; no physics, assertion or tolerance was altered
+by that text-encoding correction. Test TEMP/TMP stays inside the checkout.

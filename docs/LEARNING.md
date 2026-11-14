@@ -63,6 +63,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T12 Gap 2 | Interior ordering errors need cases beyond root and tip; exact structured errors protect both rejection and diagnostics; removing independent root and ordering guards demonstrates which boundary each regression protects. |  |  |
 
+| 2026-11-14 | T15 acceptance review | A fit verdict that changes with the subset is weak acceptance evidence; convergence to a method's own limit differs from agreement with another theory; a prediction band from coarser meshes can be checked with a held-out finer result without claiming a physical error bound. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

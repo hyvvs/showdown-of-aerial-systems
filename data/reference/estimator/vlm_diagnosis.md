@@ -218,7 +218,11 @@ argues against a missing factor of two/sign error but cannot exclude all bugs.
   and extrapolation beyond measured AR. A kernel or assembly defect remains
   possible; these results are not proof of correctness or physical validity.
 
-## Acceptance derivation for the authorized replacement
+## Historical acceptance derivation (superseded by review)
+
+The zero-compatible verdict below is no longer an assertion. Current rules are
+in vlm_acceptance_review.md; subset-dependent old verdicts are informational
+in vlm_subset_fits.md.
 
 Require positive, strictly decreasing absolute relative CL-slope and CDi gaps
 at AR6/10/20/40. Require positive local log-log exponents

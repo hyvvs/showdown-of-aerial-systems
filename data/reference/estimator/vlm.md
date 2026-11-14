@@ -7,6 +7,15 @@ failure is preserved in history and in vlm_expected_difference.md; its inputs
 and allowances are unchanged. No new dependency, T10/T11 work or physical
 validity threshold is introduced.
 
+## Current acceptance after review
+
+The zero-compatible criterion below is HISTORICAL and no longer asserted.
+Current two-mesh AR trends, owner-clarified elliptic checks and coarse-derived
+Richardson prediction bands are specified in vlm_acceptance_review.md.
+Informational subsets: vlm_subset_fits.md; mesh data: vlm_gap_vs_mesh.md.
+The original expected-difference record is unchanged. No production correction
+or tolerance widening was needed. Final review gates: 175 tests pass.
+
 ## Sources and verification limits
 
 - [Drela, JVL 2.20 Formulation](https://web.mit.edu/drela/Public/web/jvl/jvl.pdf),
@@ -202,7 +211,7 @@ explicitly authorized diagnosis and replacement acceptance, without widening
 this allowance or altering its inputs. The full original function remains in
 vlm_expected_difference.md as a record, not a live passing assertion.
 
-## Continuation acceptance and failure evidence
+## Historical b66b434 acceptance (superseded)
 
 Exact empirical assertions and bound derivation are in vlm_diagnosis.md.
 At AR6/10/20/40 the relative lift gaps decrease from 6.545857% to 0.801765%;
