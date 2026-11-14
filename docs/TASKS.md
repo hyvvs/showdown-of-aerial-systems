@@ -102,6 +102,23 @@ Goal: simple turbojet with afterburner: thrust as a table of Mach, altitude and 
 Owner-authorized scope for this batch: SYNTHETIC engine data only, with every numeric fixture path labeled in a ledger. Real thrust/fuel-flow tables still require cited sources; none were invented for a real engine. This is not required for the power-off v0.1 comparisons in T10. [x]
 Verification: separate tests/implementation commits; version-1 engine/scenario contracts with explicit version-0 power-off compatibility, named-object guards, trilinear thrust/fuel lookup, afterburner boundary, body force and CG r x F moments, stage-timed throttle, deterministic CSV fuel reporting with constant mass, and engine-based level trim pass. Hand checks include mixed off-centre cells, unequal axis values, zero CG moment and signed inclined/offset moments. Level trim force residuals are below 1.6e-10 N in the synthetic cases; no real-engine validation is claimed. No new dependencies or OPEN decisions were selected. Sources, failing-first evidence and limits: `data/reference/propulsion/README.md`. Stop after T9; T10 remains unstarted.
 
+## T9b: Dynamic derivatives and limits
+Goal: extend the table-driven aerodynamic model with Cy_beta, Cl_beta, Cn_beta,
+Cm_q, Cl_p and Cn_r (optional cross-rate Cl_r/Cn_p), using nondimensional body
+rates p*b/(2V), q*c/(2V), r*b/(2V) with cited definitions/sign conventions.
+Below MIN_AIRSPEED_FOR_ANGLES_MPS all rate terms are zero; non-finite inputs error.
+Add a lower lift limit alongside CLmax, and aircraft-file control deflection
+limits that saturate commands. Report commanded and applied deflections in CSV;
+actuator rate limits remain out of scope. Bump the aircraft format version with
+explicit legacy handling, named-object parsing and documented interpolation.
+Tests: independent hand magnitudes with distinct span/chord for every added term;
+damping signs; fixed-speed analytic roll subsidence with the stated exponential
+time constant; pitch-damping magnitude; both lift boundaries; control saturation;
+Mach/altitude interpolation; damping-inclusive aero-coupled convergence.
+Every new test value has a synthetic label and ledger entry; no new dependencies.
+Use separate tests/implementation commits, update assumptions/learning and report
+sources, failures, convergence results and remaining limits. [ ]
+
 ## T10: Compare against reference (needs H3 and D9)
 Goal: v0.1 power-off comparisons only: stall, glide, trim and static margin, using the Navion candidate from NASA CR-96008 or the fallback Cessna 172, the H3 reference data, and JSBSim output the owner generates. Propulsion parameters and powered climb/cruise comparisons are not required.
 Notes: Python is allowed here **only for plotting from CSV**. The owner checks JSBSim's license before any JSBSim files or derived data are committed.
