@@ -1,0 +1,76 @@
+{
+  "data_note": "EVERY NUMBER is SYNTHETIC TEST DATA or a hand-derived expected result, not real aircraft data. Unit circulation is the mathematical definition. See horseshoe_values.md.",
+  "bound_start_m": [
+    0.0,
+    -1.0,
+    0.0
+  ],
+  "bound_end_m": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "wake_direction_unit": [
+    -1.0,
+    0.0,
+    0.0
+  ],
+  "cases": [
+    {
+      "name": "symmetry in plane",
+      "point_m": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "expected_per_m": [
+        0.0,
+        0.0,
+        0.38423402213117186
+      ],
+      "hand": "vz=(1+sqrt(2))/(2*pi)"
+    },
+    {
+      "name": "symmetry off plane",
+      "point_m": [
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "expected_per_m": [
+        0.045944074618482676,
+        0.0,
+        0.17146562078291303
+      ],
+      "hand": "vx=k/sqrt(3); vz=k*(1+2/sqrt(3)); k=1/(4*pi)"
+    },
+    {
+      "name": "off symmetry and plane",
+      "point_m": [
+        -1.0,
+        2.0,
+        2.0
+      ],
+      "expected_per_m": [
+        0.012526621961116771,
+        0.0293112513949042,
+        0.007122369193809092
+      ],
+      "hand": "R1=sqrt(14),R2=sqrt(6),u=3/R1-1/R2; bound=k*(2u/5,0,u/5), right=k*(0,2,-1)*(1+1/R2)/5, incoming-left=-k*(0,2,-3)*(1+1/R1)/13"
+    },
+    {
+      "name": "outside upwash",
+      "point_m": [
+        -1.0,
+        2.0,
+        0.0
+      ],
+      "expected_per_m": [
+        0.0,
+        0.0,
+        -0.08170916704279164
+      ],
+      "hand": "vz=k*(3/sqrt(10)-1/sqrt(2)+(1+1/sqrt(10))/3-(1+1/sqrt(2)))"
+    }
+  ]
+}
