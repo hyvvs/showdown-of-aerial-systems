@@ -1,0 +1,23 @@
+{
+  "data_note": "EVERY numeric value is a SYNTHETIC benchmark condition, not real wing data; see lifting_line_cases_values.md. Section slope explicitly opts into cited thin-airfoil 2*pi theory.",
+  "elliptic": [
+    {
+      "span_m": 8.0,
+      "aspect_ratio": 4.0,
+      "alpha_rad": 0.05,
+      "zero_lift_angle_rad": 0.0
+    },
+    {
+      "span_m": 15.0,
+      "aspect_ratio": 10.0,
+      "alpha_rad": 0.05,
+      "zero_lift_angle_rad": 0.0
+    }
+  ],
+  "rectangular": {
+    "span_m": 12.0,
+    "chord_m": 2.0,
+    "alpha_rad": 0.08,
+    "zero_lift_angle_rad": -0.02
+  }
+}
