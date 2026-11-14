@@ -162,7 +162,8 @@ Tests: elliptic no-twist efficiency=1, CDi=CL^2/(pi*AR), and analytic finite-win
 slope for two aspect ratios; zero lift at alpha_L0; rectangular term-count
 convergence and efficiency<1; section loading/symmetry, invalid inputs; deliberate
 wrong-section-slope variant fails elliptic tests in an uncommitted scratch copy.
-Update ASSUMPTIONS/LEARNING; report observed convergence and limits. [ ]
+Update ASSUMPTIONS/LEARNING; report observed convergence and limits. [x]
+Verification: eight tests cover two independent elliptic hand cases (including local loading and e=1), zero lift, incidence signs, rectangular refinement/e<1, symmetry, assumptions/validity and invalid inputs. The scratch omitted-section-slope variant fails both elliptic cases with CL errors of factors 3 and 6. Rectangular CL/CDi converge by roughly 16x per term-count doubling; N=128 gives e=.953934767177. No physical validity threshold, OPEN decision or core-to-estimator dependency was added. Full sources, counts/ledgers and measured convergence: `data/reference/estimator/lifting_line.md`. This batch stops here; T10/T11 remain unstarted.
 
 ---
 ## Review fixes (historical)

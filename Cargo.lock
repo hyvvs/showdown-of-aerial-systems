@@ -352,6 +352,7 @@ dependencies = [
 name = "soas-estimator"
 version = "0.1.0"
 dependencies = [
+ "nalgebra",
  "serde_json",
  "soas-core",
 ]
