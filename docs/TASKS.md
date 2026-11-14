@@ -130,12 +130,45 @@ Goal: a data-driven F-104-class aircraft in the v0.2 headless simulation, using 
 Blocked until H4 is complete. Use the audited source coverage and missing-input list; do not invent missing aircraft data.
 Deliverables/tests: trace each input to its source, conditions, units and axis system; transform source-axis forces, moments and derivatives into the project's body axes, with tests for the transformations and signs; exercise the published Mach-table nodes and interpolation in a headless scenario. Document coverage and limitations in docs/ASSUMPTIONS.md.  [ ]
 
+## Stage 2 start: owner-authorized T12 then T13
+Run only T12 and T13 in this batch; do not start T10 or T11. Their reference-data
+and validation decisions remain pending. Create soas-estimator depending on
+soas-core, with no reverse dependency. Pre-approved dependencies only. First
+record these tasks in a docs-only commit, then tests/implementation commits per
+task. Every fixture number must have a synthetic label and ledger entry.
+
+## T12: Wing planform geometry
+Goal: mirrored symmetric wing from ordered right-half span stations: y, chord,
+body-axis leading-edge x and z offsets, geometric twist, section lift slope and
+zero-lift angle. Section values are explicit inputs with provenance; provide
+only a cited theoretical default (thin-airfoil 2*pi/rad), never guessed data.
+Derive span, projected planform area, aspect/taper ratios, mean aerodynamic
+chord and its position, and quarter-chord sweep. Document station interpolation,
+mirroring, body-axis signs and reference definitions. Validate finite values,
+positive chord/section slope and strictly increasing nonnegative station y.
+Tests: independent rectangular and tapered hand cases, standard trapezoid MAC,
+distinct span/chord, interpolation/mirroring and invalid inputs. [ ]
+
+## T13: Prandtl/Glauert lifting-line Fourier solution
+Goal: straight symmetric, incompressible, attached-flow wing; output CL, induced
+CD, span efficiency and section loading versus alpha, with Fourier term count
+as a parameter. Use T12 station geometry for straight wings and an analytic
+elliptic planform input for an exact benchmark (no station-tip approximation).
+Cite every formula, document collocation and coefficient normalization, and
+return applicable assumptions with "validity unassessed" rather than invented
+physical validity thresholds. No sweep correction or real-aircraft validation.
+Tests: elliptic no-twist efficiency=1, CDi=CL^2/(pi*AR), and analytic finite-wing
+slope for two aspect ratios; zero lift at alpha_L0; rectangular term-count
+convergence and efficiency<1; section loading/symmetry, invalid inputs; deliberate
+wrong-section-slope variant fails elliptic tests in an uncommitted scratch copy.
+Update ASSUMPTIONS/LEARNING; report observed convergence and limits. [ ]
+
 ---
-## Review fixes (current batch; no T9 work)
+## Review fixes (historical)
 - Fix 1: named JSON records reject positional arrays; existing diagnostics and legal array shapes retained. [x]
 - Fix 2: off-centre mixed-difference interpolation and singleton-altitude coverage; scratch planar fault check. [x] All 12 pass in production; all 11 coefficient checks fail the deliberate planar variant. No production formula change was needed.
 - Fix 3: independent moment magnitudes and scratch span/chord swap check. [x] All six pass in production and fail the deliberate length swap. Every moment coefficient and control surface is covered; no production formula change was needed.
 
 - Generic object discovery: recursive fixture tests include engine/table/sample objects and throttle knots without hand-listed paths. Existing guards pass; scratch bypasses fail. [x]
 
-Stage 2 tasks (lifting line, vortex lattice, validation) will be written when T10 is done.
+Further Stage 2 tasks will be written when authorized; this batch stops after T13.

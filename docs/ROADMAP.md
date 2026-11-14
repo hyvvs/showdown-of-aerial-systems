@@ -16,6 +16,12 @@ The hero demo is an **F-104-class supersonic jet**, targeted for v0.2 (D14). v0.
 - Exit: a hand-written reference aircraft flies headlessly, with the Navion from NASA CR-96008 as the candidate (fallback: Cessna 172); power-off stall, glide, trim and static-margin comparisons match the reference data within the tolerances the owner chose (D9); plots and comparisons committed. Propulsion parameters and powered comparisons are not required for v0.1 validation.
 
 ### Stage 2: Subsonic aerodynamic estimator
+- Owner-authorized start: T12 wing planform geometry, then T13 straight-wing
+  Prandtl/Glauert lifting-line theory in a new soas-estimator crate. It depends
+  on soas-core; the core does not depend on the estimator. This batch does not
+  start T10 or T11 or satisfy their outstanding reference-validation work.
+  Analytic/synthetic checks establish software evidence only; outputs list
+  assumptions and mark physical validity unassessed, without invented thresholds.
 - Lifting-line theory first (it has analytic test cases), then a vortex-lattice method with a compressibility correction.
 - Validate: the selected Navion or fallback Cessna 172 against power-off reference data and applicable AVL/OpenVSP output, within the v0.1 Mach limit. Flying-wing validation is parked until after v0.2.
 - Exit: published error plots; ASSUMPTIONS.md updated.
