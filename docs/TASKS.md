@@ -112,4 +112,9 @@ Blocked until H4 is complete. Use the audited source coverage and missing-input 
 Deliverables/tests: trace each input to its source, conditions, units and axis system; transform source-axis forces, moments and derivatives into the project's body axes, with tests for the transformations and signs; exercise the published Mach-table nodes and interpolation in a headless scenario. Document coverage and limitations in docs/ASSUMPTIONS.md.  [ ]
 
 ---
+## Review fixes (current batch; no T9 work)
+- Fix 1: named JSON records reject positional arrays; existing diagnostics and legal array shapes retained. [x]
+- Fix 2: off-centre mixed-difference interpolation and singleton-altitude coverage; scratch planar fault check. [ ]
+- Fix 3: independent moment magnitudes and scratch span/chord swap check. [ ]
+
 Stage 2 tasks (lifting line, vortex lattice, validation) will be written when T10 is done.

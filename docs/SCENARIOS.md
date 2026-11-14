@@ -15,6 +15,16 @@ The executable reads a JSON object with these fields. Unknown fields and
 versions are errors. `data_note` is optional provenance text; the example
 explicitly labels every numeric value as a synthetic TEST VALUE.
 
+The scenario root, `initial_state`, `controls`, and every surface's schedule
+knot must be named JSON objects, never positional arrays. `parse_scenario`
+checks these shapes and reports the offending path (for example
+`controls.rudder[1]`) before the existing typed parser runs on the original
+text. Unknown, duplicate and missing fields and trailing input retain parser
+line/column diagnostics. This performs an extra parse when loading, without
+changing integration or file output. Use `parse_scenario` for scenario files.
+State vectors and arrays of schedule knots remain arrays; each knot inside its
+schedule must be an object containing `time_s` and `deflection_deg`.
+
 | Field | Contract |
 |---|---|
 | `format_version` | Required integer 0. |

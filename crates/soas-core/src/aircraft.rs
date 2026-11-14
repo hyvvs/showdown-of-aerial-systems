@@ -83,9 +83,40 @@ impl Error for AircraftError {
 }
 
 pub fn from_json(text: &str) -> Result<Aircraft, AircraftError> {
+    // Serde structs can accept positional sequences. Enforce the JSON file's
+    // named-object contract first, then deserialize the ORIGINAL text so
+    // duplicate/unknown/missing-field and line/column diagnostics are retained.
+    let value: serde_json::Value = serde_json::from_str(text).map_err(AircraftError::Json)?;
+    require_json_object(&value, "root")?;
+    if let Some(table) = value.get("aerodynamics") {
+        require_json_object(table, "aerodynamics")?;
+        if let Some(rows) = table
+            .get("coefficients")
+            .and_then(serde_json::Value::as_array)
+        {
+            for (row_index, row) in rows.iter().enumerate() {
+                if let Some(cells) = row.as_array() {
+                    for (column, cell) in cells.iter().enumerate() {
+                        require_json_object(
+                            cell,
+                            &format!("aerodynamics.coefficients[{row_index}][{column}]"),
+                        )?;
+                    }
+                }
+            }
+        }
+    }
     let aircraft: Aircraft = serde_json::from_str(text).map_err(AircraftError::Json)?;
     aircraft.validate()?;
     Ok(aircraft)
+}
+
+fn require_json_object(value: &serde_json::Value, field: &str) -> Result<(), AircraftError> {
+    require(
+        value.is_object(),
+        field,
+        "must be a JSON object with named fields; positional arrays are not supported",
+    )
 }
 
 pub fn to_json(aircraft: &Aircraft) -> Result<String, AircraftError> {

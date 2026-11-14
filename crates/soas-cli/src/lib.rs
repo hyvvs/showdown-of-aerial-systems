@@ -160,10 +160,38 @@ fn degree_angle(degrees: f64) -> Result<Radians, RunnerError> {
 }
 
 pub fn parse_scenario(text: &str) -> Result<Scenario, RunnerError> {
+    // Reject positional records before Serde's struct-sequence compatibility
+    // can accept them. Decode the original text below to retain diagnostics.
+    let value: serde_json::Value =
+        serde_json::from_str(text).map_err(|e| err(format!("scenario JSON: {e}")))?;
+    require_json_object(&value, "root")?;
+    if let Some(initial) = value.get("initial_state") {
+        require_json_object(initial, "initial_state")?;
+    }
+    if let Some(controls) = value.get("controls") {
+        require_json_object(controls, "controls")?;
+        for surface in ["elevator", "aileron", "rudder"] {
+            if let Some(knots) = controls.get(surface).and_then(serde_json::Value::as_array) {
+                for (index, knot) in knots.iter().enumerate() {
+                    require_json_object(knot, &format!("controls.{surface}[{index}]"))?;
+                }
+            }
+        }
+    }
     let scenario: Scenario =
         serde_json::from_str(text).map_err(|e| err(format!("scenario JSON: {e}")))?;
     scenario.validate()?;
     Ok(scenario)
+}
+
+fn require_json_object(value: &serde_json::Value, field: &str) -> Result<(), RunnerError> {
+    if value.is_object() {
+        Ok(())
+    } else {
+        Err(err(format!(
+            "scenario {field}: must be a JSON object with named fields; positional arrays are not supported"
+        )))
+    }
 }
 impl Scenario {
     fn validate(&self) -> Result<(u64, u64), RunnerError> {

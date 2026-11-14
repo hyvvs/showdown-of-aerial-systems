@@ -7,6 +7,21 @@ does not open files; a caller owns filesystem access. Version 0 requires
 versions, invalid shapes and invalid values are explicit errors. Parser errors
 include a line/column; validation errors name the field or table node.
 
+Named records must be JSON objects (`{...}`), not positional arrays (`[...]`):
+the aircraft root, `aerodynamics`, and every coefficient cell. `from_json`
+checks these shapes before typed deserialization and names the offending path,
+including row/column for a cell. Unknown, duplicate and missing fields and
+trailing input remain errors with the original parser's line/column information.
+Loading parses twice to keep the derived schema and those diagnostics intact;
+the simulation hot path does not parse JSON. Use `from_json` for aircraft files;
+direct generic Serde deserialization is not the validated file-loading API.
+
+Mass and geometry are flat named scalar fields in v0, not nested record objects;
+control-surface derivatives are numeric fields in each cell. Arrays cannot
+replace those numbers. Coordinate vectors, inertia matrices, node vectors and
+table row/cell containers remain arrays as documented below. No schema fields
+were renamed or reorganized by this restriction.
+
 ## Fields, units and reference frames
 
 | Field | Meaning |
