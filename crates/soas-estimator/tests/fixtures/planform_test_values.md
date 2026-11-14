@@ -1,0 +1,70 @@
+# T12 Rust test numeric ledger
+
+Geometry/section inputs are deliberately synthetic; expected values are independent hand results from the fixture. Counts, indices and tolerance are numerical test metadata. 2*pi is the cited theoretical thin-airfoil identity, not a measured airfoil value. NaN/infinity/MAX are deliberate invalid inputs. Signs and rational arithmetic appear in the cited source line.
+
+| Source location | Literal | Provenance |
+|---|---|---|
+| `crates/soas-estimator/tests/planform.rs:7` | `1e-12` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:16` | `7.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:17` | `8.75` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:18` | `5.6` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:19` | `1.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:20` | `1.25` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:24` | `0.8` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:24` | `1.75` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:24` | `0.4` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:28` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:28` | `0.4875` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:29` | `0.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:40` | `10.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:41` | `20.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:42` | `5.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:43` | `1.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:43` | `3.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:44` | `13.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:44` | `6.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `7.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `30.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `25.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `12.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `37.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:48` | `60.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:52` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:52` | `31.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:52` | `40.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:53` | `0.2914567944778671` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:58` | `1.4` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:58` | `1.4` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:61` | `1.25` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:62` | `0.8` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:63` | `0.4` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:65` | `0.01` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:66` | `5.82` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:67` | `0.028` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:69` | `0.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:69` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:70` | `3.5` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:70` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:71` | `3.6` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:78` | `2.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:79` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:101` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:101` | `5` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:104` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:106` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:107` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:108` | `2` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:109` | `3` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:116` | `0.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:116` | `1.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:118` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:121` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:124` | `1.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:124` | `0.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:126` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:130` | `0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:130` | `0.1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:136` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:139` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:145` | `1` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |
+| `crates/soas-estimator/tests/planform.rs:151` | `2.0` | SYNTHETIC test input, mathematical expected result, or numerical test/schema-index setting. |

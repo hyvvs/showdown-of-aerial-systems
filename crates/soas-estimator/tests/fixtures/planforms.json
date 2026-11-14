@@ -1,0 +1,57 @@
+{
+  "data_note": "EVERY NUMBER is a SYNTHETIC TEST VALUE; not a real wing or airfoil; see planforms_values.md.",
+  "wings": [
+    {
+      "name": "rectangular",
+      "data_note": "SYNTHETIC TEST WING - not real aircraft",
+      "stations": [
+        {
+          "y_m": 0.0,
+          "chord_m": 1.25,
+          "leading_edge_x_m": 0.8,
+          "z_m": -0.4,
+          "twist_rad": 0.03,
+          "section_lift_curve_slope_per_rad": 5.5,
+          "zero_lift_angle_rad": -0.04,
+          "section_source": "SYNTHETIC TEST SECTION INPUT - not a real airfoil; see planforms_values.md"
+        },
+        {
+          "y_m": 3.5,
+          "chord_m": 1.25,
+          "leading_edge_x_m": 0.8,
+          "z_m": -0.4,
+          "twist_rad": -0.02,
+          "section_lift_curve_slope_per_rad": 6.3,
+          "zero_lift_angle_rad": -0.01,
+          "section_source": "SYNTHETIC TEST SECTION INPUT - not a real airfoil; see planforms_values.md"
+        }
+      ]
+    },
+    {
+      "name": "tapered",
+      "data_note": "SYNTHETIC TEST WING - not real aircraft",
+      "stations": [
+        {
+          "y_m": 0.0,
+          "chord_m": 3.0,
+          "leading_edge_x_m": 0.6,
+          "z_m": -0.2,
+          "twist_rad": 0.04,
+          "section_lift_curve_slope_per_rad": 5.0,
+          "zero_lift_angle_rad": -0.03,
+          "section_source": "SYNTHETIC TEST SECTION INPUT - not a real airfoil; see planforms_values.md"
+        },
+        {
+          "y_m": 5.0,
+          "chord_m": 1.0,
+          "leading_edge_x_m": -1.4,
+          "z_m": -1.2,
+          "twist_rad": -0.06,
+          "section_lift_curve_slope_per_rad": 6.0,
+          "zero_lift_angle_rad": -0.01,
+          "section_source": "SYNTHETIC TEST SECTION INPUT - not a real airfoil; see planforms_values.md"
+        }
+      ]
+    }
+  ]
+}
