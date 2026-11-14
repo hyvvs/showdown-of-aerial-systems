@@ -28,7 +28,7 @@ schedule must be an object containing `time_s` and `deflection_deg`.
 | Field | Contract |
 |---|---|
 | `format_version` | Required integer 0 (legacy power-off) or 1 (explicit throttle). Other versions error. |
-| `aircraft_path` | Nonempty path to an aircraft-format-0 or -1 JSON file. A version-0 scenario requires an engine-less aircraft; installed engines require a version-1 scenario. |
+| `aircraft_path` | Nonempty path to an aircraft-format-0, -1 or -2 JSON file. A version-0 scenario requires an engine-less aircraft; installed engines require a version-1 scenario. |
 | `initial_state.position_ned_m` | Finite North/East/Down coordinates; geometric altitude is -Down. |
 | `initial_state.velocity_body_mps` | Finite forward/right/down velocity components. No wind in v0.1. |
 | `initial_state.attitude_euler_deg` | Finite [roll,pitch,yaw] in degrees, 3-2-1 convention; converted with tested Degrees/Radians types at this boundary. |
@@ -110,3 +110,21 @@ argument handling. [Rust floating-point formatting](https://doc.rust-lang.org/st
 and [f64 Display](https://doc.rust-lang.org/std/primitive.f64.html#impl-Display-for-f64)
 are used without a precision setting. Serde/serde_json and physics references
 are the already recorded T5/T6 sources. No new aircraft constants were added.
+
+## Commanded versus applied surface travel (T9b)
+
+Aircraft format 2 supplies asymmetric radian travel limits for each surface.
+Scheduled degree commands are still converted to Radians at the boundary and
+sampled at each RK4 stage. The aerodynamic model saturates each command before
+computing loads. There is no actuator rate limit or lag. Aircraft versions 0/1
+retain unrestricted travel; their commanded and applied values are identical.
+
+For all scenario versions, the former `elevator_rad`, `aileron_rad`,
+`rudder_rad` CSV column names become `commanded_elevator_rad`,
+`commanded_aileron_rad`, `commanded_rudder_rad`. Three new columns immediately
+follow: `applied_elevator_rad`, `applied_aileron_rad`, `applied_rudder_rad`.
+Consumers should select columns by header, not old numeric offsets. Values
+remain shortest-round-trip decimals with units in names. The lift-limit flag
+now means either upper or lower cap for version-2 aircraft. Scenario JSON itself
+remains at versions 0/1; the added limits live in the versioned aircraft file.
+`synthetic_limited_scenario.json` and its ledger label every example number.

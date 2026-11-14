@@ -1,18 +1,21 @@
-# Aircraft JSON formats 0 and 1 (T5, T9)
+# Aircraft JSON formats 0, 1 and 2 (T5, T9, T9b)
 
 `aircraft::from_json(&str)` loads and validates JSON text;
 `aircraft::to_json(&Aircraft)` validates and saves JSON text. The simulation core
 does not open files; a caller owns filesystem access. Version 0 requires
 `format_version: 0` and forbids an `engines` field. Version 1 requires
 `format_version: 1` and an explicit `engines` array, which may be empty.
-Version 0 remains supported for existing power-off files; no silent migration
-or engine defaults are inferred. Other versions are rejected. Missing required fields, unknown fields, unsupported
+Version 2 requires `format_version: 2`, an explicit `engines` array,
+`control_limits`, and the new coefficient fields below. Versions 0/1 remain
+supported with their original behavior; no silent migration or new physical
+parameters are inferred. Other versions are rejected. Missing required fields, unknown fields, unsupported
 versions, invalid shapes and invalid values are explicit errors. Parser errors
 include a line/column; validation errors name the field or table node.
 
 Named records must be JSON objects (`{...}`), not positional arrays (`[...]`):
 the aircraft root, `aerodynamics`, every coefficient cell, every engine,
-each engine's `table`, and every engine sample. `from_json`
+each engine's `table`, every engine sample, `control_limits`, and each
+surface's deflection-limit record. `from_json`
 checks these shapes before typed deserialization and names the offending path,
 including row/column for a cell. Unknown, duplicate and missing fields and
 trailing input remain errors with the original parser's line/column information.
@@ -30,7 +33,7 @@ were renamed or reorganized by this restriction.
 
 | Field | Meaning |
 |---|---|
-| `format_version` | Required integer 0 (engine-less) or 1 (explicit engines). |
+| `format_version` | Required integer 0 (legacy engine-less), 1 (legacy engines), or 2 (dynamic derivatives and limits). |
 | `name`, `data_note` | Nonempty model identity and provenance/limitations note. A note is not proof of data provenance. |
 | `mass_kg` | Finite positive constant total mass. |
 | `cg_body_m` | Three body-axis coordinates of the CG relative to a model-defined file datum. |
@@ -40,7 +43,8 @@ were renamed or reorganized by this restriction.
 | `coefficient_axes` | Must be `wind_forces_body_moments`: force coefficients CL/CD/CY use D12 wind axes; rolling/pitching/yawing moments use body axes. |
 | `moments_about` | Must be `aerodynamic_reference_point`. The inertia reference remains the CG. |
 | `aerodynamics` | Coefficient table described below. |
-| `engines` | Required in version 1, forbidden in version 0; ordered array of engine objects, described below. |
+| `engines` | Required in versions 1/2, forbidden in version 0; ordered array of engine objects, described below. |
+| `control_limits` | Required in version 2, forbidden in versions 0/1; named per-surface travel bounds in radians. |
 
 Coordinates must be finite. No automatic unit, source-axis or inertia-sign
 conversion is inferred. SI is required, including per-radian angle derivatives.
@@ -50,9 +54,10 @@ realizable or representative of any real aircraft.
 
 ## Coefficient fields
 
-Every table cell has all eleven finite numeric fields; no implicit coefficient
-defaults. CL, CD, CY and moment coefficients are dimensionless; derivatives
-with `_per_rad` multiply angles in radians. Model equations are specified by T6.
+All versions require the eleven original finite numeric fields below. Version 2
+also requires the six new fields listed in its extension; two cross-rate
+derivatives are optional. No new physical data are inferred for legacy files. CL, CD, CY and moment coefficients are dimensionless; derivatives
+with `_per_rad` multiply angles in radians. Model equations are specified by T6 and the T9b extension below.
 
 | Field | Role / validation |
 |---|---|
@@ -161,3 +166,69 @@ required before using real engines. Sources and hand checks:
 
 Verified online 2026-11-14. Physical conventions come from D3/D4/D6/D11/D12
 and CONVENTIONS.md; no external aircraft parameters were added.
+
+## Dynamic derivatives and limits: version 2 (T9b)
+
+In EVERY coefficient cell, add these finite values:
+
+| Field | Definition | Required in v2 |
+|---|---|---|
+| `cl_min` | Negative lower lift-coefficient cap, below cl_max. | yes |
+| `roll_beta_per_rad` | Cl_beta: body rolling-moment derivative per radian of D13 beta. | yes |
+| `yaw_beta_per_rad` | Cn_beta: body yawing-moment derivative per radian of D13 beta. | yes |
+| `cm_q` | Cm_q: pitching-moment derivative per nondimensional pitch rate. | yes |
+| `roll_p` | Cl_p: rolling-moment derivative per nondimensional roll rate. | yes |
+| `yaw_r` | Cn_r: yawing-moment derivative per nondimensional yaw rate. | yes |
+| `roll_r` | Cl_r: rolling-moment derivative per nondimensional yaw rate. | optional; omitted means the term is not modeled (zero contribution) |
+| `yaw_p` | Cn_p: yawing-moment derivative per nondimensional roll rate. | optional; omitted means the term is not modeled (zero contribution) |
+
+`cy_beta_per_rad` already supplies Cy_beta. All added fields, including cl_min,
+use exactly the existing Mach/geometric-altitude linear/bilinear interpolation
+and out-of-range policy. Lower-cap presence must be consistent across cells.
+Signs of new derivatives are preserved, including destabilizing positive damping
+coefficients; the loader does not force a stable aircraft.
+
+```text
+phat = p*b/(2V); qhat = q*c/(2V); rhat = r*b/(2V)
+CY = Cy_beta*beta
+Cl = Cl_beta*beta + Cl_p*phat + Cl_r*rhat + Cl_da*applied_aileron
+Cm = Cm0 + Cm_alpha*alpha + Cm_q*qhat + Cm_de*applied_elevator
+Cn = Cn_beta*beta + Cn_r*rhat + Cn_p*phat + Cn_dr*applied_rudder
+CL = clamp(CL0 + CLalpha*alpha, cl_min, cl_max)
+```
+
+V is instantaneous airspeed in m/s; p,q,r are BODY rates in rad/s, b is span
+and c is mean reference chord. At/beyond either lift cap `stalled=true`; this
+remains a coefficient cap, not a physical post-stall flow model. Below
+`MIN_AIRSPEED_FOR_ANGLES_MPS`, ALL rate terms are zero. At the threshold they
+are active. Non-finite rates/inputs error before the low-speed fallback.
+Moments use q*S*b for roll/yaw and q*S*c for pitch, then transfer to CG as before.
+These definitions/signs and verification notes are sourced in
+`data/reference/aerodynamics/dynamics_and_limits.md`. Published derivatives in
+other source axes require conversion; matching derivative names is insufficient.
+
+`control_limits` is an object with `elevator`, `aileron`, `rudder` objects.
+Each has finite `min_rad` and `max_rad`, with min_rad <= max_rad. They are
+configuration data, not new unit wrappers. Every commanded angle saturates
+independently to its interval before evaluating aerodynamic controls. Angles
+in the applied Controls result still use Radians. Commanded/applied controls
+are both returned; CSV labels both explicitly. Saturation is instantaneous;
+**actuator rate limits, lag and hysteresis are out of scope**. Trim uses this
+same saturation; an infeasible target returns failure rather than bypassing
+limits. Static margin remains control-fixed and rejects either lift cap.
+
+Version handling is explicit on load, save and evaluation: v0/1 forbid all
+these new fields and control_limits, retain their upper-only lift cap,
+unmodeled rate/sideslip moment terms and unrestricted deflections. Their
+in-memory zero/None compatibility values are never serialized as invented data.
+Version 2 requires explicit lower cap, beta/direct damping coefficients and
+travel limits; missing fields error instead of taking legacy defaults.
+Engine and scenario contracts remain otherwise unchanged; scenario versions
+0/1 can reference a version-2 aircraft subject to their existing engine rules.
+No scenario JSON schema change was needed. CSV column changes are documented
+in SCENARIOS.md.
+
+The new synthetic_dynamic_aircraft.json and synthetic_limited_scenario.json
+have per-numeric-path ledgers; synthetic_dynamic_test_values.md labels new
+Rust test literals and derived expectations. Generic recursive shape tests
+automatically include every new limit record without hand-listed paths.

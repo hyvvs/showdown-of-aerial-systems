@@ -399,7 +399,7 @@ pub fn simulate(scenario: &Scenario, aircraft: &Aircraft) -> Result<Vec<Sample>,
 
 pub fn csv_text(samples: &[Sample]) -> String {
     let mut text = String::from(
-        "time_s,north_m,east_m,down_m,u_mps,v_mps,w_mps,qw_unitless,qx_unitless,qy_unitless,qz_unitless,p_radps,q_radps,r_radps,elevator_rad,aileron_rad,rudder_rad,mach_unitless,alpha_rad,beta_rad,cl_unitless,cd_unitless,lift_n,drag_n,side_n,lift_limited_unitless,throttle_unitless,thrust_n,fuel_flow_kgps,afterburner_engines_unitless\n",
+        "time_s,north_m,east_m,down_m,u_mps,v_mps,w_mps,qw_unitless,qx_unitless,qy_unitless,qz_unitless,p_radps,q_radps,r_radps,commanded_elevator_rad,commanded_aileron_rad,commanded_rudder_rad,applied_elevator_rad,applied_aileron_rad,applied_rudder_rad,mach_unitless,alpha_rad,beta_rad,cl_unitless,cd_unitless,lift_n,drag_n,side_n,lift_limited_unitless,throttle_unitless,thrust_n,fuel_flow_kgps,afterburner_engines_unitless\n",
     );
     for sample in samples {
         let s = sample.state;
@@ -424,6 +424,9 @@ pub fn csv_text(samples: &[Sample]) -> String {
             c.elevator_rad.value(),
             c.aileron_rad.value(),
             c.rudder_rad.value(),
+            a.applied_controls.elevator_rad.value(),
+            a.applied_controls.aileron_rad.value(),
+            a.applied_controls.rudder_rad.value(),
             a.mach,
             a.angles.alpha_rad.value(),
             a.angles.beta_rad.value(),

@@ -2,7 +2,7 @@
 
 All new test configuration values are synthetic, never real aircraft data. Every numeric Rust literal below is test-only; tolerances, counts, versions and indices are numerical test settings/metadata rather than physical measurements. Signs are supplied by the surrounding expression. Fixture JSON values have separate per-path ledgers. The density 1.224999155887712 in comments is the existing sourced T3 sea-level equation result (data/reference/atmosphere/README.md), not a newly invented synthetic constant. Gravity and the D13 threshold are inherited sourced/owner decisions, not new values. Hand moment scales and exponential expectations are derived from that density and the synthetic geometry/rates.
 
-| Location at tests commit | Numeric literal | Provenance |
+| Current source location | Numeric literal | Provenance |
 |---|---|---|
 | `crates/soas-core/tests/dynamic_format.rs:16` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_format.rs:16` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -40,14 +40,14 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-core/tests/dynamic_derivatives.rs:56` | `1e-11` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:67` | `0.12` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:68` | `0.1` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
-| `crates/soas-core/tests/dynamic_derivatives.rs:70` | `35.279975689566105` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:70` | `35.279_975_689_566_11` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:70` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:70` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:76` | `0.18` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:77` | `0.1` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:79` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:79` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
-| `crates/soas-core/tests/dynamic_derivatives.rs:79` | `52.919963534349154` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:79` | `52.919_963_534_349_15` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:85` | `3.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:86` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:87` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -95,6 +95,8 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-core/tests/dynamic_derivatives.rs:141` | `3.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:142` | `0.4` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:143` | `0.7` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:145` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:145` | `3` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:146` | `0.5` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:146` | `0.5` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:149` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -173,6 +175,8 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-core/tests/dynamic_derivatives.rs:276` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:276` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:277` | `0.0025` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:278` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:278` | `80` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:284` | `20.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:284` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:284` | `0.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -186,6 +190,7 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-core/tests/dynamic_derivatives.rs:311` | `0.2` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:311` | `0.3` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:312` | `1000.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:315` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:315` | `0.25` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:320` | `0.000078125` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:321` | `0.0000390625` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -196,8 +201,11 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-core/tests/dynamic_derivatives.rs:338` | `2` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:339` | `0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:339` | `1` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:341` | `12.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:341` | `22.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:343` | `2` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:343` | `1e-5` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+| `crates/soas-core/tests/dynamic_derivatives.rs:344` | `1` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:344` | `0.05` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-core/tests/dynamic_derivatives.rs:344` | `2` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-cli/tests/control_limits.rs:22` | `30.0_f64` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
@@ -207,3 +215,5 @@ All new test configuration values are synthetic, never real aircraft data. Every
 | `crates/soas-cli/tests/control_limits.rs:24` | `50.0` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-cli/tests/control_limits.rs:24` | `0.3` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
 | `crates/soas-cli/tests/control_limits.rs:34` | `1e-14` | SYNTHETIC TEST VALUE / derived expectation / numerical setting or schema-index metadata. |
+
+Clippy requested shortest representable spellings: `35.279_975_689_566_11` replaces `35.279975689566105`, and `52.919_963_534_349_15` replaces `52.919963534349154`. Both pairs have identical f64 bit patterns; no expected binary value or tolerance changed. These remain derived SYNTHETIC TEST expectations.

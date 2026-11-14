@@ -117,7 +117,8 @@ time constant; pitch-damping magnitude; both lift boundaries; control saturation
 Mach/altitude interpolation; damping-inclusive aero-coupled convergence.
 Every new test value has a synthetic label and ledger entry; no new dependencies.
 Use separate tests/implementation commits, update assumptions/learning and report
-sources, failures, convergence results and remaining limits. [ ]
+sources, failures, convergence results and remaining limits. [x]
+Verification: separate docs-only task entry, tests and implementation commits; all required derivatives plus optional Cl_r/Cn_p, explicit aircraft format 2, two-sided lift caps, surface saturation and commanded/applied CSV are covered. Independent magnitudes, both-direction damping signs, analytic fixed-V roll subsidence, generic object-shape tests and smooth damped coupled convergence pass. Default-step roll error is 3.455e-9 rad/s; coupled halving ratios approach 16. No dependency, physical convention or default-step decision changed. Full report and sources: `data/reference/aerodynamics/dynamics_and_limits.md`. T10 remains unstarted.
 
 ## T10: Compare against reference (needs H3 and D9)
 Goal: v0.1 power-off comparisons only: stall, glide, trim and static margin, using the Navion candidate from NASA CR-96008 or the fallback Cessna 172, the H3 reference data, and JSBSim output the owner generates. Propulsion parameters and powered climb/cruise comparisons are not required.

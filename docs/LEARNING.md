@@ -47,6 +47,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | Generic object regression | Recursive discovery covers newly added records without a path checklist; preserving source field order avoids unrelated type errors hiding positional decoding; deliberate faults establish that regression tests can fail. |  |  |
 
+| 2026-11-14 | T9b | Nondimensional rates compare rotation over a wing/chord travel time; negative direct rate derivatives oppose spin and give exponential roll decay in an isolated fixed-speed case; lift caps and surface travel saturation bound the model, so commanded and applied angles can differ. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

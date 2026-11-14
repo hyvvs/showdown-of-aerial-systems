@@ -67,7 +67,7 @@ fn roll_beta_has_hand_magnitude() {
         |c| c.roll_beta_per_rad = -0.12,
         0.1,
         Vector3::zeros(),
-        Vector3::new(-35.279975689566105, 0.0, 0.0),
+        Vector3::new(-35.279_975_689_566_11, 0.0, 0.0),
     );
 }
 #[test]
@@ -76,7 +76,7 @@ fn yaw_beta_has_hand_magnitude() {
         |c| c.yaw_beta_per_rad = 0.18,
         0.1,
         Vector3::zeros(),
-        Vector3::new(0.0, 0.0, 52.919963534349154),
+        Vector3::new(0.0, 0.0, 52.919_963_534_349_15),
     );
 }
 #[test]

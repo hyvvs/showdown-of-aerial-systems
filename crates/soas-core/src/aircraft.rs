@@ -9,7 +9,26 @@ use nalgebra::Matrix3;
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt};
 
-pub const FORMAT_VERSION: u32 = 1;
+pub const FORMAT_VERSION: u32 = 2;
+
+const DYNAMIC_FIELDS: [&str; 8] = [
+    "cl_min",
+    "roll_beta_per_rad",
+    "yaw_beta_per_rad",
+    "cm_q",
+    "roll_p",
+    "yaw_r",
+    "roll_r",
+    "yaw_p",
+];
+const REQUIRED_DYNAMIC_FIELDS: [&str; 6] = [
+    "cl_min",
+    "roll_beta_per_rad",
+    "yaw_beta_per_rad",
+    "cm_q",
+    "roll_p",
+    "yaw_r",
+];
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -32,6 +51,23 @@ pub struct Aircraft {
     /// Version 0 is explicitly engine-less; version 1 requires this JSON field.
     #[serde(default)]
     pub engines: Vec<Engine>,
+    /// Version 2 requires explicit angular travel limits; legacy files have none.
+    #[serde(default)]
+    pub control_limits: Option<ControlLimits>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DeflectionLimits {
+    pub min_rad: f64,
+    pub max_rad: f64,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ControlLimits {
+    pub elevator: DeflectionLimits,
+    pub aileron: DeflectionLimits,
+    pub rudder: DeflectionLimits,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -60,6 +96,24 @@ pub struct AeroCoefficients {
     pub cy_beta_per_rad: f64,
     pub roll_aileron_per_rad: f64,
     pub yaw_rudder_per_rad: f64,
+    /// None only for legacy versions 0/1, which had no lower lift cap.
+    #[serde(default)]
+    pub cl_min: Option<f64>,
+    #[serde(default)]
+    pub roll_beta_per_rad: f64,
+    #[serde(default)]
+    pub yaw_beta_per_rad: f64,
+    /// Rate derivatives multiply NONDIMENSIONAL body rates, not rad/s.
+    #[serde(default)]
+    pub cm_q: f64,
+    #[serde(default)]
+    pub roll_p: f64,
+    #[serde(default)]
+    pub yaw_r: f64,
+    #[serde(default)]
+    pub roll_r: f64,
+    #[serde(default)]
+    pub yaw_p: f64,
 }
 
 #[derive(Debug)]
@@ -92,6 +146,14 @@ pub fn from_json(text: &str) -> Result<Aircraft, AircraftError> {
     // duplicate/unknown/missing-field and line/column diagnostics are retained.
     let value: serde_json::Value = serde_json::from_str(text).map_err(AircraftError::Json)?;
     require_json_object(&value, "root")?;
+    if let Some(limits) = value.get("control_limits") {
+        require_json_object(limits, "control_limits")?;
+        for surface in ["elevator", "aileron", "rudder"] {
+            if let Some(bounds) = limits.get(surface) {
+                require_json_object(bounds, &format!("control_limits.{surface}"))?;
+            }
+        }
+    }
     if let Some(table) = value.get("aerodynamics") {
         require_json_object(table, "aerodynamics")?;
         if let Some(rows) = table
@@ -145,18 +207,63 @@ pub fn from_json(text: &str) -> Result<Aircraft, AircraftError> {
             "format_version",
             "version 0 is engine-less; use version 1 for an engines section",
         )?,
-        Some(1) => require(
+        Some(1) | Some(2) => require(
             value.get("engines").is_some(),
             "format_version",
-            "version 1 requires an engines array (empty is allowed)",
+            "format versions 1 and 2 require an engines array (empty is allowed)",
         )?,
         Some(_) => {
             return Err(validation(
                 "format_version",
-                "only versions 0 and 1 are supported",
+                "only versions 0, 1 and 2 are supported",
             ));
         }
         None => {} // Typed parser retains missing/type/duplicate diagnostics.
+    }
+    if aircraft.format_version == 2 {
+        require(
+            value.get("control_limits").is_some(),
+            "format_version",
+            "format version 2 requires control_limits",
+        )?;
+    } else {
+        require(
+            value.get("control_limits").is_none(),
+            "format_version",
+            "control_limits requires format version 2",
+        )?;
+    }
+    // Typed decoding above preserves duplicate/unknown/type diagnostics. Check
+    // presence here: legacy defaults must never fill missing version-2 inputs.
+    if let Some(rows) = value
+        .pointer("/aerodynamics/coefficients")
+        .and_then(serde_json::Value::as_array)
+    {
+        for (h, row) in rows.iter().enumerate() {
+            if let Some(cells) = row.as_array() {
+                for (m, cell) in cells.iter().enumerate() {
+                    for key in if aircraft.format_version == 2 {
+                        &REQUIRED_DYNAMIC_FIELDS[..]
+                    } else {
+                        &DYNAMIC_FIELDS[..]
+                    } {
+                        if aircraft.format_version == 2 {
+                            require(
+                                cell.get(key).is_some(),
+                                &format!("aerodynamics.coefficients[{h}][{m}].{key}"),
+                                "required explicitly in format version 2",
+                            )?;
+                        } else {
+                            require(
+                                cell.get(key).is_none(),
+                                "format_version",
+                                "dynamic coefficients and cl_min require format version 2",
+                            )?;
+                        }
+                    }
+                }
+            }
+        }
     }
     aircraft.validate()?;
     Ok(aircraft)
@@ -174,12 +281,25 @@ pub fn to_json(aircraft: &Aircraft) -> Result<String, AircraftError> {
     // serde_json serializes some non-finite numbers as null; reject them BEFORE
     // serialization so an invalid in-memory model cannot silently change value.
     aircraft.validate()?;
-    if aircraft.format_version == 0 {
+    if aircraft.format_version < 2 {
         let mut value = serde_json::to_value(aircraft).map_err(AircraftError::Json)?;
-        value
-            .as_object_mut()
-            .expect("Aircraft is an object")
-            .remove("engines");
+        let root = value.as_object_mut().expect("Aircraft is an object");
+        if aircraft.format_version == 0 {
+            root.remove("engines");
+        }
+        root.remove("control_limits");
+        for row in value["aerodynamics"]["coefficients"]
+            .as_array_mut()
+            .expect("table rows")
+        {
+            for cell in row.as_array_mut().expect("table cells") {
+                for key in DYNAMIC_FIELDS {
+                    cell.as_object_mut()
+                        .expect("coefficient object")
+                        .remove(key);
+                }
+            }
+        }
         serde_json::to_string_pretty(&value).map_err(AircraftError::Json)
     } else {
         serde_json::to_string_pretty(aircraft).map_err(AircraftError::Json)
@@ -189,10 +309,35 @@ pub fn to_json(aircraft: &Aircraft) -> Result<String, AircraftError> {
 impl Aircraft {
     pub fn validate(&self) -> Result<(), AircraftError> {
         require(
-            self.format_version == 0 || self.format_version == FORMAT_VERSION,
+            self.format_version <= FORMAT_VERSION,
             "format_version",
-            "only versions 0 and 1 are supported",
+            "only versions 0, 1 and 2 are supported",
         )?;
+        require(
+            (self.format_version == 2) == self.control_limits.is_some(),
+            "format_version",
+            "format version 2 requires control_limits; versions 0/1 must omit it",
+        )?;
+        if let Some(limits) = self.control_limits {
+            limits.validate()?;
+        }
+        for (h, row) in self.aerodynamics.coefficients.iter().enumerate() {
+            for (m, c) in row.iter().enumerate() {
+                if self.format_version == 2 {
+                    require(
+                        c.cl_min.is_some(),
+                        &format!("aerodynamics.coefficients[{h}][{m}].cl_min"),
+                        "required in format version 2",
+                    )?;
+                } else {
+                    require(
+                        c.cl_min.is_none() && c.dynamic_values().into_iter().all(|v| v == 0.0),
+                        "format_version",
+                        "dynamic coefficients and cl_min require format version 2",
+                    )?;
+                }
+            }
+        }
         require(
             self.format_version != 0 || self.engines.is_empty(),
             "format_version",
@@ -259,6 +404,11 @@ impl CoefficientTable {
             "aerodynamics.coefficients",
             "row count must equal altitude-node count (one for a Mach-only table)",
         )?;
+        let has_lower = self
+            .coefficients
+            .first()
+            .and_then(|row| row.first())
+            .is_some_and(|c| c.cl_min.is_some());
         for (row_index, row) in self.coefficients.iter().enumerate() {
             let path = format!("aerodynamics.coefficients[{row_index}]");
             require(
@@ -267,6 +417,11 @@ impl CoefficientTable {
                 "column count must equal Mach-node count",
             )?;
             for (column, coefficients) in row.iter().enumerate() {
+                require(
+                    coefficients.cl_min.is_some() == has_lower,
+                    &format!("{path}[{column}].cl_min"),
+                    "all table cells must share lower-limit presence",
+                )?;
                 coefficients.validate(&format!("{path}[{column}]"))?;
             }
         }
@@ -278,6 +433,13 @@ impl AeroCoefficients {
     pub(crate) fn validate(&self, path: &str) -> Result<(), AircraftError> {
         for (field, value) in self.fields() {
             finite([value].into_iter(), &format!("{path}.{field}"))?;
+        }
+        if let Some(min) = self.cl_min {
+            require(
+                min.is_finite() && min < 0.0 && min < self.cl_max,
+                &format!("{path}.cl_min"),
+                "must be finite, negative and below cl_max",
+            )?;
         }
         for (field, value) in [
             ("cl_alpha_per_rad", self.cl_alpha_per_rad),
@@ -305,7 +467,18 @@ impl AeroCoefficients {
         Ok(())
     }
 
-    fn fields(&self) -> [(&'static str, f64); 11] {
+    fn dynamic_values(&self) -> [f64; 7] {
+        [
+            self.roll_beta_per_rad,
+            self.yaw_beta_per_rad,
+            self.cm_q,
+            self.roll_p,
+            self.yaw_r,
+            self.roll_r,
+            self.yaw_p,
+        ]
+    }
+    fn fields(&self) -> [(&'static str, f64); 18] {
         [
             ("cl0", self.cl0),
             ("cl_alpha_per_rad", self.cl_alpha_per_rad),
@@ -318,7 +491,33 @@ impl AeroCoefficients {
             ("cy_beta_per_rad", self.cy_beta_per_rad),
             ("roll_aileron_per_rad", self.roll_aileron_per_rad),
             ("yaw_rudder_per_rad", self.yaw_rudder_per_rad),
+            ("roll_beta_per_rad", self.roll_beta_per_rad),
+            ("yaw_beta_per_rad", self.yaw_beta_per_rad),
+            ("cm_q", self.cm_q),
+            ("roll_p", self.roll_p),
+            ("yaw_r", self.yaw_r),
+            ("roll_r", self.roll_r),
+            ("yaw_p", self.yaw_p),
         ]
+    }
+}
+
+impl ControlLimits {
+    fn validate(self) -> Result<(), AircraftError> {
+        for (name, limits) in [
+            ("elevator", self.elevator),
+            ("aileron", self.aileron),
+            ("rudder", self.rudder),
+        ] {
+            require(
+                limits.min_rad.is_finite()
+                    && limits.max_rad.is_finite()
+                    && limits.min_rad <= limits.max_rad,
+                &format!("control_limits.{name}"),
+                "finite min_rad <= max_rad required",
+            )?;
+        }
+        Ok(())
     }
 }
 

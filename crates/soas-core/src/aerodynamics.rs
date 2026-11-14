@@ -43,6 +43,8 @@ pub struct AirAngles {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct AeroOutput {
+    pub commanded_controls: Controls,
+    pub applied_controls: Controls,
     pub loads: Loads,
     pub angles: AirAngles,
     pub mach: f64,
@@ -52,7 +54,7 @@ pub struct AeroOutput {
     pub lift_n: f64,
     pub drag_n: f64,
     pub side_n: f64,
-    /// Upper lift limit reached/exceeded; not a model of post-stall motion.
+    /// Either lift limit reached/exceeded; not a model of post-stall motion.
     pub stalled: bool,
 }
 
@@ -228,6 +230,14 @@ fn interpolate(a: AeroCoefficients, b: AeroCoefficients, t: f64) -> AeroCoeffici
         cy_beta_per_rad: mix(a.cy_beta_per_rad, b.cy_beta_per_rad),
         roll_aileron_per_rad: mix(a.roll_aileron_per_rad, b.roll_aileron_per_rad),
         yaw_rudder_per_rad: mix(a.yaw_rudder_per_rad, b.yaw_rudder_per_rad),
+        cl_min: a.cl_min.zip(b.cl_min).map(|(x, y)| mix(x, y)),
+        roll_beta_per_rad: mix(a.roll_beta_per_rad, b.roll_beta_per_rad),
+        yaw_beta_per_rad: mix(a.yaw_beta_per_rad, b.yaw_beta_per_rad),
+        cm_q: mix(a.cm_q, b.cm_q),
+        roll_p: mix(a.roll_p, b.roll_p),
+        yaw_r: mix(a.yaw_r, b.yaw_r),
+        roll_r: mix(a.roll_r, b.roll_r),
+        yaw_p: mix(a.yaw_p, b.yaw_p),
     }
 }
 
@@ -240,6 +250,31 @@ pub fn evaluate(
     controls: Controls,
 ) -> Result<AeroOutput, AeroError> {
     aircraft.validate().map_err(AeroError::Aircraft)?;
+    let commanded_controls = controls;
+    let controls = if let Some(limits) = aircraft.control_limits {
+        Controls {
+            elevator_rad: angle(
+                controls
+                    .elevator_rad
+                    .value()
+                    .clamp(limits.elevator.min_rad, limits.elevator.max_rad),
+            )?,
+            aileron_rad: angle(
+                controls
+                    .aileron_rad
+                    .value()
+                    .clamp(limits.aileron.min_rad, limits.aileron.max_rad),
+            )?,
+            rudder_rad: angle(
+                controls
+                    .rudder_rad
+                    .value()
+                    .clamp(limits.rudder.min_rad, limits.rudder.max_rad),
+            )?,
+        }
+    } else {
+        controls
+    };
     finite_vector(state.position_ned_m)?;
     finite_vector(state.angular_rates_body_radps)?;
     let norm = state.attitude_body_to_ned.quaternion().norm();
@@ -264,9 +299,14 @@ pub fn evaluate(
     if ar <= 0.0 {
         return Err(AeroError::Invalid("aspect ratio underflowed"));
     }
-    // T6 specifies an UPPER CLmax limit. No negative-stall law or fitted
-    // post-stall curve is invented; large-angle flight remains unvalidated.
+    // Version 2 supplies both limits; legacy versions retain their old upper
+    // cap only. These caps are not fitted positive/negative post-stall curves.
     let cl = raw_cl.min(c.cl_max);
+    let cl = if let Some(min) = c.cl_min {
+        cl.max(min)
+    } else {
+        cl
+    };
     let induced_drag_denominator = PI * c.oswald_efficiency * ar;
     finite([induced_drag_denominator])?;
     if induced_drag_denominator <= 0.0 {
@@ -274,11 +314,35 @@ pub fn evaluate(
     }
     let cd = c.cd0 + cl * cl / induced_drag_denominator;
     let cy = c.cy_beta_per_rad * angles.beta_rad.value();
+    // Caughey (2011), eqs. 4.37-38 and 4.77-78: qhat=q*c/(2V),
+    // phat=p*b/(2V), rhat=r*b/(2V). Use instantaneous airspeed here.
+    // D13 threshold policy also disables ALL rate terms below the threshold;
+    // rates were checked finite above, before this fallback. See T9b reference.
+    let rates = if angles.airspeed_mps < MIN_AIRSPEED_FOR_ANGLES_MPS {
+        Vector3::zeros()
+    } else {
+        Vector3::new(
+            state.angular_rates_body_radps.x
+                * (0.5 * aircraft.reference_span_m / angles.airspeed_mps),
+            state.angular_rates_body_radps.y
+                * (0.5 * aircraft.reference_chord_m / angles.airspeed_mps),
+            state.angular_rates_body_radps.z
+                * (0.5 * aircraft.reference_span_m / angles.airspeed_mps),
+        )
+    };
+    finite_vector(rates)?;
     let cm = c.cm0
         + c.cm_alpha_per_rad * angles.alpha_rad.value()
-        + c.cm_elevator_per_rad * controls.elevator_rad.value();
-    let roll = c.roll_aileron_per_rad * controls.aileron_rad.value();
-    let yaw = c.yaw_rudder_per_rad * controls.rudder_rad.value();
+        + c.cm_elevator_per_rad * controls.elevator_rad.value()
+        + c.cm_q * rates.y;
+    let roll = c.roll_aileron_per_rad * controls.aileron_rad.value()
+        + c.roll_beta_per_rad * angles.beta_rad.value()
+        + c.roll_p * rates.x
+        + c.roll_r * rates.z;
+    let yaw = c.yaw_rudder_per_rad * controls.rudder_rad.value()
+        + c.yaw_beta_per_rad * angles.beta_rad.value()
+        + c.yaw_r * rates.z
+        + c.yaw_p * rates.x;
     let (lift_n, drag_n, side_n) = (q_s * cl, q_s * cd, q_s * cy);
     finite([cl, cd, cy, cm, roll, yaw, lift_n, drag_n, side_n])?;
     let force = wind_to_body(
@@ -296,6 +360,8 @@ pub fn evaluate(
     // Newton's moment transfer: r runs FROM the CG TO the force application point.
     let moment = finite_vector(moment_at_reference + (reference - cg).cross(&force))?;
     Ok(AeroOutput {
+        commanded_controls,
+        applied_controls: controls,
         loads: Loads {
             force_body_n: force,
             moment_body_nm: moment,
@@ -308,7 +374,7 @@ pub fn evaluate(
         lift_n,
         drag_n,
         side_n,
-        stalled: raw_cl >= c.cl_max,
+        stalled: raw_cl >= c.cl_max || c.cl_min.is_some_and(|min| raw_cl <= min),
     })
 }
 
