@@ -93,8 +93,9 @@ Tests: same input produces byte-identical output on one machine (determinism tes
 Verification: soas-cli runs versioned scenarios with timed piecewise-linear controls and unit-labeled, shortest-round-trip CSV. Seven tests cover process determinism, scenario/argument errors, file boundaries, time/angle conversions, stage times, cadence and CLmax/table-node convergence. No new external packages; only CLI file I/O. The transition case has irregular observed order, so D10 does not imply fourth order across events. See `docs/SCENARIOS.md` and `data/reference/aerodynamics/transitions.md`.
 
 ## T8: Trim solver and static stability numbers
-Goal: find trim alpha and elevator for a given airspeed; report static margin.
-Tests: hand-made aircraft with a known analytic answer; level-flight force balance at the computed trim, with forces and moments balancing to a tight tolerance.  [ ]
+Goal: local steady straight trim at given airspeed/geometric altitude: solve alpha, elevator and gamma from path-parallel/normal force and pitching moment about CG; report finite-difference control-fixed static margin. Optional temporary body-x applied thrust through CG defaults to zero, pending T9.
+Tests: hand-made aircraft with a known analytic answer; level-flight force balance at the computed trim, with forces and moments balancing to a tight tolerance; explicit non-convergence and negative margin for an unstable configuration.  [x]
+Verification: 10 tests cover analytic glide/level trim, tight full-vector balances, stable/unstable finite-difference margins, CG moment transfer, Mach/altitude lookup and explicit invalid/non-convergence/undefined-margin errors. No best-effort result or engine model. Synthetic margins are +0.125/-0.125 chord; full force residuals <2.63e-10 N. Sources, definitions and limitations: `data/reference/trim/README.md`. T9 has not started.
 
 ## T9: Turbojet with afterburner model v0
 Goal: simple turbojet with afterburner: thrust as a table of Mach, altitude and throttle, plus fuel flow.

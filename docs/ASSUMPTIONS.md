@@ -46,6 +46,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## Propulsion
 - To be filled in when the engine model task starts. Note: thrust is not simply `power / speed` (that diverges at zero airspeed).
+- T8 optionally accepts a temporary constant applied body-x force through the CG, default 0 N, only for the trim calculation. This is not a propulsion model or a new powered-run scenario input; it includes no fuel flow or aerodynamic interaction.
+
+## Trim and static margin (T8)
+- Local steady straight longitudinal flight at a specified airspeed and geometric altitude: solve alpha, elevator and gamma (positive climb) from path-parallel force, upward-normal force and pitching moment about the CG. Body pitch=alpha+gamma; bank, sideslip and rates are zero. Both T*cos(alpha) and T*sin(alpha) are included. A glide trim is local at that atmosphere, not a guarantee of constant speed along changing altitude/density.
+- The numerical solver searches the forward nonvertical branch |alpha|,|gamma|<pi/2. No physical actuator limits are invented. Success requires explicit force/moment tolerances, including no residual lateral imbalance. Failed iteration limits, singular Jacobians and failed searches return non-convergence errors, never best-effort solutions. Defaults 1e-8 N/Nm and 1e-5 rad difference step are numerical settings, not D9 aircraft tolerances.
+- Control-fixed static margin is -(dCm_CG/dalpha)/(dCL/dalpha), evaluated by central differences of the table-driven coefficient laws at the trim condition with speed/Mach, geometric altitude and elevator fixed. Moment transfer to the CG is included; the result is a chord fraction. The stencil reaching CLmax or an unresolved/nonpositive lift slope is an explicit undefined-margin error.
+- This report ignores elevator-free motion/control feedback, rate/unsteady effects, structural flexibility, loading changes, thrust derivatives/propulsive interactions and changes in atmosphere/Mach during the perturbation. It does not establish dynamic stability or near-stall physical validity. Stable/unstable synthetic configurations give +0.125/-0.125 chord; full force residuals in the analytic glide/level cases are below 2.63e-10 N. Sources, cases and limits: `data/reference/trim/README.md`.
 
 ## Known weak regions
 - Mach > 0.8, including the transonic range: not modeled in v0.1; transonic modeling remains a low-confidence region when introduced from v0.2.

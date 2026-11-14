@@ -38,6 +38,7 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 | 2026-11-14 | T5 | A versioned JSON schema gives saved data an explicit contract; validation rejects wrong units, frames and table shapes before use; synthetic test fixtures exercise software without pretending to describe real aircraft. |  |  |
 | 2026-11-14 | T6 | Dimensionless coefficients scale aerodynamic forces with density, speed squared and reference area; wind-axis lift/drag/side forces must be rotated and moments transferred to the CG; interpolation supplies coefficients at the current Mach/altitude, and coupled convergence checks reevaluate those loads throughout each RK4 step. |  |  |
 | 2026-11-14 | T7 | A headless runner translates files into pure simulation inputs and writes histories; piecewise-linear controls must be sampled at intermediate integration times; byte determinism and round-trip number formatting differ from numerical accuracy, which can lose its smooth-case order at lift/table transitions. |  |  |
+| 2026-11-14 | T8 | Trim balances force along/across the flight path and pitching moment about the CG; body-axis thrust has both path-parallel and normal components; static margin compares small lift and CG-moment changes with elevator held fixed, so an aircraft can be trimmed yet statically unstable. |  |  |
 
 ## T4 concepts introduced: equations of motion in plain language
 

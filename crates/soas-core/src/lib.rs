@@ -7,6 +7,7 @@ pub mod aircraft;
 pub mod atmosphere;
 pub mod attitude;
 pub mod dynamics;
+pub mod trim;
 pub mod units;
 
 #[cfg(test)]
