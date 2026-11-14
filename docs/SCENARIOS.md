@@ -78,7 +78,8 @@ regular output times, and the final state once even if off the output cadence.
 Column order is fixed. Units appear in every numeric column name: positions m,
 velocity mps, body rates radps, controls/alpha/beta rad, forces n. Quaternion
 components are scalar-first qw,qx,qy,qz and labeled unitless; coefficients and
-Mach are also unitless. The upper-lift-limit flag is numeric 0/1. Quaternions
+Mach are also unitless. The lift-limit flag is numeric 0/1: either lower or upper cap for aircraft
+format 2, and the legacy upper cap for formats 0/1. Quaternions
 avoid undefined Euler output at singular pitch.
 
 T9 appends four columns for both scenario versions: `throttle_unitless`,
@@ -102,6 +103,51 @@ Tests cover two actual process runs and byte comparison, numeric round-trip
 formatting, relative paths, schedule interpolation/degree conversion, analytic
 time-dependent loads at RK4 stages, invalid files/times/arguments, zero duration,
 final-output cadence and preservation of inputs/existing outputs on run errors.
+
+## CSV schema version 1
+
+This identifier documents the current 33-column CSV contract; it is separate
+from scenario and aircraft format versions and is not an extra CSV column.
+The exact header (including order and final LF) is pinned by the CSV header test.
+A changed name, order, unit or meaning requires a new documented CSV schema.
+**Tools must read columns by header name, never by position.** Order below is
+for schema review; consumers must not use these ordinal positions to select data.
+
+| Order | Column header | Meaning / units |
+|---:|---|---|
+| 1 | `time_s` | Simulation time, seconds |
+| 2 | `north_m` | North position, metres |
+| 3 | `east_m` | East position, metres |
+| 4 | `down_m` | Down position, metres (geometric altitude = -Down) |
+| 5 | `u_mps` | Body x velocity, m/s |
+| 6 | `v_mps` | Body y velocity, m/s |
+| 7 | `w_mps` | Body z velocity, m/s |
+| 8 | `qw_unitless` | Quaternion scalar w, unitless |
+| 9 | `qx_unitless` | Quaternion x, unitless |
+| 10 | `qy_unitless` | Quaternion y, unitless |
+| 11 | `qz_unitless` | Quaternion z, unitless |
+| 12 | `p_radps` | Body roll rate, rad/s |
+| 13 | `q_radps` | Body pitch rate, rad/s |
+| 14 | `r_radps` | Body yaw rate, rad/s |
+| 15 | `commanded_elevator_rad` | Commanded elevator, radians |
+| 16 | `commanded_aileron_rad` | Commanded aileron, radians |
+| 17 | `commanded_rudder_rad` | Commanded rudder, radians |
+| 18 | `applied_elevator_rad` | Applied elevator after saturation, radians |
+| 19 | `applied_aileron_rad` | Applied aileron after saturation, radians |
+| 20 | `applied_rudder_rad` | Applied rudder after saturation, radians |
+| 21 | `mach_unitless` | Mach number, unitless |
+| 22 | `alpha_rad` | Angle of attack, radians |
+| 23 | `beta_rad` | Sideslip, radians |
+| 24 | `cl_unitless` | Lift coefficient, unitless |
+| 25 | `cd_unitless` | Drag coefficient, unitless |
+| 26 | `lift_n` | Lift, newtons |
+| 27 | `drag_n` | Drag, newtons |
+| 28 | `side_n` | Wind-axis side force, newtons |
+| 29 | `lift_limited_unitless` | Lift cap reached: 0/1; either cap in aircraft format 2 |
+| 30 | `throttle_unitless` | Throttle command, unitless |
+| 31 | `thrust_n` | Sum of scalar engine thrusts, newtons |
+| 32 | `fuel_flow_kgps` | Total reported fuel flow, kg/s |
+| 33 | `afterburner_engines_unitless` | Afterburning engine count, unitless |
 
 ## Sources
 

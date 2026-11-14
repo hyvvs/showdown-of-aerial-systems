@@ -162,3 +162,21 @@ test result: FAILED. 0 passed; 1 failed
 The scratch fault is not committed. Existing production guards already handle
 all current records, so no parser change was needed. This is regression
 coverage, not new schema behavior or physics validation.
+
+## Expected-number spelling audit: ab6e9e3
+
+The T9b implementation commit `ab6e9e3` changed two hand-expected literal
+spellings at Clippy's excessive_precision request. The exact diff was rechecked:
+
+| Before | After | Identical IEEE-754 f64 bits (hex) |
+|---|---|---|
+| `-35.279975689566105` | `-35.279_975_689_566_11` | `c041a3d63e4f2e45` |
+| `52.919963534349154` | `52.919_963_534_349_15` | `404a75c15d76c566` |
+
+No expected binary value, tolerance or assertion changed. This is a spelling
+correction, not a relaxed numerical comparison.
+
+Part 0 also pins the exact schema-1 CSV header in the CLI test; it already
+passes against production. No production output change was necessary. The
+33-column table is in SCENARIOS.md; consumers must select fields by header.
+The test adds no numeric fixture data or numerical test setting.

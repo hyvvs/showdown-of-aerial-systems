@@ -173,4 +173,6 @@ Verification: eight tests cover two independent elliptic hand cases (including l
 
 - Generic object discovery: recursive fixture tests include engine/table/sample objects and throttle knots without hand-listed paths. Existing guards pass; scratch bypasses fail. [x]
 
+- CSV contract review: exact schema-1 header test, 33-column documentation, two-sided lift-flag wording and identical-bit literal audit recorded. [x]
+
 Further Stage 2 tasks will be written when authorized; this batch stops after T13.

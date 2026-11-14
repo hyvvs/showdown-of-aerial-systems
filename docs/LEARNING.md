@@ -53,6 +53,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-14 | T13 | A Fourier series represents circulation and induced downwash across a wing; non-elliptic loading adds induced drag through higher modes; analytic benchmarks and term refinement check equations/numerics while physical validity remains a separate question. |  |  |
 
+| 2026-11-14 | CSV contract review | A versioned header is a data contract while consumers select fields by name; decimal spellings can differ yet round to identical binary floating-point values; pinning exact output catches accidental schema drift. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
