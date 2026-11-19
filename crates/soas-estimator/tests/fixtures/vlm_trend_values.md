@@ -29,3 +29,22 @@ Rectangles use both 64x8 and 128x8; ellipses use a declared single chordwise pan
 | `/ellipse_benchmarks/full_span_panels/4` | `512` | SYNTHETIC benchmark geometry, operating angle, mesh/term count, or unchanged coordinate-roundoff check. |
 | `/ellipse_benchmarks/chordwise_panels` | `1` | SYNTHETIC benchmark geometry, operating angle, mesh/term count, or unchanged coordinate-roundoff check. |
 | `/ellipse_benchmarks/root_chord_m` | `1.0` | SYNTHETIC benchmark geometry, operating angle, mesh/term count, or unchanged coordinate-roundoff check. |
+
+## T15b added settings
+
+All entries are SYNTHETIC TEST settings or sourced mathematical definitions. No real-wing values.
+
+| JSON path / use | Value | Provenance |
+|---|---|---|
+| `/ellipse_bounds/aspect_ratios/0` | `6.0` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/aspect_ratios/1` | `40.0` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/chordwise_panels/0` | `1` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/chordwise_panels/1` | `8` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/full_span_panels/0` | `128` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/full_span_panels/1` | `256` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/full_span_panels/2` | `512` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/full_span_panels/3` | `1024` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| `/ellipse_bounds/root_chord_m` | `1.0` | SYNTHETIC owner-specified T15b geometry/mesh setting. |
+| Exact Munk efficiency upper bound | `1.0` | Mathematical planar fixed-lift/span minimum-drag bound, NACA-TR-121 / MIT Lecture 9. NO tolerance. |
+| Scratch drag mutation | `0.95` | Owner-prescribed SYNTHETIC FAULT multiplier, never production/fixture calibration. |
+| Test-build optimization | `3` | Owner-approved compiler optimization level, not a numerical acceptance setting. |

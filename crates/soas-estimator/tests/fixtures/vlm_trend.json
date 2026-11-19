@@ -31,5 +31,23 @@
     ],
     "chordwise_panels": 1,
     "root_chord_m": 1.0
+  },
+  "ellipse_bounds": {
+    "data_note": "SYNTHETIC T15b test meshes and geometry, not aircraft data. Munk upper bound 1 is a sourced mathematical limit with no tolerance.",
+    "aspect_ratios": [
+      6.0,
+      40.0
+    ],
+    "chordwise_panels": [
+      1,
+      8
+    ],
+    "full_span_panels": [
+      128,
+      256,
+      512,
+      1024
+    ],
+    "root_chord_m": 1.0
   }
 }
