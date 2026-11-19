@@ -85,6 +85,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | Documentation estimator plan | Wing, tail and body loads interact through downwash/sidewash rather than forming independent corrections (Caughey §§2.5-2.6, pp. 19-20; JVL §4.3 pp. 9-10); quasi-steady rotation rates and delayed alpha-dot effects require different models (Caughey §4.3 pp. 58-59, 65-69); an independently specified hand problem verifies a method, while comparing an aircraft total requires matching source definitions and configuration (CR pp. 100-103, A-1/B-1; ESTIMATOR_PLAN.md). |  |  |
 
+| 2026-11-19 | Static milestone planning decisions | Input readiness and physical accuracy are separate verdicts (CR pp. 100-103; T16 audit contract); a PG diagnostic's percentage depends on its denominator and does not establish its share of an unknown total discrepancy (AVL primer §Compressibility; ESTIMATOR_PLAN.md calculation); a neutral point inferred from the same lift/pitch slopes is a derived reference, not an independent measurement (Caughey §3.1 pp. 27-28). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

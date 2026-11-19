@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. H3 and D9 are required only before T10; T0 to T9 are not blocked by owner tasks.
+H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. Only T16's source audit is newly authorized; later implementation tasks need separate approval.
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -120,8 +120,9 @@ Use separate tests/implementation commits, update assumptions/learning and repor
 sources, failures, convergence results and remaining limits. [x]
 Verification: separate docs-only task entry, tests and implementation commits; all required derivatives plus optional Cl_r/Cn_p, explicit aircraft format 2, two-sided lift caps, surface saturation and commanded/applied CSV are covered. Independent magnitudes, both-direction damping signs, analytic fixed-V roll subsidence, generic object-shape tests and smooth damped coupled convergence pass. Default-step roll error is 3.455e-9 rad/s; coupled halving ratios approach 16. No dependency, physical convention or default-step decision changed. Full report and sources: `data/reference/aerodynamics/dynamics_and_limits.md`. T10 remains unstarted.
 
-## T10: Compare against reference (needs H3 and D9)
+## T10: Compare against reference (reshaped and blocked)
 Goal: v0.1 power-off comparisons only: stall, glide, trim and static margin, using the Navion candidate from NASA CR-96008 or the fallback Cessna 172, the H3 reference data, and JSBSim output the owner generates. Propulsion parameters and powered climb/cruise comparisons are not required.
+Reshaped by owner decision 2026-11-19: retain this task and its performance goal; the estimator's static derivative milestone is separate and must finish before T10 resumes. Blocked on that milestone, H3 reference cases and D9 tolerances. A source-readiness GO or a lift-slope discrepancy report alone does not complete T10.
 Notes: Python is allowed here **only for plotting from CSV**. The owner checks JSBSim's license before any JSBSim files or derived data are committed.
 Done when: a comparison table and plots are committed and docs/ASSUMPTIONS.md "Validation status" is filled in.  [ ]
 
@@ -267,6 +268,9 @@ above; AIRCRAFT_FORMAT.md sections cited in the decision sheet).
 
 ## Documentation estimator plan (owner-authorized 2026-11-19)
 
+Historical initial draft; superseded by the owner's static-only planning
+decisions below. Its broad proposals do not authorize later comparisons.
+
 Goal: identify the estimator contributions needed for a published Navion
 derivative comparison and propose their implementation order, without starting
 that implementation or transcribing aircraft values. [x]
@@ -285,5 +289,76 @@ H3/H4, D8/D9 and queued T10/T11 remain unchanged. Documentation checks only;
 no code, dependency, aircraft data, test, CONVENTIONS.md or VISION.md changes.
 The plan ends with the questions needed before implementation starts.
 
-Current authorized batch stops after this documentation plan. Further
-implementation or data transcription needs authorization.
+## Static derivative milestone (owner decisions 2026-11-19)
+
+Separate from reshaped T10 and from T11. Approved planning horizon: published
+whole-aircraft lift slope first; pitching-moment slope with neutral-point
+location afterward. Only T16 is authorized to execute. Prerequisite model
+implementation needs separate approval; the current wing-only estimator is
+not a complete Navion model. See `docs/ESTIMATOR_PLAN.md`. [ ]
+
+After the first published lift-slope comparison, STOP for the owner's
+checkpoint before any later task starts, including pitch/neutral-point work.
+The owner reviews the discrepancy, omitted contributions, data sufficiency
+and whether to revise the model/reference or require finite-Mach treatment.
+No accuracy pass/fail claim before D9. Finishing this milestone requires
+both the checkpoint and the separately approved pitch/neutral-point stage;
+T10 remains blocked until that and its H3/D9 requirements are satisfied.
+
+Other simulator derivatives remain future candidates, each requiring its
+own approval after the checkpoint. Drag, Mach-derivative and
+angle-of-attack-rate comparisons are outside the planning horizon.
+No propeller or engine model is to be built for this milestone.
+
+## T16: Navion source and comparison-definition audit (authorized only)
+
+Documentation/source audit, not solver implementation; authorized, not yet
+completed by this planning update. Seek documented power-off evidence first.
+Audit exact variant/configuration, wing planform and airfoil/section data,
+tail geometry/position, fuselage dimensions, CG/datum and aerodynamic reference
+definitions, flight condition and power/propeller state. Resolve or list
+every missing input, source discrepancy and axis/reference ambiguity with
+source/page evidence (CR pp. 100-103, A-1-A-10/B-1; existing inventories). [ ]
+
+Required ending: GO or NO-GO for the first whole-aircraft lift-slope estimate,
+distinguishing input readiness from physical accuracy. If geometry is
+insufficient, say so plainly and propose an alternative aircraft with complete
+public, mutually matching geometry/static-reference data, citing and checking
+each required input. Do not assume the queued Cessna fallback is complete;
+do not fill gaps from memory or silently switch the selected reference.
+
+If power-on or silent, report propulsion as unmodeled, with sourced expected
+size/direction and assumptions. State explicitly when those cannot be
+established; do not invent a range or net sign. No engine/propeller model.
+
+For the actual published condition, compute and cite the Prandtl-Glauert
+factor, its percentage change and the share of the expected/reported
+discrepancy it could explain, with consistent denominators and clear limits.
+CR X-A/B p. 101 gives M=0.158: direct calculation gives factor approximately
+1.01272 (1.272% above incompressible; 1.256% deficit relative to the corrected
+value). The formula is in the AVL primer, Compressibility section. This
+diagnostic is not an AVL run or a uniform three-dimensional aircraft correction.
+Without a whole-aircraft estimate/expected-gap budget, its fraction of the
+total gap is unavailable; report that limitation and the calculation at the
+first comparison. Source and derivation: `docs/ESTIMATOR_PLAN.md`.
+
+Owner hold point: if actual Mach is above about 0.3 or the factor increase is
+above about 5%, stop and ask whether finite-Mach treatment must come first.
+This is a review trigger, not a physical-validity or D9 accuracy threshold.
+
+Later pinned AVL cross-check: secondary evidence only, after license review
+of the actual release, inputs and intended artifacts. Check permission before
+committing anything derived from AVL. No binaries or raw output unless clearly
+permitted with applicable conditions satisfied; our own sourced summary tables
+are the preferred deliverable. Official release conditions/GPL §0 were checked
+for this plan; a future pinned distribution/artifact review remains required.
+
+## Documentation: static milestone decisions recorded (2026-11-19)
+
+Updated ESTIMATOR_PLAN.md and this queue with the owner's scope, T16 audit,
+PG assessment/hold point, power-state treatment, neutral-point requirement,
+license policy and mandatory first-comparison checkpoint. Broad candidate
+comparison task plans were removed from the current planning horizon. [x]
+Documentation checks only; no solver, dependency, aircraft fixture, test,
+CONVENTIONS.md, VISION.md or T11 change. LEARNING.md records concepts only.
+This commit does not complete T16 or start a modeling/comparison task.
