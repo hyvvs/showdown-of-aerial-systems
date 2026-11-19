@@ -211,7 +211,7 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 
 ### T15b follow-up: resource evidence and taper experiments (owner-authorized 2026-11-19)
 - Part 1: exact profile diff, enabled debug/overflow checks, printed 256x8 old/new outputs and bit differences; unchanged largest test 179.9444381 s / 1,081,479,168 peak resident bytes, below the owner-confirmed 240 s / 2.0 GB guards. Full cargo test --all: 194.9422389 s, 177 passed, none failed/ignored; fmt/Clippy pass. Source/settings/results ledger: data/reference/estimator/t15b_profile.md. Documentation only. [x]
-- Part 2: actual production Rust solver versus independent efficiency values; assess largest meshes without silent solver substitution. [ ]
+- Part 2: production Rust runs at AR10/20/40/80, efficiencies agreeing with archived full-precision results to relative differences below 5.38e-14 on these grids. AR80 ran in 76.8736739 s / 1,080,778,752 peak resident bytes. AR160 was not launched: two dense matrices alone need 4,294,967,296 bytes, above the disclosed budget. No solver substitution, new assertion or tolerance. Evidence/ledger: data/reference/estimator/t15b_production_comparison.md and independent/T15B_PRODUCTION_LEDGER.md. [x]
 - Part 3: independent taper sweep, Fourier refinement, gap fits/residuals and tip-resolution evidence; no assertions or causal verdict. [ ]
 
 ---

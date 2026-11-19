@@ -73,6 +73,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b follow-up Part 1 | Compiler optimization can change the last floating-point digits while retaining runtime checks; exact bit comparisons differ from tolerance comparisons; wall time and process peak memory measure different resource costs. |  |  |
 
+| 2026-11-19 | T15b follow-up Part 2 | Comparing full-precision references separates rounding from solver differences; a dense matrix's memory grows with the square of its panel count; matching independent implementations does not validate the shared aerodynamic assumptions. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
