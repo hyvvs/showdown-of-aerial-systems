@@ -67,6 +67,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b Part 1 | Relative error compares methods with different lift slopes; the planar minimum-drag bound gives an exact efficiency ceiling within its assumptions; an extrapolation can be screened without assigning it a tolerance or claiming physical validation. |  |  |
 
+| 2026-11-19 | T15b Part 2 | A numerical prediction band belongs to its specific discretization; provenance headers can preserve an independent program without changing its logic; finite-range fitted exponents describe observations without establishing their cause or an asymptotic law. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

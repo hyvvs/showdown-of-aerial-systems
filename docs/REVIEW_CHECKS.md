@@ -241,3 +241,23 @@ bands around physical e=1. Derivation: estimator/vlm_acceptance_review.md.
 Formatting, Clippy and all 175 workspace tests pass (0 failed, 0 ignored).
 New review headings use UTF-8; no physics, assertion or tolerance was altered
 by that text-encoding correction. Test TEMP/TMP stays inside the checkout.
+
+## 2026-11-19 T15b records and band scope
+
+The zero-compatible extrapolation assertions and their control test were
+deliberately replaced after the leave-one-out fits showed the verdict depends
+on the AR subset; this was an owner-authorized acceptance redesign. The
+subset fits are retained as informational evidence, not asserted outcomes.
+
+The Richardson prediction bands apply only to the Nx=1 geometry/mesh sequence
+used to derive them. With Nx=8, the AR6 estimate from Ny256/512/1024 is
+0.997976872, outside the Nx1 band [0.9987106156690151, 0.9988950560535235].
+No band is widened or transferred between chordwise meshes. This does not
+violate the separate exact planar Munk screen e<=1. Fresh production and
+independent verification agree at the quoted precision.
+
+The supplied independent AR10..160 sweep and finite-range exponents are in
+data/reference/estimator/vlm_gap_vs_ar.md. The verifier script body is
+byte-for-byte and AST identical after adding a provenance header; it imports
+no repository code and is outside the build/CI. Its numeric inventory is
+independent/NUMERICAL_LEDGER.md. No solver/dependency/tolerance changed.
