@@ -265,5 +265,25 @@ directed. H3/H4, D8/D9 and T10/T11 statuses remain unchanged; the requested
 derivative audit does not replace queued T10's power-off goal (H3/H4/T10/T11
 above; AIRCRAFT_FORMAT.md sections cited in the decision sheet).
 
-Current authorized batch stops after this documentation follow-up. Further
+## Documentation estimator plan (owner-authorized 2026-11-19)
+
+Goal: identify the estimator contributions needed for a published Navion
+derivative comparison and propose their implementation order, without starting
+that implementation or transcribing aircraft values. [x]
+
+Evidence: `docs/ESTIMATOR_PLAN.md`. All X-B/C derivative names and the
+recoverable elevator pitch derivative are mapped to current capabilities,
+missing physics and proposed tasks T16-T28. Each proposal includes method
+sources/verification limits, independent analytic or hand tests, planned
+mutations, risks and relative size. Static-slope milestones are separated
+from controls, rotating-flow, compressibility, total drag, unsteady and
+conditional propulsion work; source/owner gates precede comparison claims
+(CR pp. 100-103, A-1-A-10/B-1; method sections cited in the plan).
+
+No active T16-T28 queue entries or implementation authorization are created.
+H3/H4, D8/D9 and queued T10/T11 remain unchanged. Documentation checks only;
+no code, dependency, aircraft data, test, CONVENTIONS.md or VISION.md changes.
+The plan ends with the questions needed before implementation starts.
+
+Current authorized batch stops after this documentation plan. Further
 implementation or data transcription needs authorization.

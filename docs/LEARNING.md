@@ -83,6 +83,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | Documentation go/no-go, Part B | Right-surface and paired-aileron variables can have opposite signs (JSBSim Flight Control chapter §Conventions; Caughey §1.2.2 p. 5); a moment-sign definition does not prove physical trailing-edge travel (CR A-4); accessible author slides are separate evidence from an unopened published textbook passage (Beard/McLain chapter 4 slide 8; SIGN_EVIDENCE.md access record). |  |  |
 
+| 2026-11-19 | Documentation estimator plan | Wing, tail and body loads interact through downwash/sidewash rather than forming independent corrections (Caughey §§2.5-2.6, pp. 19-20; JVL §4.3 pp. 9-10); quasi-steady rotation rates and delayed alpha-dot effects require different models (Caughey §4.3 pp. 58-59, 65-69); an independently specified hand problem verifies a method, while comparing an aircraft total requires matching source definitions and configuration (CR pp. 100-103, A-1/B-1; ESTIMATOR_PLAN.md). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
