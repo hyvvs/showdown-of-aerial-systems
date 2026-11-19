@@ -58,3 +58,10 @@ When a batch stops, append an entry with the task, what blocked it, and options 
 - **Options with trade-offs:** A future controlled mesh/quadrature and model-definition study could isolate numerical/model differences but needs additional computation and independent references; comparison with a separately established continuum result could constrain interpretation but requires suitable sourced cases. Neither investigation is started here; T10/T11 remain unstarted.
 - **Records:** data/reference/estimator/vlm_gap_vs_ar.md, vlm_efficiency_gap.md and independent/T15B_EFFICIENCY_LEDGER.md.
 - **Answered build preference:** The owner approved estimator-only test-profile optimization for Part 1. It changes compilation settings, not model inputs, assertions or tolerances.
+
+## 2026-11-19 — T15b profile resource limit
+
+- **Status:** ANSWERED. The owner confirmed **4 minutes** for the existing largest test function, including both 8192-panel cases; the disclosed memory guard is **2.0 GB** (2,000,000,000 bytes).
+- **Task:** T15b follow-up Part 1, test-profile evidence.
+- **What needed clarification:** "A few minutes" needed an explicit wall-time limit before measuring the unchanged test. No meshes, assertions or tolerances were adjusted.
+- **Resolution:** The function passed unchanged in 179.9444381 s, with peak resident memory 1,081,479,168 bytes and peak paged/commit counter 1,078,722,560 bytes. Neither guard tripped, so this resource condition does not block the later requested experiments. Settings, printed old/new profile outputs and measurement limitations are ledgered in data/reference/estimator/t15b_profile.md.

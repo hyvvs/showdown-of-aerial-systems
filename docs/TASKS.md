@@ -209,6 +209,11 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 - Part 2: preserve verifier script unchanged apart from origin header; record supplied AR10..160 data/exponents and scope Nx1 prediction bands explicitly. Body bytes/AST and numeric inventory checked; see estimator/vlm_gap_vs_ar.md and independent/NUMERICAL_LEDGER.md. [x]
 - Part 3: same-CL efficiency comparison, algebraic drag-gap decomposition and outer-tip refinement experiments complete using the independent verifier, with LLT term-convergence records. See estimator/vlm_efficiency_gap.md and its numerical ledger; decay-rate question remains explicitly unresolved. No assertions, physical/bug verdict or T10/T11 work. [x]
 
+### T15b follow-up: resource evidence and taper experiments (owner-authorized 2026-11-19)
+- Part 1: exact profile diff, enabled debug/overflow checks, printed 256x8 old/new outputs and bit differences; unchanged largest test 179.9444381 s / 1,081,479,168 peak resident bytes, below the owner-confirmed 240 s / 2.0 GB guards. Full cargo test --all: 194.9422389 s, 177 passed, none failed/ignored; fmt/Clippy pass. Source/settings/results ledger: data/reference/estimator/t15b_profile.md. Documentation only. [x]
+- Part 2: actual production Rust solver versus independent efficiency values; assess largest meshes without silent solver substitution. [ ]
+- Part 3: independent taper sweep, Fourier refinement, gap fits/residuals and tip-resolution evidence; no assertions or causal verdict. [ ]
+
 ---
 ## Review fixes (historical)
 - T12 Gap 2: duplicate/descending interior, missing-root and equal-root/tip structured-error tests pass immediately; removed-guard scratch copy fails all four. [x]

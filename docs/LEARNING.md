@@ -71,6 +71,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b Part 3 | Linear rescaling compares span efficiency at the same lift coefficient; a drag-gap decomposition depends on the chosen counterfactual order; local mesh refinement measures sensitivity without identifying a physical cause or proving global convergence. |  |  |
 
+| 2026-11-19 | T15b follow-up Part 1 | Compiler optimization can change the last floating-point digits while retaining runtime checks; exact bit comparisons differ from tolerance comparisons; wall time and process peak memory measure different resource costs. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
