@@ -77,6 +77,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b follow-up Part 3 | Mean geometric chord and local tip chord measure different mesh scales; a log-space fit and an original-space fit minimize different residuals; finite Fourier refinement and visible fit residuals describe numerical sensitivity without proving a physical cause or an infinite-aspect-ratio law. |  |  |
 
+| 2026-11-19 | Documentation inventory | A local stability derivative does not establish a stall or engine-off glide comparison; fixed stability axes, body axes and moment-reference locations must stay attached to source quantities; physical control travel, moment-sign definitions and separate yaw-damper surfaces are different evidence. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

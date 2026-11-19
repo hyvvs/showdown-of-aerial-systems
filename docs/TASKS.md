@@ -226,4 +226,23 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 
 - CSV contract review: exact schema-1 header test, 33-column documentation, two-sided lift-flag wording and identical-bit literal audit recorded. [x]
 
-Current authorized batch stops after the T15b follow-up; T10/T11 remain unstarted. Further work needs authorization.
+## Documentation inventory (owner-authorized 2026-11-19)
+
+Goal: inventory CR-96008's F-104/Navion sections and the three exact supplementary
+NASA reports supplied by the owner, with page references, coverage, units,
+source axes/control signs, H3/H4 gaps and power-off comparison limitations.
+Documentation only; no numerical fixture transcription, code or tests. [x]
+
+Evidence: `data/reference/inventory/cr96008.md` and `other_sources.md`.
+All four exact PDFs opened; title/author/date/aircraft scope and relevant
+scanned pages checked. The absent PROJECT_BRIEF.md was not reconstructed;
+the owner supplied NTRS 19630004010, 19660022438 and 20090026345 explicitly.
+The two-fighter comparison covers labeled swept-wing airplanes A/B, not an
+identified F-104/Navion data set. CR discrepancies and incomplete physical
+control-sign evidence remain flagged. No engine-off validation set was
+established. This inventory does not complete owner H3/H4 or decide D8/D9.
+CONVENTIONS.md is unchanged. Documentation diff/whitespace checks only;
+no test run, as the owner directed for this documentation task.
+
+Current authorized batch stops after this documentation inventory; T10/T11
+remain unstarted. Further work needs authorization.
