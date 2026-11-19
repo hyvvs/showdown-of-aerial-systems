@@ -212,7 +212,7 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 ### T15b follow-up: resource evidence and taper experiments (owner-authorized 2026-11-19)
 - Part 1: exact profile diff, enabled debug/overflow checks, printed 256x8 old/new outputs and bit differences; unchanged largest test 179.9444381 s / 1,081,479,168 peak resident bytes, below the owner-confirmed 240 s / 2.0 GB guards. Full cargo test --all: 194.9422389 s, 177 passed, none failed/ignored; fmt/Clippy pass. Source/settings/results ledger: data/reference/estimator/t15b_profile.md. Documentation only. [x]
 - Part 2: production Rust runs at AR10/20/40/80, efficiencies agreeing with archived full-precision results to relative differences below 5.38e-14 on these grids. AR80 ran in 76.8736739 s / 1,080,778,752 peak resident bytes. AR160 was not launched: two dense matrices alone need 4,294,967,296 bytes, above the disclosed budget. No solver substitution, new assertion or tolerance. Evidence/ledger: data/reference/estimator/t15b_production_comparison.md and independent/T15B_PRODUCTION_LEDGER.md. [x]
-- Part 3: independent taper sweep, Fourier refinement, gap fits/residuals and tip-resolution evidence; no assertions or causal verdict. [ ]
+- Part 3: all owner-specified taper/AR/mesh cases run with the archived independent VLM and its Fourier equations adapted only for tapered chord input. LLT refined through 4096 terms; both fit forms and all residuals, local tip-width/chord ratios and full numerical ledger recorded. Raw lambda .5 / AR10 e=1.001331201893 retained and flagged; no threshold verdict or causal claim. Evidence: data/reference/estimator/vlm_taper_sweep.md and independent/T15B_TAPER_LEDGER.md. Documentation only. [x]
 
 ---
 ## Review fixes (historical)
@@ -226,4 +226,4 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 
 - CSV contract review: exact schema-1 header test, 33-column documentation, two-sided lift-flag wording and identical-bit literal audit recorded. [x]
 
-Current authorized batch stops after T15; further Stage 2 work needs authorization.
+Current authorized batch stops after the T15b follow-up; T10/T11 remain unstarted. Further work needs authorization.

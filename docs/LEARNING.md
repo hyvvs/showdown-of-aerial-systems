@@ -75,6 +75,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b follow-up Part 2 | Comparing full-precision references separates rounding from solver differences; a dense matrix's memory grows with the square of its panel count; matching independent implementations does not validate the shared aerodynamic assumptions. |  |  |
 
+| 2026-11-19 | T15b follow-up Part 3 | Mean geometric chord and local tip chord measure different mesh scales; a log-space fit and an original-space fit minimize different residuals; finite Fourier refinement and visible fit residuals describe numerical sensitivity without proving a physical cause or an infinite-aspect-ratio law. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
