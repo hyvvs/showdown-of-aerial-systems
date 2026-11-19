@@ -207,7 +207,7 @@ and vlm_expected_difference.md. No T10/T11 work or real-aircraft validation.
 ## T15b: bound checks and efficiency diagnosis (owner-authorized 2026-11-19)
 - Part 1: elliptic finest relative slope improvement AR6→40 for Nx1/Nx8; exact Munk screens on 128/256/512 and 256/512/1024 Richardson estimates. Tests pass against unchanged production; wrong-AR and 0.95-drag scratch mutations fail. Owner-approved estimator-only test compilation optimization; no tolerance added. All 177 tests and fmt/Clippy pass. Reference: estimator/t15b_assertions.md. [x]
 - Part 2: preserve verifier script unchanged apart from origin header; record supplied AR10..160 data/exponents and scope Nx1 prediction bands explicitly. Body bytes/AST and numeric inventory checked; see estimator/vlm_gap_vs_ar.md and independent/NUMERICAL_LEDGER.md. [x]
-- Part 3: same-CL efficiency comparison, algebraic drag-gap decomposition and outer-tip refinement experiments; retain the decay-rate question as unresolved. No assertions, physical/bug verdict or T10/T11 work. [ ]
+- Part 3: same-CL efficiency comparison, algebraic drag-gap decomposition and outer-tip refinement experiments complete using the independent verifier, with LLT term-convergence records. See estimator/vlm_efficiency_gap.md and its numerical ledger; decay-rate question remains explicitly unresolved. No assertions, physical/bug verdict or T10/T11 work. [x]
 
 ---
 ## Review fixes (historical)

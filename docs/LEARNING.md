@@ -69,6 +69,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | T15b Part 2 | A numerical prediction band belongs to its specific discretization; provenance headers can preserve an independent program without changing its logic; finite-range fitted exponents describe observations without establishing their cause or an asymptotic law. |  |  |
 
+| 2026-11-19 | T15b Part 3 | Linear rescaling compares span efficiency at the same lift coefficient; a drag-gap decomposition depends on the chosen counterfactual order; local mesh refinement measures sensitivity without identifying a physical cause or proving global convergence. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
