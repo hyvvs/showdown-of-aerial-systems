@@ -197,42 +197,53 @@ struct EllipseBoundReadout {
 }
 // Shared immutable results avoid repeating the largest dense solves in the two
 // tests. All VLM loads still come from the production solver, not saved outputs.
-fn ellipse_bound_readouts() -> &'static [EllipseBoundReadout] {
-    static READOUTS: OnceLock<Vec<EllipseBoundReadout>> = OnceLock::new();
-    READOUTS.get_or_init(|| {
-        let v = fixture();
-        let b = &v["ellipse_bounds"];
-        let mut readouts = Vec::new();
-        for nx in b["chordwise_panels"].as_array().unwrap() {
-            let nx: usize = nx.as_u64().unwrap().try_into().unwrap();
-            for ar in b["aspect_ratios"].as_array().unwrap() {
-                let ar = ar.as_f64().unwrap();
-                let mut efficiencies = Vec::new();
-                let mut extrapolated_efficiencies = Vec::new();
-                let mut finest_slope = 0.0;
-                for ny in b["full_span_panels"].as_array().unwrap() {
-                    let ny = ny.as_u64().unwrap().try_into().unwrap();
-                    let w = elliptic_polygon(ar, number(b, "root_chord_m"), ny);
-                    let out = solve(&w, request(&v, ny, nx)).unwrap();
-                    let e = out.cl.powi(2)
-                        / (PI * w.geometry().unwrap().aspect_ratio * out.induced_drag_coefficient);
-                    finest_slope = out.d_cl_d_alpha_per_rad;
-                    println!("T15b ellipse AR={ar} Ny={ny} Nx={nx} e={e:.15} slope={finest_slope:.15}");
-                    efficiencies.push(e);
-                    if efficiencies.len() >= 3 {
-                        let (estimate, p) = richardson(&efficiencies[efficiencies.len() - 3..]);
-                        println!("T15b Munk AR={ar} Nx={nx} last Ny={ny} estimate={estimate:.15} p={p:.12}");
-                        // Munk NACA-TR-121: fixed lift/span, planar inviscid
-                        // system -> CDi >= CL^2/(pi*AR), hence e <= 1.
-                        // No tolerance. Stop immediately on any violation.
-                        assert!(estimate <= 1.0, "STOP: Munk estimate exceeds 1: AR={ar} Nx={nx} last Ny={ny}: {estimate}");
-                        extrapolated_efficiencies.push(estimate);
-                    }
-                }
-                readouts.push(EllipseBoundReadout { ar, nx, finest_slope, extrapolated_efficiencies });
+fn ellipse_bound_readout(ar_index: usize, nx_index: usize) -> &'static EllipseBoundReadout {
+    static READOUTS: OnceLock<Vec<OnceLock<EllipseBoundReadout>>> = OnceLock::new();
+    let v = fixture();
+    let b = &v["ellipse_bounds"];
+    let ars = b["aspect_ratios"].as_array().unwrap();
+    let nxs = b["chordwise_panels"].as_array().unwrap();
+    let cache = READOUTS.get_or_init(|| {
+        (0..ars.len() * nxs.len())
+            .map(|_| OnceLock::new())
+            .collect()
+    });
+    cache[nx_index * ars.len() + ar_index].get_or_init(|| {
+        let nx: usize = nxs[nx_index].as_u64().unwrap().try_into().unwrap();
+        let ar = ars[ar_index].as_f64().unwrap();
+        let mut efficiencies = Vec::new();
+        let mut extrapolated_efficiencies = Vec::new();
+        let mut finest_slope = 0.0;
+        for ny in b["full_span_panels"].as_array().unwrap() {
+            let ny = ny.as_u64().unwrap().try_into().unwrap();
+            let w = elliptic_polygon(ar, number(b, "root_chord_m"), ny);
+            let out = solve(&w, request(&v, ny, nx)).unwrap();
+            let e = out.cl.powi(2)
+                / (PI * w.geometry().unwrap().aspect_ratio * out.induced_drag_coefficient);
+            finest_slope = out.d_cl_d_alpha_per_rad;
+            println!("T15b ellipse AR={ar} Ny={ny} Nx={nx} e={e:.15} slope={finest_slope:.15}");
+            efficiencies.push(e);
+            if efficiencies.len() >= 3 {
+                let (estimate, p) = richardson(&efficiencies[efficiencies.len() - 3..]);
+                println!(
+                    "T15b Munk AR={ar} Nx={nx} last Ny={ny} estimate={estimate:.15} p={p:.12}"
+                );
+                // Munk NACA-TR-121: fixed lift/span, planar inviscid
+                // system -> CDi >= CL^2/(pi*AR), hence e <= 1.
+                // No tolerance. Stop immediately on any violation.
+                assert!(
+                    estimate <= 1.0,
+                    "STOP: Munk estimate exceeds 1: AR={ar} Nx={nx} last Ny={ny}: {estimate}"
+                );
+                extrapolated_efficiencies.push(estimate);
             }
         }
-        readouts
+        EllipseBoundReadout {
+            ar,
+            nx,
+            finest_slope,
+            extrapolated_efficiencies,
+        }
     })
 }
 
@@ -242,15 +253,12 @@ fn elliptic_finest_relative_lift_slope_gap_is_smaller_at_ar40_for_both_chord_cou
     let b = &v["ellipse_bounds"];
     let a0 = 2.0 * PI; // Cited ideal thin-airfoil slope; independent LLT formula.
     let ars = b["aspect_ratios"].as_array().unwrap();
-    for nx in b["chordwise_panels"].as_array().unwrap() {
+    for (nx_index, nx) in b["chordwise_panels"].as_array().unwrap().iter().enumerate() {
         let nx: usize = nx.as_u64().unwrap().try_into().unwrap();
         let mut relative_gaps = Vec::new();
-        for ar in ars {
+        for (ar_index, ar) in ars.iter().enumerate() {
             let ar = ar.as_f64().unwrap();
-            let measured = ellipse_bound_readouts()
-                .iter()
-                .find(|r| r.ar == ar && r.nx == nx)
-                .unwrap();
+            let measured = ellipse_bound_readout(ar_index, nx_index);
             let target = a0 / (1.0 + a0 / (PI * ar));
             let gap = (measured.finest_slope / target - 1.0).abs();
             println!("T15b finest relative lift-slope gap AR={ar} Nx={nx}: {gap:.15}");
@@ -265,9 +273,14 @@ fn elliptic_finest_relative_lift_slope_gap_is_smaller_at_ar40_for_both_chord_cou
 
 #[test]
 fn elliptic_richardson_estimates_obey_munk_bound_without_tolerance() {
-    for row in ellipse_bound_readouts() {
-        for estimate in &row.extrapolated_efficiencies {
-            assert!(*estimate <= 1.0, "AR={} Nx={}: {estimate}", row.ar, row.nx);
+    let v = fixture();
+    let b = &v["ellipse_bounds"];
+    for nx_index in 0..b["chordwise_panels"].as_array().unwrap().len() {
+        for ar_index in 0..b["aspect_ratios"].as_array().unwrap().len() {
+            let row = ellipse_bound_readout(ar_index, nx_index);
+            for estimate in &row.extrapolated_efficiencies {
+                assert!(*estimate <= 1.0, "AR={} Nx={}: {estimate}", row.ar, row.nx);
+            }
         }
     }
 }

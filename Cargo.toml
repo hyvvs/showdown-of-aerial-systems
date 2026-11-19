@@ -1,3 +1,8 @@
 [workspace]
 members = ["crates/soas-core", "crates/soas-cli", "crates/soas-estimator"]
 resolver = "3"
+
+# Owner-approved T15b test-only optimization for the largest dense VLM cases.
+# No model, assertion, tolerance or dependency changes.
+[profile.test.package.soas-estimator]
+opt-level = 3
