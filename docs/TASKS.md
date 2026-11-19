@@ -244,5 +244,26 @@ established. This inventory does not complete owner H3/H4 or decide D8/D9.
 CONVENTIONS.md is unchanged. Documentation diff/whitespace checks only;
 no test run, as the owner directed for this documentation task.
 
-Current authorized batch stops after this documentation inventory; T10/T11
-remain unstarted. Further work needs authorization.
+## Documentation go/no-go and sign audit (owner-authorized 2026-11-19)
+
+- Part A: compact F-104/Navion input matrix, current estimator/simulator limits,
+  ranked source blockers and Navion-first recommendation, with the comparison
+  report's derivative-specific disagreement and uncertainty kept separate.
+  Evidence: `data/reference/inventory/go_no_go.md`; cited CR pp. 74-79,
+  100-103, MEMO 2-3-59L pp. 12-16, and repository sections/lines. [x]
+- Part B: source-by-source elevator/aileron/rudder evidence, including the
+  JSBSim manual's opposite right-aileron scalar sign, Caughey's explicit D6
+  agreement and opened author-linked slides; the published textbook passage
+  remains unverified. Evidence: `docs/SIGN_EVIDENCE.md`, JSBSim manual
+  Flight Control chapter §Conventions, Caughey §1.2.2 p. 5, Beard/McLain
+  chapter 4 slide 8, and the NASA page references in the audit. [x]
+
+Documentation only; no model-input values transcribed, no code, dependencies,
+tests or CONVENTIONS.md changes. Checks: documentation whitespace, local links,
+input-field coverage and tracked-change scope. No tests run, as the owner
+directed. H3/H4, D8/D9 and T10/T11 statuses remain unchanged; the requested
+derivative audit does not replace queued T10's power-off goal (H3/H4/T10/T11
+above; AIRCRAFT_FORMAT.md sections cited in the decision sheet).
+
+Current authorized batch stops after this documentation follow-up. Further
+implementation or data transcription needs authorization.

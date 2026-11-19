@@ -79,6 +79,10 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | Documentation inventory | A local stability derivative does not establish a stall or engine-off glide comparison; fixed stability axes, body axes and moment-reference locations must stay attached to source quantities; physical control travel, moment-sign definitions and separate yaw-damper surfaces are different evidence. |  |  |
 
+| 2026-11-19 | Documentation go/no-go, Part A | Wing-only lift and pitch slopes are not whole-aircraft derivatives (soas-estimator VLM assumptions/output; Caughey §§2.5-2.7 pp. 19-21); a coefficient at one operating point does not supply an aircraft's full polar or engine-off validation case (CR pp. 76-79, 101-103); flight-identification uncertainty differs from flight-versus-tunnel disagreement (MEMO 2-3-59L pp. 12-16). |  |  |
+
+| 2026-11-19 | Documentation go/no-go, Part B | Right-surface and paired-aileron variables can have opposite signs (JSBSim Flight Control chapter §Conventions; Caughey §1.2.2 p. 5); a moment-sign definition does not prove physical trailing-edge travel (CR A-4); accessible author slides are separate evidence from an unopened published textbook passage (Beard/McLain chapter 4 slide 8; SIGN_EVIDENCE.md access record). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
