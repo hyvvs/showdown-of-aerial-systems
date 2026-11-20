@@ -223,3 +223,66 @@ suite **215 passed, 0 failed, 0 ignored**. The extra reverse non-SI inputs
 were also rerun directly after being added; the final batch gate repeats
 the whole current suite. Log: `target/s3-01b/fix3-all-tests.txt`.
 No dependency, original assertion, tolerance or build setting changed.
+
+## Fix 4: naming policy and later acceptance conditions (docs only)
+
+First commit `c5c2f2a Fix 4: tests` contains only the documentation-check
+specification and actual red output. A local read-only documentation checker
+reported **0 passed, 12 failed**; after the policy edits it reports
+**12 passed, 0 failed**. Full checklist and output:
+S3_01B_POLICY_CHECKS.md. No feature test or production code is added in Fix 4;
+the executable object-shape/missing-mass tests are acceptance conditions for
+S3-02/S3-03, not claimed to run now.
+
+ASSUMPTIONS and ROADMAP now state neutral names for templates/gallery with
+registry plus review; free names for user designs; an incomplete denylist;
+and a report disclaimer which limits claims independently of chosen names.
+ROADMAP and TASKS bind automatic discovery and array substitution of every
+nested JSON object to S3-02 and missing-single-component mass/CG rejection to
+S3-03, including the zero-substitution mutation. Existing legitimate-array
+and error-quality requirements remain. Later tasks stay unstarted.
+
+Source: owner's Fix 4 policy, the existing recursive-object tests and
+ROADMAP S3-02/S3-03. No new formula, fixture number or dependency.
+
+## Final batch verification and file map
+
+All three final quality gates pass, with TEMP/TMP inside the checkout:
+
+```text
+cargo fmt --all -- --check                         PASS
+cargo clippy --all-targets --all-features -- -D warnings   PASS
+cargo test --all                    215 passed; 0 failed; 0 ignored
+```
+
+Local logs: `target/s3-01b/final-fmt.txt`, `final-clippy.txt`, and
+`final-all-tests.txt`. Rust's hard-link cache warning and automatic copying
+were disclosed; no cache/profile/dependency change was made. Original
+`tests/semantic.rs` is unchanged from task/s3-01; the shared support fixture
+has no further change after the separately authorized rudder correction.
+The fixture checkpoint is 18 consumers; the twelve Fix 2 and five Fix 3
+names above complete the final list of 35 shared-fixture consumers.
+
+| Item | Files touched (paths relative to checkout) |
+|---|---|
+| Fix 1 | `crates/soas-designer/src/{lib,quantities,validation}.rs`; `tests/quantity_identity.rs`, `tests/support/mod.rs` (identity metadata only), `tests/fixtures/verification_values.md`; `docs/{S3_01_SEMANTIC_MODEL,TASKS,LEARNING,QUESTIONS}.md` |
+| Rudder correction | `crates/soas-designer/tests/support/mod.rs`, `tests/fixtures/semantic_values.md`; `docs/{S3_01B_VERIFICATION,TASKS}.md` |
+| Fix 2 | `crates/soas-designer/src/validation.rs`, `tests/validation_regressions.rs`, `tests/fixtures/verification_values.md`; `docs/{ASSUMPTIONS,LEARNING,QUESTIONS,S3_01B_VERIFICATION,S3_01_SEMANTIC_MODEL,TASKS}.md` |
+| Fix 3 | `crates/soas-designer/src/validation.rs`, `tests/parameter_units.rs`, `tests/fixtures/verification_values.md`; `docs/{ASSUMPTIONS,LEARNING,S3_01B_VERIFICATION,S3_01_SEMANTIC_MODEL,TASKS}.md` |
+| Fix 4 | `docs/{ASSUMPTIONS,LEARNING,QUESTIONS,ROADMAP,S3_01B_POLICY_CHECKS,S3_01B_VERIFICATION,TASKS}.md` only |
+
+In that table unprefixed `tests/` paths are under `crates/soas-designer/`.
+No core/CLI/estimator source, dependency manifest, lockfile, build setting,
+original assertion or tolerance changed. All synthetic additions/settings
+are ledgered. No new aerodynamic formula is introduced: quantity coverage
+comes from the existing estimator outputs, unit policy from D4, and the
+ordering equation from the owner's clarification; physical signs remain D6.
+
+Least confident about: declaration consistency does not verify a supplied
+source's truth or physical accuracy. The hinge test verifies the recorded
+physical sign contract; no designer geometry-to-control-load adapter exists
+yet. The suffix catalogue deliberately covers current semantic units only.
+Assumptions: first/last parent stations declare root/tip; non-finite angle
+rejection is tested at the safe existing constructor, because such a value
+cannot enter a typed angle field through that API. No questions remain for
+this batch. S3-02 and all later modeling tasks remain unstarted.

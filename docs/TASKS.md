@@ -474,6 +474,22 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 | S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Planned; not authorized |
 | S3-10 | Later box/cylinder/ellipsoid inertia helper with rotation/parallel-axis accounting and explicit approximate qualifier; after S3-03 and report support. | [ ] Later; not authorized |
 
+**Additional binding acceptance conditions (owner S3-01b Fix 4):**
+
+- S3-02 designer JSON/file loading: an automatic object-shape regression
+  discovers every nested object with no hand-listed paths, replaces each
+  independently with an array of its values, and must assert rejection.
+  Preserve legitimate arrays and all existing file-error contracts; follow
+  the core/CLI `all_object_shapes` precedent. No loader is implemented here.
+- S3-03 mass/CG buildup: one missing component mass blocks total mass and CG
+  instead of counting as zero. Compare a complete hand-summed case and the
+  same case with a single missing mass, and demonstrate that a missing-to-zero
+  scratch mutation fails. No mass calculation is implemented here.
+- S3-02 templates and S3-09 gallery/report must preserve the naming/claim
+  policy in ROADMAP: registry plus review for templates/gallery, free user
+  names, no claim that a denylist is complete, and the explicit report
+  disclaimer regardless of name. These tasks remain unstarted.
+
 ### S3-01 completion evidence
 
 #### S3-01b verification follow-up (in order)
@@ -493,7 +509,9 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   tests pass; three scratch faults caught; all gates pass, 215 workspace
   tests passed. [x]
 - Fix 4: template/gallery naming and future loading/missing-mass acceptance
-  conditions (documentation only). [ ]
+  conditions (documentation only). Read-only documentation checks: 12 failed
+  before edits, 12 passed after; final three gates pass, 215 workspace tests
+  passed, none failed or ignored. [x]
 
 S3-02 stays unstarted. The original S3-01 evidence below is retained; current
 registry/follow-up details are in S3_01_SEMANTIC_MODEL.md and QUESTIONS.md.

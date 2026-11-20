@@ -103,6 +103,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01b Fix 3 | Agreement between metadata and a declared unit is insufficient when both contradict the field's unit suffix. Compound suffixes must be resolved before shorter suffixes, and unknown units require an explicit error rather than an inferred conversion. Consistent units do not establish a supplied coefficient's physical meaning (S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract). |  |  |
 
+| 2026-11-20 | S3-01b Fix 4 | Neutral template/gallery naming needs a registry and review, while a name cannot establish validation or replace a report disclaimer. Recursive schema mutation tests discover new object shapes automatically; a total with missing component mass is unknown, not the sum with that mass treated as zero. These are future loading/mass acceptance conditions, not implemented features (ROADMAP S3-02/S3-03; ASSUMPTIONS, S3-01b declaration checks). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

@@ -4,6 +4,21 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## S3-01b declaration checks
 
+- Neutral naming applies to **templates and the gallery**, enforced through
+  a **registry plus review** of names, images, descriptions and implied claims.
+  User designs may name themselves freely. A denylist cannot be complete;
+  the report disclaimer limits claims, independently of a design's name.
+  A neutral name does not establish validation. Current template validation
+  remains a registered-name check; there is no gallery/report implementation
+  in S3-01. Source: owner S3-01b Fix 4 policy; ROADMAP, evidence/naming policy.
+- Future designer JSON/file loading must have an automatic object-shape
+  regression: discover every nested object with no hand-listed paths,
+  independently replace each with an array of its values, and assert rejection.
+  Future mass/CG tests must show that one missing component mass blocks total
+  mass and CG instead of counting as zero. These are S3-02/S3-03 acceptance
+  conditions, not implemented features. Source: owner S3-01b Fix 4;
+  ROADMAP, S3-02/S3-03; core/CLI `all_object_shapes` precedent.
+
 - The owner-defined control order uses the actual parent root-to-tip vector
   in body axes, with a strictly positive hinge displacement dot product.
   It supports ventral, inverted V and canted declarations, without changing

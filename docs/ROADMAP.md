@@ -222,11 +222,16 @@ actual component, not an additional claim of aerodynamic estimation. Missing
 provenance is a validation error, not a reason to silently label a value user
 supplied. (Owner choices 3/6; later S3-10.)
 
-Templates and fixtures use **neutral names** and explicit synthetic labels;
-no name, image, descriptive text or performance claim implies an F-104 or
-another real aircraft until validated matching data exist. The parked real
-source inventory is not a template-data licence or validation result.
-(Owner choice 6; experimental parallel-track register.)
+Neutral naming applies to **templates and the gallery**, enforced through a
+**registry plus review** of names, images, descriptive text and performance
+claims. Templates and fixtures carry explicit synthetic labels and must not
+imply an F-104 or another real aircraft until validated matching data exist.
+User designs may name themselves freely. A denylist cannot be complete;
+the report disclaimer limits claims, regardless of a design's chosen name.
+Neutral naming is not validation. Current registered-template checks do not
+implement a gallery or report. The parked source inventory is not a template
+data licence or validation result. (Owner choice 6 and S3-01b Fix 4 policy;
+experimental parallel-track register; S3-09 report disclaimer.)
 
 **Evidence rules for every task.** Tests first; expected answers from hand
 algebra, separately authored records or an independently stated analytic case,
@@ -293,6 +298,12 @@ export/report implementation is included. The requirements below are retained.
   duplicate-field, missing-reference and unsupported-version rejection.
   Saving an incomplete draft retains missing inertia; injecting a static
   wing-derived result or dropping any numeric-path provenance is rejected.
+  **Acceptance condition:** an automatic object-shape regression must
+  discover every nested object with no hand-listed paths, replace each
+  independently with an array of its values, and assert rejection. Include
+  engines, throttle/table definitions, controls and provenance while retaining
+  legitimate arrays, as in core/CLI `all_object_shapes`. A hand-maintained
+  object list cannot satisfy this condition. (Owner S3-01b Fix 4.)
 - **Mutations:** accept an object-shaped array; drop source metadata; resolve
   paths against the process directory; ignore a version or unknown field.
 - **Risks:** relative references breaking on relocation, schema drift and
@@ -317,9 +328,16 @@ export/report implementation is included. The requirements below are retained.
   signed parallel-axis contributions, rigid translation and reordered inputs
   within a stated roundoff budget. Check incomplete/zero-total-mass cases and
   singular inertia blocking simulator export.
+  **Acceptance condition:** one missing component mass blocks total mass and
+  CG instead of counting as zero. Test a complete independently hand-summed
+  case and the same case with exactly one component mass absent; demand an
+  explicit missing/error aggregate result, never a partial total. If a partial
+  subtotal is displayed, it must be labelled separately and cannot serve as
+  total mass or CG. (Owner S3-01b Fix 4.)
 - **Mutations:** average positions without mass weighting; omit an engine;
   count fuel twice; use the file origin instead of component CG; lose an
-  off-diagonal minus sign or rotate inertia the wrong way.
+  off-diagonal minus sign or rotate inertia the wrong way; replace a missing
+  component mass with zero and show that the missing-mass test fails.
 - **Risks:** unknown structure/payload distribution and point-mass singularity;
   no structural weight estimate or fuel-burn CG model. Sources: MIT L11 p. 1
   and L26 pp. 2-3/7-9 below; convert its positive products to D11 signed entries.

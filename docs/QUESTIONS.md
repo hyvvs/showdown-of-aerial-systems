@@ -123,14 +123,14 @@ When a batch stops, append an entry with the task, what blocked it, and options 
   against original production code. The original sign assertions remain intact.
 - **Owner's clarified ordering:** `(endpoint2-endpoint1) dot (parent tip-root)`
   must be positive, using actual body-axis geometry, including canted/inverted/
-  ventral surfaces. Current rudder gives -5; reversed endpoints give +5. These
+  ventral surfaces. The original rudder gave -5; reversed endpoints give +5. These
   are derived from the existing synthetic fixture, not new aircraft numbers.
 - **What blocks:** the existing independent expected-number inventory also
   pins rudder coordinates. An isolated in-memory reversal, without altering any
   expected data, fails for `controls[rudder].hinge_end_body_m[2]`: actual
   `Some(2.0)`, expected `Some(4.0)`. The owner explicitly required STOP if any
   assertion's expected value would change; that includes this inventory
-  assertion, not only the sign strings. The committed fixture is untouched.
+  assertion, not only the sign strings. The fixture was untouched at that checkpoint.
 - **Options / trade-offs:** authorize changing only the rudder's expected
   inventory entries together with its fixture/ledger, preserving every
   assertion, sign expectation, other fixture number and tolerance (recommended);
@@ -151,3 +151,14 @@ When a batch stops, append an entry with the task, what blocked it, and options 
   are recorded in S3_01B_VERIFICATION.md. Assertions and tolerances are intact.
   Fix 2 implements the actual-parent rule and tests ventral/inverted/canted
   cases. This question is answered; no S3-02 work is authorized or started.
+
+## S3-01b Fix 4 — naming and later acceptance policy
+
+ANSWERED by the owner's explicit policy: templates/gallery use neutral names
+with registry plus review; user designs may name themselves freely; a
+denylist cannot be complete and the report disclaimer limits claims. The
+automatic every-object array-substitution test is mandatory for S3-02;
+single-missing-component mass/CG rejection and its zero-substitution mutation
+are mandatory for S3-03. ROADMAP, TASKS and ASSUMPTIONS record these as later
+acceptance conditions; no loading, mass calculation, gallery or report task
+starts in this batch. No further owner decision is needed for these fixes.

@@ -55,3 +55,15 @@ No aircraft number, numerical tolerance or formula is introduced. The
 counts above are observed documentation-check results, not fixture data.
 The executable JSON and mass tests belong to their future tasks and are
 not run or claimed implemented here.
+
+## Result after policy edits
+
+```text
+Documentation checks: 12 passed; 0 failed
+```
+
+Local evidence: `target/s3-01b/fix4-red.txt` and `fix4-green.txt`. Manual
+review confirms the clauses appear in the naming policy and the actual
+S3-02/S3-03 task sections, not merely in a verification record. Both Fix 4
+commits are docs-only. No existing assertion, expected value or tolerance
+is changed, and future tasks remain unauthorized/unstarted.
