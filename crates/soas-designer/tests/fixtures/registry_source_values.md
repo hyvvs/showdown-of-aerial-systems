@@ -18,3 +18,27 @@ their synthetic ledgers; no shared fixture or expected number is edited.
   and list-entry removal are also deliberately wrong structural mutations.
 - Source: owner's Fix 8, current semantic-model closed catalogues, and
   verifier h2 (unlisted WingArea plus method arms, leaving ALL unchanged).
+
+## Fix 9
+
+- Existing SYNTHETIC TEST value -0.7 is cloned from the tail-law fixture for
+  source-validation probes; legitimate kinds/scopes/units are declared
+  explicitly. The dimensionless fuselage probe is an arbitrary synthetic
+  test value, not real aircraft data or an assembled aerodynamic contribution.
+  No shared value or expected-number entry changes.
+- ASCII display label: 256 repetitions of x. Kind-label cases: existing
+  canonical fuselage_pitching_moment_contribution once and repeated 8 times.
+  The enum kind remains FuselagePitchingMomentContribution in both cases;
+  there is no new/unknown kind or kind-field serialization.
+- Unicode display label: U+7FFC repeated 64 times, 192 UTF-8 bytes. These are
+  synthetic string-length settings, not physical numbers or source exceptions.
+- Empty list, empty string, ASCII space/tab/CR/LF, Unicode U+2003/U+00A0
+  whitespace and a valid-plus-empty reference list are intentional invalid
+  metadata probes. Contribution source text is checked separately. Positive
+  controls keep valid sources to establish that labels/kinds are accepted.
+- Mutation k uses the verifier's exact condition: USER_SUPPLIED plus a label
+  slice length greater than 128 bytes exempts numeric source checking. The
+  cutoff exists only in the uncommitted fault, never production validation.
+- Component/contribution slot 0 refers to the existing tail-law record. Source:
+  owner Fix 9; target/verifier/scratch/s3_01c2_mutations.py, mutation k; existing
+  validation.rs source contract. No new tolerance, formula or dependency.
