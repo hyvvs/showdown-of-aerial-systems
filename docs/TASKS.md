@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. T10 and the entire T16-T28 experimental/modeling chain are **parked** by the owner's post-T16c answers; completed audits remain complete. Their reopening gates are in ESTIMATOR_PLAN.md, Parked work register. Next proposed work is Stage 3, S3-01 onward, with implementation awaiting the applicable owner answers and a named task. The parked comparison chain does not block that limited designer/report work; T0 to T9 are not blocked by owner tasks. (Owner post-T16c consequences; ROADMAP, Stage 3 task plan.)
+H1 and H2 run alongside development. T10 and the entire T16-T28 experimental/modeling chain are **parked** by the owner's post-T16c answers; completed audits remain complete. Their reopening gates are in ESTIMATOR_PLAN.md, Parked work register. All six Stage 3 choices are now answered with binding conditions in ROADMAP.md; **S3-01 only is authorized after those decisions are recorded**, and is not started in this docs-only commit. Later S3 tasks still need task authorization. The parked comparison chain does not block that limited designer/report work; T0 to T9 are not blocked by owner tasks. (Owner Stage 3 adoption; ROADMAP, recorded decisions.)
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -419,26 +419,70 @@ direction, with new implementation questions in ROADMAP.md; no modeling or
 designer task is started. T17/T10/T11 remain unstarted and D8/D9 unchanged.
 (Closure §§6-7; ESTIMATOR_PLAN, Current scope; QUESTIONS, T16c/Stage 3 entries.)
 
-## Stage 3: proposed designer/report queue (not authorized to implement)
+## Stage 3: recorded designer/report queue (S3-01 only authorized)
 
-All details, independent tests, scratch mutations, risks, sizes and pre-start
-questions are in [ROADMAP.md](ROADMAP.md#stage-3-proposed-task-plan--owner-answers-required-before-execution).
-Use new S3 IDs; **no T16-T28 renumbering**. Only the owner's named task(s)
-run after the applicable questions are answered; no automatic batch is
-authorized. The core stays pure, and no new dependency is selected by this
-plan. (Owner planning request; AGENTS, Batch mode.)
+All details, independent tests, scratch mutations, risks, sizes and recorded
+owner conditions are in [ROADMAP.md](ROADMAP.md#stage-3-task-plan--recorded-owner-decisions).
+Use S3 IDs; **no T16-T28 renumbering**. All six choices are ANSWERED; the owner
+authorizes **S3-01 only after recording**, not an automatic batch. This turn
+is documentation only; no crate, code or tests are created. The architecture
+is a pure `soas-designer` depending on core/estimator, with CLI-owned I/O and
+no reverse dependency. Only pre-approved dependencies. (Owner choices 1-6;
+AGENTS, Batch mode.)
 
-| ID | Proposed task / dependencies | Status |
+**Binding data rules:** save incomplete drafts, but missing intrinsic inertia
+blocks export. Every computable wing result (including area, aspect ratio,
+lift slope, induced drag and wing neutral point) is recomputed from current
+geometry; supplied/template aerodynamic values are restricted to the permitted
+tail, fuselage, interference and CLmax contributions. No opaque supplied
+aircraft total or stored static wing result bypasses that split. Whole-aircraft
+trim/static-margin/export require a complete assembled bundle; basic checks
+remain available with their own required inputs. Detailed assembly and any
+remaining simulator fields are later S3-05 gates, not an excuse to guess or
+to block S3-01. (Owner choice 2; ROADMAP, Binding estimated-versus-supplied contract.)
+
+Every numeric input/result/setting and vector/tensor entry has machine-readable
+provenance, shown beside its report value: `ESTIMATED_WING_ONLY`,
+`USER_SUPPLIED`, `TEMPLATE_DEFAULT`, `NOT_ESTIMATED`, `OUTSIDE_COVERAGE`.
+The single added category **`DERIVED_FROM_INPUTS`** identifies calculated
+mass/CG, ratios and mixed-result quantities without falsely calling them
+supplied or wing-only. Dependency paths retain their origins. Later shape
+helpers also carry `approximate: true`. Templates use neutral names and
+synthetic labels; no real-aircraft identity or confidence percentage is
+implied. (Owner choices 3/6; ROADMAP, Machine-readable number provenance.)
+
+**Stage 3 acceptance:** the **11 m to 9 m wingspan demonstration** is required.
+With normalized chord distribution, component mass/loading, atmosphere and
+supplied constant CLmax held fixed within coverage, independent expectations
+are area/aspect-ratio ratios `9/11`, wing-loading ratio `11/9` and stall-speed
+ratio `sqrt(11/9)`. Recompute all wing outputs and show current-revision
+provenance. Every stall result says **"conditional on supplied CLmax"** and
+**"flaps and high-lift devices are not modelled"**; state geometry affects
+this stall calculation through area and weight only. No implied change to
+CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptance test.)
+
+| ID | Task / dependencies | Status |
 |---|---|---|
-| S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and provenance. | [ ] Proposed |
-| S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Proposed |
-| S3-03 | Explicit component mass/CG/inertia and fixed loading-case buildup; after S3-01. | [ ] Proposed |
-| S3-04 | Isolated-wing estimator adapter with explicit unsupported/not-estimated results; after S3-01. | [ ] Proposed |
-| S3-05 | Complete supplied aircraft inputs and existing simulator-format export; after S3-02/03/04. | [ ] Proposed |
-| S3-06 | Wing loading, thrust-to-weight, declared CG range and domain checks; after S3-03/05. | [ ] Proposed |
-| S3-07 | Existing trim/static-margin wrappers and sampled CG feasibility; after S3-05/06. | [ ] Proposed |
-| S3-08 | Conditional stall speed from independently supplied whole-aircraft CLmax; after S3-03/05/06. | [ ] Proposed |
-| S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Proposed |
+| S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and per-number provenance; no static derived wing inputs. | [ ] Authorized after recording; not started |
+| S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Planned; not authorized |
+| S3-03 | Explicit component mass/CG/inertia and fixed loading-case buildup; after S3-01. | [ ] Planned; not authorized |
+| S3-04 | Current-geometry wing recomputation with provenance and explicit unsupported/not-estimated results; after S3-01. | [ ] Planned; not authorized |
+| S3-05 | Complete assembled wing-plus-allowed-supplied inputs and freshly generated simulator export; after S3-02/03/04. | [ ] Planned; not authorized |
+| S3-06 | Wing loading, thrust-to-weight, declared CG range and domain checks; after S3-03/05. | [ ] Planned; not authorized |
+| S3-07 | Existing trim/static-margin wrappers and sampled CG feasibility; after S3-05/06. | [ ] Planned; not authorized |
+| S3-08 | Conditional stall speed from independently supplied whole-aircraft CLmax; after S3-03/05/06. | [ ] Planned; not authorized |
+| S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Planned; not authorized |
+| S3-10 | Later box/cylinder/ellipsoid inertia helper with rotation/parallel-axis accounting and explicit approximate qualifier; after S3-03 and report support. | [ ] Later; not authorized |
+
+### Documentation: six Stage 3 choices adopted with conditions (completed)
+
+Recorded all six owner choices, automatic geometry-driven wing results,
+the permitted supplied-input boundary, per-number provenance/adjacent report
+flags, conditional stall notices, neutral template names and the required
+11 m to 9 m acceptance test. Added the later approximate shape helper. No
+implementation, numeric fixture or test is created; S3-01 remains authorized
+for the next implementation task without repeat approval. (Owner adoption
+and documentation-only scope; ROADMAP; QUESTIONS, answered Stage 3 entry.) [x]
 
 ### Documentation: checkpoint answers and Stage 3 proposal (completed)
 
