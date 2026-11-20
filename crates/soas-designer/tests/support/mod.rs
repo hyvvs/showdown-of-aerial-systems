@@ -175,11 +175,16 @@ fn control(id: &str, parent: &str, kind: ControlKind) -> ControlSurface {
         min_rad: rad(-0.3),
         max_rad: rad(0.4),
     };
-    if kind == ControlKind::Rudder {
-        std::mem::swap(
-            &mut control.hinge_start_body_m,
-            &mut control.hinge_end_body_m,
-        );
+    match kind {
+        ControlKind::Elevator => {
+            control.hinge_start_body_m = [-4.0, 0.0, 2.0];
+            control.hinge_end_body_m = [-5.0, 2.0, 3.0];
+        }
+        ControlKind::Rudder => {
+            control.hinge_start_body_m = [-6.0, 0.0, 2.0];
+            control.hinge_end_body_m = [-7.0, 0.0, -1.0];
+        }
+        ControlKind::Aileron => {}
     }
     control
 }
@@ -320,8 +325,10 @@ pub fn expected_numbers(_design: &Design) -> Vec<(String, Option<f64>, &'static 
             ("hinge_end_body_m", [-2.0, 3.0, 4.0]),
         ] {
             let point = match (id, name) {
-                ("rudder", "hinge_start_body_m") => [-2.0, 3.0, 4.0],
-                ("rudder", "hinge_end_body_m") => [-1.0, 0.0, 2.0],
+                ("elevator", "hinge_start_body_m") => [-4.0, 0.0, 2.0],
+                ("elevator", "hinge_end_body_m") => [-5.0, 2.0, 3.0],
+                ("rudder", "hinge_start_body_m") => [-6.0, 0.0, 2.0],
+                ("rudder", "hinge_end_body_m") => [-7.0, 0.0, -1.0],
                 _ => point,
             };
             for (i, value) in point.iter().enumerate() {

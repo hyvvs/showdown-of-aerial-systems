@@ -22,8 +22,9 @@ settings, not measured data. All comparisons are exact; no new tolerance is sele
 | wing.mass.intrinsic_inertia.tensor_kg_m2 | [[4,-0.1,0.2],[-0.1,5,-0.3],[0.2,-0.3,6]] kg m², symmetric positive definite test matrix |
 | wing.mass.intrinsic_inertia.axes_euler_rad | [0.01,0.02,0.03] rad, orientation input only, not transformed in S3-01 |
 | all other mass/CG/inertia fields | absent, not numeric zero; NOT_ESTIMATED |
-| controls[elevator/aileron].hinge_start/end_body_m | [-1,0,2] / [-2,3,4] m, unchanged |
-| controls[rudder].hinge_start/end_body_m | [-2,3,4] / [-1,0,2] m; only these two endpoint entries are swapped under the owner's S3-01b clarification |
+| controls[aileron].hinge_start/end_body_m | [-1,0,2] / [-2,3,4] m, unchanged |
+| controls[elevator].hinge_start/end_body_m | [-4,0,2] / [-5,2,3] m, exactly the existing parent tail root/tip; owner-authorized S3-01c2 containment fixture correction |
+| controls[rudder].hinge_start/end_body_m | [-6,0,2] / [-7,0,-1] m, exactly the existing parent fin root/tip; same narrow S3-01c2 authorization |
 | each control.chord_fraction / min_rad / max_rad | 0.2 / -0.3 rad / 0.4 rad |
 | contributions[tail-law].parameters[cm_alpha_per_rad] | -0.7 per rad, declared synthetic tail law only |
 | contributions[lift-limit].parameters[cl_max] | 1.4, synthetic supplied whole-aircraft lift cap, never a wing estimate |
@@ -49,3 +50,15 @@ coordinates under the owner's formula, not new physical data or tolerances.
 Positive deflection remains a physical D6 definition independent of hinge order;
 all sign assertions and all other fixture values remain unchanged. This narrow
 fixture/inventory correction is separately authorized and committed.
+
+S3-01c2 correction, synthetic coordinates only: the old elevator root
+projection was -3 with parent squared span 6; the old rudder endpoint
+projections were -10 and -5 with squared span 10. Thus those points passed
+the old positive-order rule but violated the new containment rule. The
+corrected elevator projections are 0 and 6, and rudder 0 and 10, so all four
+endpoints are exactly on their parent root/tip boundaries (zero distance
+outside). These hand projections describe the fixture, not assertion
+expectations to change. Only raw hinge coordinates and matching independent
+inventory entries are corrected; every other fixture value and every
+assertion/physical sign/tolerance is unchanged. Dedicated boundary and
+slightly-outside tests use their own geometry, not this shared fixture.
