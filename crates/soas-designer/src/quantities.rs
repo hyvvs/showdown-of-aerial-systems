@@ -48,32 +48,72 @@ wing_quantities! {
     PanelCirculationOverAirspeed => "wing_panel_circulation_over_airspeed_m",
     PanelSpanwiseIndex => "wing_panel_spanwise_index",
     PanelChordwiseIndex => "wing_panel_chordwise_index",
+    SampledLeadingEdgeX => "wing_sampled_leading_edge_x_m",
+    SampledLeadingEdgeZ => "wing_sampled_leading_edge_z_m",
+    SampledTwist => "wing_sampled_twist_rad",
+    SampledSectionLiftSlope => "wing_sampled_section_lift_slope_per_rad",
+    SampledSectionZeroLiftAngle => "wing_sampled_section_zero_lift_angle_rad",
+    FiniteSegmentVelocityPerCirculation => "finite_segment_velocity_per_circulation_per_m",
+    SemiInfiniteVelocityPerCirculation => "semi_infinite_velocity_per_circulation_per_m",
+    HorseshoeVelocityPerCirculation => "horseshoe_velocity_per_circulation_per_m",
+    ThinAirfoilLiftSlope => "thin_airfoil_lift_slope_per_rad",
 }
 
-fn normalize(name: &str) -> String {
-    name.chars()
-        .filter(|c| *c != '_' && *c != '-' && !c.is_whitespace())
-        .map(|c| c.to_ascii_lowercase())
-        .collect()
+// Closed non-wing domain: no catch-all coefficient or wing-result variant.
+// Source: owner's S3-01c Fix 5 examples and the existing tail-law/CLmax inputs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SuppliedQuantityKind {
+    TailLiftCurveSlope,
+    TailNeutralPointContribution,
+    TailPitchingMomentSlope,
+    FuselagePitchingMomentContribution,
+    InterferenceFactor,
+    WholeAircraftClMax,
 }
-
-impl ComputedWingQuantity {
-    /// Compatibility spelling recognition prevents a misleading SuppliedNonWing
-    /// declaration from laundering a known wing-result label. Display text does
-    /// not override an explicit ComputedWing identity, even if text is arbitrary.
-    pub fn from_name(name: &str) -> Option<Self> {
-        let normalized = normalize(name);
-        Self::ALL
-            .iter()
-            .copied()
-            .find(|q| normalize(q.canonical_name()) == normalized)
+impl SuppliedQuantityKind {
+    pub const ALL: &'static [Self] = &[
+        Self::TailLiftCurveSlope,
+        Self::TailNeutralPointContribution,
+        Self::TailPitchingMomentSlope,
+        Self::FuselagePitchingMomentContribution,
+        Self::InterferenceFactor,
+        Self::WholeAircraftClMax,
+    ];
+    pub fn canonical_name(self) -> &'static str {
+        match self {
+            Self::TailLiftCurveSlope => "tail_lift_curve_slope",
+            Self::TailNeutralPointContribution => "tail_neutral_point_contribution",
+            Self::TailPitchingMomentSlope => "tail_pitching_moment_slope",
+            Self::FuselagePitchingMomentContribution => "fuselage_pitching_moment_contribution",
+            Self::InterferenceFactor => "interference_factor",
+            Self::WholeAircraftClMax => "whole_aircraft_cl_max",
+        }
+    }
+    pub fn scope(self) -> crate::ContributionScope {
+        match self {
+            Self::TailLiftCurveSlope
+            | Self::TailNeutralPointContribution
+            | Self::TailPitchingMomentSlope => crate::ContributionScope::Tail,
+            Self::FuselagePitchingMomentContribution => crate::ContributionScope::Fuselage,
+            Self::InterferenceFactor => crate::ContributionScope::Interference,
+            Self::WholeAircraftClMax => crate::ContributionScope::ClMax,
+        }
+    }
+    pub fn unit(self) -> &'static str {
+        match self {
+            Self::TailLiftCurveSlope | Self::TailPitchingMomentSlope => "1/rad",
+            Self::TailNeutralPointContribution => "m",
+            Self::FuselagePitchingMomentContribution
+            | Self::InterferenceFactor
+            | Self::WholeAircraftClMax => "1",
+        }
     }
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum QuantityIdentity {
-    /// Allowed non-wing parameter, subject to scope, source and unit validation.
-    SuppliedNonWing,
-    /// Explicit forbidden request, retained for a precise validation error.
+    Supplied(SuppliedQuantityKind),
     ComputedWing(ComputedWingQuantity),
+    /// Explicit invalid declarations give precise errors; neither is a default.
+    Missing,
+    Unknown(String),
 }

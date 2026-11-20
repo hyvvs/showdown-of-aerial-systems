@@ -4,7 +4,7 @@ mod numbers;
 mod quantities;
 mod validation;
 
-pub use quantities::{ComputedWingQuantity, QuantityIdentity};
+pub use quantities::{ComputedWingQuantity, QuantityIdentity, SuppliedQuantityKind};
 
 use soas_core::{propulsion::EngineTable, units::Radians};
 use std::{collections::BTreeMap, error::Error, fmt};
@@ -201,6 +201,7 @@ pub struct SuppliedContribution {
 pub struct SuppliedParameter {
     /// Semantic identity is independent of the display label. No implicit default.
     pub quantity: QuantityIdentity,
+    /// Free-text label; never selects kind, scope, units or allowed origin.
     pub name: String,
     pub value: Option<f64>,
     pub unit: String,

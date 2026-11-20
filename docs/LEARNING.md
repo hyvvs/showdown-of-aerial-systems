@@ -105,6 +105,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01b Fix 4 | Neutral template/gallery naming needs a registry and review, while a name cannot establish validation or replace a report disclaimer. Recursive schema mutation tests discover new object shapes automatically; a total with missing component mass is unknown, not the sum with that mass treated as zero. These are future loading/mass acceptance conditions, not implemented features (ROADMAP S3-02/S3-03; ASSUMPTIONS, S3-01b declaration checks). |  |  |
 
+| 2026-11-20 | S3-01c2 Fix 5 | A closed semantic kind can constrain meaning, units and scope while a free label cannot. Distinct supplied/computed enum domains prevent computed results being admitted as supplied kinds; independent catalogue tests detect accidental extensions. A defining input and its interpolated result have different authority even if their values coincide (S3_01_SEMANTIC_MODEL, Closed supplied-quantity kinds; S3_01C_VERIFICATION). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

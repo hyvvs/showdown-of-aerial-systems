@@ -32,11 +32,15 @@ Keep this honest and current. Every simplification the code makes belongs here. 
   separately. Sources: owner S3-01b requirements/clarification;
   S3_01_SEMANTIC_MODEL.md, Representation and validation; core units/dynamics
   validation reused without tolerance changes.
-- Supplied parameter units use an explicit current-model suffix catalogue,
-  including the existing dimensionless `cl_max` exception. Name, declared
-  unit and numeric provenance must all agree. Unknown suffixes are errors;
-  no conversion or physical coefficient interpretation is guessed. Sources:
-  D4; S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract.
+- Supplied aerodynamic contributions now require one of six closed quantity
+  kinds, with exact scope/unit mappings; no generic supplied kind, unknown kind
+  or missing kind is accepted. Free-text labels never select meaning or units.
+  Computed results remain forbidden as supplied kinds, including sampled
+  station/kernel outputs. This replaces the earlier label classifier/suffix
+  checks under the owner's Fix 5 design change. Defining geometry/section
+  inputs remain inputs; their interpolated/computed results are not overrides.
+  Sources: owner Fix 5; S3_01_SEMANTIC_MODEL, closed-kind/registry sections.
+
 
 ## Environment (v0.1)
 - Flat, non-rotating Earth; constant gravity.

@@ -202,15 +202,22 @@ impl Design {
         }
         for c in &self.contributions {
             let p = format!("contributions[{}]", c.id);
-            // Quantity identity is checked before label syntax or scope, so
-            // neither separators/casing nor another component scope bypass it.
+            // Reject explicit invalid/computed declarations before label/scope.
+            // Free text is never classified, normalized or parsed for meaning.
             for a in &c.parameters {
-                require(
-                    !matches!(a.quantity, QuantityIdentity::ComputedWing(_))
-                        && ComputedWingQuantity::from_name(&a.name).is_none(),
-                    &format!("{p}.parameters[{}]", a.name),
-                    "computed wing quantities cannot be supplied",
-                )?;
+                let p = format!("{p}.parameters[{}]", a.name);
+                match &a.quantity {
+                    QuantityIdentity::ComputedWing(_) => {
+                        return Err(error(&p, "computed wing quantities cannot be supplied"));
+                    }
+                    QuantityIdentity::Missing => {
+                        return Err(error(&p, "supplied quantity kind is required"));
+                    }
+                    QuantityIdentity::Unknown(_) => {
+                        return Err(error(&p, "unknown supplied quantity kind"));
+                    }
+                    QuantityIdentity::Supplied(_) => {}
+                }
             }
             require(
                 !matches!(
@@ -225,23 +232,32 @@ impl Design {
             let mut names = BTreeSet::new();
             for a in &c.parameters {
                 let p = format!("{p}.parameters[{}]", a.name);
-                identity(&a.name, &p, &mut names)?;
-                text(&a.unit, &p)?;
-                let expected_unit = parameter_unit(&a.name)
-                    .ok_or_else(|| error(&p, "unknown supplied-parameter unit suffix"))?;
+                text(&a.name, &p)?;
                 require(
-                    a.unit == expected_unit,
+                    names.insert(a.name.clone()),
                     &p,
-                    "parameter suffix and declared unit disagree",
+                    "duplicate parameter label",
+                )?;
+                let QuantityIdentity::Supplied(kind) = a.quantity else {
+                    unreachable!("kind validated above")
+                };
+                require(
+                    kind.scope() == c.scope,
+                    &p,
+                    "quantity kind does not belong to contribution scope",
+                )?;
+                require(
+                    a.unit == kind.unit(),
+                    &p,
+                    "quantity kind and declared unit disagree",
                 )?;
                 if let Some(v) = a.value {
                     finite(&[v], &p)?;
                 }
-                if c.scope == ContributionScope::ClMax {
-                    require(a.name == "cl_max", &p, "CLmax scope accepts only cl_max")?;
-                    if let Some(v) = a.value {
-                        positive(v, &p)?;
-                    }
+                if c.scope == ContributionScope::ClMax
+                    && let Some(v) = a.value
+                {
+                    positive(v, &p)?;
                 }
             }
         }
@@ -316,29 +332,6 @@ fn validate_metadata(
         )?;
     }
     Ok(())
-}
-fn parameter_unit(name: &str) -> Option<&'static str> {
-    // D4 internal SI; exact spellings match numbers.rs. This is unit validation,
-    // not a claim that an arbitrary supplied coefficient has physical meaning.
-    // Compound suffixes precede their shorter endings. Extend with independent
-    // positive/cross-unit/unknown-suffix tests (S3_01_SEMANTIC_MODEL.md).
-    if name == "cl_max" {
-        return Some("1");
-    }
-    [
-        ("_kg_m2", "kg*m^2"),
-        ("_per_rad", "1/rad"),
-        ("_kgps", "kg/s"),
-        ("_m2", "m^2"),
-        ("_rad", "rad"),
-        ("_kg", "kg"),
-        ("_m", "m"),
-        ("_n", "N"),
-        ("_unit", "1"),
-        ("_fraction", "1"),
-    ]
-    .into_iter()
-    .find_map(|(suffix, unit)| name.ends_with(suffix).then_some(unit))
 }
 fn validate_surface(s: &Surface, p: &str) -> Result<(), DesignError> {
     require(

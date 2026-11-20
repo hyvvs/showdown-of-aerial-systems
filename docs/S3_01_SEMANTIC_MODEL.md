@@ -88,8 +88,9 @@ Sixteen semantic tests pass, with exact comparisons and no new tolerance.
 - `SuppliedContribution` accepts only tail/fuselage/interference/whole-aircraft
   CLmax scopes with source and declared coverage. Explicit Wing/WholeAircraft
   scope requests and computed wing quantity identities are rejected. ClMax accepts
-  only positive, optionally missing `cl_max`. This is an input ledger, not
-  coefficient assembly or a physical interpretation of arbitrary parameter names.
+  only the positive, optionally missing WholeAircraftClMax kind. Labels are
+  free text and never select semantics. This is an input ledger, not coefficient
+  assembly or an interpretation of arbitrary labels.
 
 Drafts need not contain every aircraft component or any aerodynamic contribution.
 Optional airfoil/mass/contribution values remain explicit `Option` values; no
@@ -106,35 +107,50 @@ not that supplied citations or physical aircraft properties are true.
 
 ## Numeric provenance and identity
 
-### Supplied-parameter suffix/unit contract
+### Closed supplied-quantity kinds (S3-01c2 Fix 5)
 
-The declared unit must agree with the name even when its provenance metadata
-agrees with the same wrong unit. Exact internal-SI spellings follow D4 and
-the existing numeric inventory; no conversion is inferred from a label.
+A supplied aerodynamic parameter must declare `QuantityIdentity::Supplied`
+with one of the following `SuppliedQuantityKind` variants. There is no
+catch-all supplied kind. The list consists of the owner's five examples plus
+the existing synthetic tail pitching-moment slope; no new aerodynamic model
+or simulator-coefficient assembly is introduced.
 
-| Name ending (longest applicable ending first) | Declared unit |
-|---|---|
-| `_kg_m2` | `kg*m^2` |
-| `_per_rad` | `1/rad` |
-| `_kgps` | `kg/s` |
-| `_m2` | `m^2` |
-| `_rad` | `rad` |
-| `_kg` | `kg` |
-| `_m` | `m` |
-| `_n` | `N` |
-| `_unit`, `_fraction` | `1` |
-| Exact existing name `cl_max` | `1` |
+| Kind | Required scope | Required unit | Meaning / later accounting |
+|---|---|---|---|
+| TailLiftCurveSlope | Tail | 1/rad | Supplied tail lift derivative; normalization/downwash accounting remains S3-05. |
+| TailNeutralPointContribution | Tail | m | Supplied tail neutral-point contribution in the common body datum, not the wing neutral point; assembly remains S3-05. |
+| TailPitchingMomentSlope | Tail | 1/rad | Existing supplied tail moment derivative, with source/reference definitions. |
+| FuselagePitchingMomentContribution | Fuselage | 1 | Supplied dimensionless pitching-moment coefficient contribution, not an aircraft total. |
+| InterferenceFactor | Interference | 1 | Declared dimensionless factor; affected terms and combination rule must be specified before use. |
+| WholeAircraftClMax | ClMax | 1 | Existing supplied positive whole-aircraft lift cap within declared coverage. |
 
-This is a closed catalogue for the current semantic model, not a universal
-unit parser. Unknown or differently cased suffixes are rejected explicitly,
-including non-SI `_mm`, `_ft` and `_deg`; a known SI suffix with any different
-declared unit is a separate error. Checks also apply to absent draft values.
-New unit-bearing fields require a documented suffix/unit pair and independent
-positive, all-cross-unit and unknown-suffix tests. Compound endings must
-precede shorter endings (`_kg_m2` before `_m2`, `_per_rad` before `_rad`).
-This check does not make an arbitrary supplied parameter into an aerodynamic
-model input; coefficient assembly remains a later task. Computed wing identity
-rejection still runs first in every scope.
+These inputs describe only contributions today's wing estimator cannot
+produce. They do not claim that the tail/fuselage/interference effect is
+estimated. Their values remain source/coverage dependent. No other coefficient
+or control/rate term is admitted by implication; expansion requires an explicit
+semantic specification and independent tests, not a new display spelling.
+
+`name` is a nonempty free-text label, unique within its contribution for
+unambiguous numeric paths. It is never parsed, normalized, or matched to choose
+kind, scope, origin or units. A label such as `wing_area_m2` is legal on a
+TailPitchingMomentSlope with unit `1/rad`; it supplies a tail moment slope,
+not wing area. Conversely every ComputedWing declaration is rejected even if
+its label looks like a permitted tail value. Unit metadata and declared units
+must agree with the kind's unit, including absent draft values. Wrong units
+and non-SI strings still error; no conversion is inferred from free text.
+D4 unit suffixes remain on typed defining fields; a label is not a field name.
+
+`Missing` and `Unknown(String)` are explicit invalid declaration states,
+rejected with precise parameter-path errors. There is no default kind or
+fallback to generic supplied data, and no designer parser is introduced.
+Present values require USER_SUPPLIED or TEMPLATE_DEFAULT, optionally with
+OUTSIDE_COVERAGE. Missing draft values remain None with NOT_ESTIMATED.
+
+This owner-authorized design change supersedes the S3-01b name classifier
+and label-suffix unit checks. Tests were migrated to explicit computed kinds
+for rejection and explicit supplied kinds for allowed labels/unit checks;
+all former unit strings remain probes, all original semantic/numeric/sign
+assertions remain, and no tolerance is loosened. See S3_01C_VERIFICATION.md.
 
 ### Numeric provenance records
 
@@ -177,20 +193,17 @@ and scalar fields are independently authored; expected engine numbers are
 discovered generically from the previously labeled core JSON fixture, not from
 production `Design::numbers`. No real-aircraft or engine data are introduced.
 
-## Computed wing quantity registry — S3-01b Fix 1
+## Computed result registry - current S3-01c2 policy
 
-`SuppliedParameter.quantity` is a mandatory `QuantityIdentity`: either
-`SuppliedNonWing` or `ComputedWing(ComputedWingQuantity)`. The latter is always
-rejected in every scope, regardless of its display name. A known computed-wing
-label cannot be laundered by declaring `SuppliedNonWing`: `from_name` resolves
-canonical labels case-insensitively, ignoring underscores, hyphens and
-whitespace, then rejects that computed identity too. This replaces the old
-case-sensitive prefix test. Quantity validation precedes scope and label
-syntax checks, preserving one specific parameter-path error across spellings:
-`computed wing quantities cannot be supplied`.
+`QuantityIdentity::ComputedWing(ComputedWingQuantity)` is always rejected as
+a supplied contribution in every scope. The computed and supplied domains
+are different Rust enum types: no computed variant can be inserted into the
+supplied list. Independent catalogue equality and cross-domain canonical-ID
+checks fail if a computed result is added to the allowed supplied catalogue.
+Free text is not an authority/classification mechanism.
 
 The registry is defined in
-[quantities.rs](../crates/soas-designer/src/quantities.rs). Its 33 identities cover
+[quantities.rs](../crates/soas-designer/src/quantities.rs). Its 42 identities cover
 the owner's named outputs and existing geometry/VLM/LLT numeric outputs:
 
 | Group | Registered identities |
@@ -199,23 +212,32 @@ the owner's named outputs and existing geometry/VLM/LLT numeric outputs:
 | Wing coefficients and stability | LiftCoefficient, LiftSlope, InducedDragCoefficient, PitchingMomentCoefficient, PitchingMomentSlope, RollingMomentCoefficient, NeutralPointPosition, SpanEfficiency |
 | Section/loading/Fourier results | SectionLoading, SectionLiftCoefficient, SectionChord, SpanwisePosition, CirculationOverAirspeed, LiftPerSpanOverDynamicPressure, InducedAngle, FourierCoefficient, FourierHarmonic |
 | Reference/mesh/diagnostic outputs | ReferencePointPosition, RelativeCollocationResidual, PanelBoundStartPosition, PanelBoundEndPosition, PanelControlPointPosition, PanelCirculationOverAirspeed, PanelSpanwiseIndex, PanelChordwiseIndex |
+| Sampled station results | SampledLeadingEdgeX, SampledLeadingEdgeZ, SampledTwist, SampledSectionLiftSlope, SampledSectionZeroLiftAngle; sampled y/chord already use SpanwisePosition/SectionChord |
+| Kernel/section helper results | FiniteSegmentVelocityPerCirculation, SemiInfiniteVelocityPerCirculation, HorseshoeVelocityPerCirculation (vector outputs, 1/m); ThinAirfoilLiftSlope (1/rad) |
 
 Canonical names come from `canonical_name()`; every variant appears in
 `ComputedWingQuantity::ALL`. These are identities, not new aerodynamic
 calculations/defaults or a serializer. Defining coordinates/section inputs
 remain inputs; sampled wing-only results have distinct output identities.
 Declared non-wing semantics do not prove a human's physical claim is true,
-but display text cannot override an explicit computed identity or bypass
-a recognized canonical spelling.
+but display text cannot override a kind. Kernel/sample identities are computed
+results, not additional supplied kinds. Defining station inputs remain allowed
+in their typed geometry fields; sampled outputs are not authoritative inputs.
 
 **Extension rule:** for a new computable estimator output, add its variant and
 canonical label, update this coverage table, and update the independently
 authored expected catalogue in `tests/quantity_identity.rs`. Add the same
 four-scope/two-origin/four-spelling rejection cases and opaque-display-label
-typed-identity case. Expected coverage must not be generated from the registry:
+typed-identity case, and supplied-label acceptance for all decorations. Supplied
+extensions must retain the closed independent scope/unit catalogue and disjoint-ID
+check. Expected coverage must not be generated from the registry:
 exact catalogue equality detects accidentally dropped entries. Future loading
 must preserve the mandatory identity, not infer authority from display text.
 S3-02 remains unstarted.
+
+### Historical S3-01b Fix 1 evidence
+
+The following records the superseded policy at its original commit.
 
 Tests were committed first as `12968e4`. Original-code runtime evidence:
 

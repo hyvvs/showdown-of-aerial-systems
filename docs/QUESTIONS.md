@@ -162,3 +162,17 @@ single-missing-component mass/CG rejection and its zero-substitution mutation
 are mandatory for S3-03. ROADMAP, TASKS and ASSUMPTIONS record these as later
 acceptance conditions; no loading, mass calculation, gallery or report task
 starts in this batch. No further owner decision is needed for these fixes.
+
+## 2026-11-20 — S3-01c prerequisite branch blocker — RESOLVED
+
+The blocker recorded on the old `task/s3-01c` branch (docs-only commit
+`f245334`) was the absence of S3-01/S3-01b from main. The owner chose to wait
+for the reviewed work to be merged. Main now contains merge `850f143`, on
+top of `1c62d85`, and both `crates/soas-designer` and
+`docs/S3_01_SEMANTIC_MODEL.md` are tracked there. Ancestor verification also
+confirms main contains `task/s3-01b`. **Status: RESOLVED.**
+
+Per the owner's new instruction, a fresh `task/s3-01c2` starts at that main;
+the old branch and its commit are not reused. Continue only Fixes 5-7,
+tests then implementation per fix. S3-02 remains unstarted. Source: owner's
+merge confirmation, local git tree/history and ancestor checks.

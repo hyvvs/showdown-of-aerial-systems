@@ -492,6 +492,22 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 
 ### S3-01 completion evidence
 
+#### S3-01c2 remaining findings (owner-authorized, in order)
+
+- Fix 5: closed supplied-kind list, kind-owned scope/unit rules, free labels,
+  sampled/kernel computed identities, unknown/missing rejection. Six new tests,
+  three scratch faults caught; all gates pass, 221 workspace tests passed. [x]
+- Fix 6: positive-diagonal indefinite tensor and template-source mutation
+  coverage (mutations h/i); production guards already exist. [ ]
+- Separate owner-authorized elevator/rudder fixture correction, with full
+  suites before/after and only raw hinge coordinates/inventory/ledger changed. [ ]
+- Fix 7: actual-parent span containment with geometry-derived roundoff
+  allowance; independent root/tip and slightly-outside cases, no chordwise rule. [ ]
+
+The earlier blocker is resolved by merged main `850f143`; fresh branch
+`task/s3-01c2` does not reuse old `task/s3-01c`. Details: S3_01C_VERIFICATION.
+No S3-02 or later modeling task is started.
+
 #### S3-01b verification follow-up (in order)
 
 - Fix 1: completed typed registry and spelling-independent computed-wing
