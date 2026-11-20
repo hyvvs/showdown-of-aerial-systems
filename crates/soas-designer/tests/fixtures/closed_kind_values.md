@@ -56,3 +56,33 @@ probes retain semantic_values.md and verification_values.md as their ledgers.
   quadratic form; this hand witness disproves it without numerical eigenvalue
   computation. Source: existing core/semantic SPD contract, owner Fix 6 and
   the verifier's mutation definitions (recorded in S3_01C_VERIFICATION).
+
+## Fix 7 — independent synthetic geometry and numerical settings
+
+The tests in hinge_containment.rs construct their own Design, never the
+shared fixture. All geometry below is SYNTHETIC TEST DATA, not aircraft data.
+
+- Root [0,0,0] m; tips [0,8,0], [0,0,-8], [0,0,8], [0,6,8], [6,8,0] m
+  exercise horizontal, dorsal, ventral, inverted/canted and swept directions.
+  Squared spans are 64 or 100 m², by hand. Both station chords are 2 m;
+  incidence/twist 0 rad, no airfoil input, no mass/inertia/engine/contribution.
+- Control fraction .2 and limits -.3/.4 rad reuse earlier synthetic settings.
+  Source flags distinguish present inputs from missing aggregates. There is
+  no real-aircraft or aerodynamic-effectiveness claim.
+- Inside fractions .25/.75 imply hand projections 16/48 or 25/75 m². Boundary
+  cases use 0/1; partial/full outside cases use -.5,-.25,1.25,1.5, independently
+  of any production projection helper. All are deliberate geometric probes.
+- Slightly-outside fraction offset sqrt(f64::EPSILON) is approximately
+  1.4901161193847656e-8, about 1.1920928955078125e-7 m for the 8 m span.
+  It is a probe input, not a tolerance. It exceeds rounding of basic arithmetic
+  while remaining small relative to this synthetic geometry. Source: Rust
+  f64::EPSILON definition; direct square root and multiplication.
+- Scaling cases 1/1024,1,1024 scale that geometry and offset together; a fixed
+  metric allowance must not replace geometry-based rounding bounds.
+- The chordwise non-check case uses start [16,2,32], end [-16,6,-32] m,
+  with a y-directed parent span. These deliberately extreme x/z coordinates
+  verify the requested absence of a chordwise containment rule.
+- Structural xyz/bound indices 0/1/2 and four endpoint products in interval
+  multiplication are algorithm structure, not an empirical tolerance. No fixed
+  tolerance number is added: the interval rule is derived and sourced in
+  S3_01_SEMANTIC_MODEL, Span containment and rounding allowance.
