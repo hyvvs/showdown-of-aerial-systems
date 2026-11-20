@@ -33,3 +33,26 @@ probes retain semantic_values.md and verification_values.md as their ledgers.
 - No new tolerance, physical constant, aerodynamic formula or solver setting.
   Policy source: owner's Fix 5 design change. Output coverage source:
   estimator planform/sample, lifting_line, vlm and vortex public APIs.
+
+## Fix 6
+
+- SYNTHETIC TEST tensor [[1,2,0],[2,1,0],[0,0,1]] kg m² has positive
+  diagonal, eigenvalues 3,-1,1 and determinant -3. It is symmetric and
+  invertible but indefinite. The hand witness vector (1,-1,0) gives quadratic
+  form -2. The 2-by-2 block eigenvectors (1,1) and (1,-1) give eigenvalues
+  3 and -1 directly; the last axis has eigenvalue 1.
+- SYNTHETIC positive control [[2,1,0],[1,2,0],[0,0,1]] kg m² has eigenvalues
+  3,1,1: positive off-diagonals are allowed when the whole tensor is SPD.
+  No tensor in the shared fixture or expected-number inventory is changed.
+- Source probes are an empty list, an empty string and whitespace/tab/newline,
+  applied under TEMPLATE_DEFAULT to every independently inventoried present
+  numeric path; each contribution's own source text is also checked. No
+  physical number is introduced by those metadata probes.
+- Indices 0 and the existing contribution order select fixture records. There
+  is no numerical tolerance. Mutation h is the verifier's positive-diagonals
+  plus finite-inverse substitute; mutation i exempts TEMPLATE_DEFAULT from
+  the source requirement. They are tested only in scratch copies.
+- The positive-definite definition is that every nonzero vector has positive
+  quadratic form; this hand witness disproves it without numerical eigenvalue
+  computation. Source: existing core/semantic SPD contract, owner Fix 6 and
+  the verifier's mutation definitions (recorded in S3_01C_VERIFICATION).
