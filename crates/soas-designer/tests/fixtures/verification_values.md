@@ -55,3 +55,29 @@ tolerance is introduced. Provenance rejection loops use the independently
 authored expected inventory, not the production numeric walker. Testing the
 existing angle type's constructor is necessary because its private value
 cannot represent a non-finite angle through the safe public API.
+
+## Fix 3 — supplied parameter units
+
+Every parameter probe clones the existing labelled synthetic tail-law value
+(-0.7) and its source/coverage. Renaming it to a unit-test parameter does not
+give it a physical interpretation. Absent variants use None, never a numeric
+zero. All units and settings below are schema tests, not aircraft values.
+
+- The independent suffix/unit catalogue is `_kg_m2`/`kg*m^2`,
+  `_per_rad`/`1/rad`, `_kgps`/`kg/s`, `_m2`/`m^2`, `_rad`/`rad`, `_kg`/`kg`,
+  `_m`/`m`, `_n`/`N`, `_unit`/`1`, `_fraction`/`1`, and the existing explicit
+  dimensionless name `cl_max`/`1`. These cover the current model's numeric
+  unit-bearing suffixes and existing coefficient exception. D4 prescribes
+  internal SI; unit spellings match the existing numeric provenance inventory.
+- Pairwise cross-product checks every differing declared unit in both
+  directions, for present and absent values. Metadata intentionally uses the
+  wrong declared unit too, so the name check must catch the inconsistency.
+- `mm`, `ft`, `deg`, lowercase force `n`, unknown `furlong`, unsupported `mps`
+  and uppercase suffix `M` are intentional spelling/mismatch probes. `_mps`
+  is not a unit-bearing suffix used in this semantic model; future additions
+  need a documented suffix/unit pair and independent tests.
+- Longest suffix takes precedence: `_kg_m2` is not `_m2`, and `_per_rad`
+  is not `_rad`. This introduces no conversion formula or tolerance.
+- Parameter/component index 0 is the existing tail-law parameter; true/false
+  selects present versus absent state. All original fixture data, expectations
+  and tolerances remain unchanged.
