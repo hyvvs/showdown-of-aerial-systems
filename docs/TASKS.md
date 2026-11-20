@@ -489,7 +489,9 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 - Fix 2: source/non-finite/provenance/station/inertia/control-order verification,
   including actual-parent-span ventral/inverted/canted cases. Tests first,
   17 scratch faults caught; all gates pass, 210 workspace tests passed. [x]
-- Fix 3: supplied-parameter suffix/unit reconciliation. [ ]
+- Fix 3: supplied-parameter suffix/unit reconciliation. Tests first, all five
+  tests pass; three scratch faults caught; all gates pass, 215 workspace
+  tests passed. [x]
 - Fix 4: template/gallery naming and future loading/missing-mass acceptance
   conditions (documentation only). [ ]
 

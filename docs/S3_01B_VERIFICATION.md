@@ -167,3 +167,59 @@ was simplified after Clippy's first rejection; no assertion or tolerance
 changed. Full-suite log: `target/s3-01b/fix2-all-tests.txt`; compiler copy
 fallback warnings remain disclosed. No dependency, profile or cache setting
 was changed. Source: the gate outputs and owner-specified scope.
+
+## Fix 3: supplied-parameter unit reconciliation
+
+Tests first: `ea67a5d`. Before implementation:
+
+```text
+every_model_unit_suffix_accepts_only_its_declared_si_unit ... ok
+every_different_unit_pair_is_rejected_in_both_directions ... FAILED
+matching_non_si_spelling_does_not_bypass_the_si_boundary ... FAILED
+unknown_suffixes_are_rejected_even_when_metadata_agrees ... FAILED
+a_long_suffix_cannot_be_misread_as_its_shorter_suffix ... FAILED
+  left: Ok(())
+ right: Err(DesignError { field:
+   "contributions[tail-law].parameters[nonwing_length_m]",
+   reason: "parameter suffix and declared unit disagree" })
+test result: FAILED. 1 passed; 4 failed; 0 ignored
+```
+
+The excerpt's specific mismatch is `_m` with declared `mm`. Unknown `_mm`
+gets `unknown supplied-parameter unit suffix`. The reverse non-SI probes
+also cover `_mm`/`m`, `_ft`/`m` and `_deg`/`rad`; only the synthetic test
+matrix was extended before the implementation commit. All differing known
+unit pairs are checked in both directions, for present and absent values.
+The red summary above is from the first run; its already-failing unknown
+case is still the first case in that extended matrix.
+
+All five tests in `parameter_units.rs` consume the same shared fixture,
+joining the rudder-reader list. They independently list each current suffix
+and expected unit; provenance is deliberately changed to agree with the
+declared wrong unit so it cannot mask the missing check. Exact unit/error
+expectations are authored in tests, not obtained from the implementation.
+No existing assertion or tolerance changed. The closed suffix contract and
+extension procedure are documented in S3_01_SEMANTIC_MODEL.md; D4 is the
+unit-policy source, not a newly introduced formula.
+
+Green: **5 passed, 0 failed, 0 ignored**; all designer tests: **38 passed**.
+Local evidence: `target/s3-01b/fix3-red.txt`, `fix3-green.txt`, and
+`fix3-green-units.txt` for the complete reverse-unit matrix.
+
+Three additional scratch mutations compiled and failed assertions (exit
+101), each with **0 passed, 1 failed, 0 ignored, 4 filtered out**:
+
+| Mutation | Failing test |
+|---|---|
+| bypass declared-unit comparison | `every_different_unit_pair_is_rejected_in_both_directions` |
+| accept unknown suffix using its own declared unit | `unknown_suffixes_are_rejected_even_when_metadata_agrees` |
+| interpret `_kg_m2` as `_m2` | `a_long_suffix_cannot_be_misread_as_its_shorter_suffix` |
+
+Copies/logs are under ignored `target/s3-01b/fix3-mutations`; no mutant is
+committed. TEMP/TMP remain inside each checkout-local scratch directory.
+
+Fix 3 gates pass: formatting, Clippy with warnings denied, and full workspace
+suite **215 passed, 0 failed, 0 ignored**. The extra reverse non-SI inputs
+were also rerun directly after being added; the final batch gate repeats
+the whole current suite. Log: `target/s3-01b/fix3-all-tests.txt`.
+No dependency, original assertion, tolerance or build setting changed.

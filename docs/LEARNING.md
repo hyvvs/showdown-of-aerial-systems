@@ -101,6 +101,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01b Fix 2 | A positive dot product tests progress along an actual geometric direction, including canted or inverted parents; physical control signs are independent of endpoint storage order. A symmetric tensor can still be physically invalid if it is not positive definite. A private finite angle type rejects invalid values at construction, while source/provenance checks only establish declaration completeness (S3_01B_VERIFICATION.md; S3_01_SEMANTIC_MODEL.md). |  |  |
 
+| 2026-11-20 | S3-01b Fix 3 | Agreement between metadata and a declared unit is insufficient when both contradict the field's unit suffix. Compound suffixes must be resolved before shorter suffixes, and unknown units require an explicit error rather than an inferred conversion. Consistent units do not establish a supplied coefficient's physical meaning (S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

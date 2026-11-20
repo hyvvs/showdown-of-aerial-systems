@@ -17,6 +17,11 @@ Keep this honest and current. Every simplification the code makes belongs here. 
   separately. Sources: owner S3-01b requirements/clarification;
   S3_01_SEMANTIC_MODEL.md, Representation and validation; core units/dynamics
   validation reused without tolerance changes.
+- Supplied parameter units use an explicit current-model suffix catalogue,
+  including the existing dimensionless `cl_max` exception. Name, declared
+  unit and numeric provenance must all agree. Unknown suffixes are errors;
+  no conversion or physical coefficient interpretation is guessed. Sources:
+  D4; S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract.
 
 ## Environment (v0.1)
 - Flat, non-rotating Earth; constant gravity.

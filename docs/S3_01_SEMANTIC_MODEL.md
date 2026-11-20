@@ -106,6 +106,38 @@ not that supplied citations or physical aircraft properties are true.
 
 ## Numeric provenance and identity
 
+### Supplied-parameter suffix/unit contract
+
+The declared unit must agree with the name even when its provenance metadata
+agrees with the same wrong unit. Exact internal-SI spellings follow D4 and
+the existing numeric inventory; no conversion is inferred from a label.
+
+| Name ending (longest applicable ending first) | Declared unit |
+|---|---|
+| `_kg_m2` | `kg*m^2` |
+| `_per_rad` | `1/rad` |
+| `_kgps` | `kg/s` |
+| `_m2` | `m^2` |
+| `_rad` | `rad` |
+| `_kg` | `kg` |
+| `_m` | `m` |
+| `_n` | `N` |
+| `_unit`, `_fraction` | `1` |
+| Exact existing name `cl_max` | `1` |
+
+This is a closed catalogue for the current semantic model, not a universal
+unit parser. Unknown or differently cased suffixes are rejected explicitly,
+including non-SI `_mm`, `_ft` and `_deg`; a known SI suffix with any different
+declared unit is a separate error. Checks also apply to absent draft values.
+New unit-bearing fields require a documented suffix/unit pair and independent
+positive, all-cross-unit and unknown-suffix tests. Compound endings must
+precede shorter endings (`_kg_m2` before `_m2`, `_per_rad` before `_rad`).
+This check does not make an arbitrary supplied parameter into an aerodynamic
+model input; coefficient assembly remains a later task. Computed wing identity
+rejection still runs first in every scope.
+
+### Numeric provenance records
+
 `numbers()` traverses all typed numeric inputs, including engine table nodes/
 samples and each tensor element, and sorts paths. Every path requires parallel
 metadata with matching unit, nonempty source/explanation and ordered unique

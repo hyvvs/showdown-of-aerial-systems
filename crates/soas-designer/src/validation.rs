@@ -227,6 +227,13 @@ impl Design {
                 let p = format!("{p}.parameters[{}]", a.name);
                 identity(&a.name, &p, &mut names)?;
                 text(&a.unit, &p)?;
+                let expected_unit = parameter_unit(&a.name)
+                    .ok_or_else(|| error(&p, "unknown supplied-parameter unit suffix"))?;
+                require(
+                    a.unit == expected_unit,
+                    &p,
+                    "parameter suffix and declared unit disagree",
+                )?;
                 if let Some(v) = a.value {
                     finite(&[v], &p)?;
                 }
@@ -309,6 +316,29 @@ fn validate_metadata(
         )?;
     }
     Ok(())
+}
+fn parameter_unit(name: &str) -> Option<&'static str> {
+    // D4 internal SI; exact spellings match numbers.rs. This is unit validation,
+    // not a claim that an arbitrary supplied coefficient has physical meaning.
+    // Compound suffixes precede their shorter endings. Extend with independent
+    // positive/cross-unit/unknown-suffix tests (S3_01_SEMANTIC_MODEL.md).
+    if name == "cl_max" {
+        return Some("1");
+    }
+    [
+        ("_kg_m2", "kg*m^2"),
+        ("_per_rad", "1/rad"),
+        ("_kgps", "kg/s"),
+        ("_m2", "m^2"),
+        ("_rad", "rad"),
+        ("_kg", "kg"),
+        ("_m", "m"),
+        ("_n", "N"),
+        ("_unit", "1"),
+        ("_fraction", "1"),
+    ]
+    .into_iter()
+    .find_map(|(suffix, unit)| name.ends_with(suffix).then_some(unit))
 }
 fn validate_surface(s: &Surface, p: &str) -> Result<(), DesignError> {
     require(
