@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. T16, T16b and T16c are documentation/source audits; later implementation tasks need separate approval (see their status sections below).
+H1 and H2 run alongside development. T10 and the entire T16-T28 experimental/modeling chain are **parked** by the owner's post-T16c answers; completed audits remain complete. Their reopening gates are in ESTIMATOR_PLAN.md, Parked work register. Next proposed work is Stage 3, S3-01 onward, with implementation awaiting the applicable owner answers and a named task. The parked comparison chain does not block that limited designer/report work; T0 to T9 are not blocked by owner tasks. (Owner post-T16c consequences; ROADMAP, Stage 3 task plan.)
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -120,9 +120,10 @@ Use separate tests/implementation commits, update assumptions/learning and repor
 sources, failures, convergence results and remaining limits. [x]
 Verification: separate docs-only task entry, tests and implementation commits; all required derivatives plus optional Cl_r/Cn_p, explicit aircraft format 2, two-sided lift caps, surface saturation and commanded/applied CSV are covered. Independent magnitudes, both-direction damping signs, analytic fixed-V roll subsidence, generic object-shape tests and smooth damped coupled convergence pass. Default-step roll error is 3.455e-9 rad/s; coupled halving ratios approach 16. No dependency, physical convention or default-step decision changed. Full report and sources: `data/reference/aerodynamics/dynamics_and_limits.md`. T10 remains unstarted.
 
-## T10: Compare against reference (reshaped and blocked)
-Goal: v0.1 power-off comparisons only: stall, glide, trim and static margin, using the Navion candidate from NASA CR-96008 or the fallback Cessna 172, the H3 reference data, and JSBSim output the owner generates. Propulsion parameters and powered climb/cruise comparisons are not required.
-Reshaped by owner decision 2026-11-19: retain this task and its performance goal; the estimator's static derivative milestone is separate and must finish before T10 resumes. Blocked on that milestone, H3 reference cases and D9 tolerances. A source-readiness GO or a lift-slope discrepancy report alone does not complete T10.
+## T10: Compare against reference (parked)
+**PARKED**, not completed or deleted. The owner's latest direction parks comparison against published derivatives along with the T16-T28 chain; retain this task's earlier power-off stall/glide/trim/static-margin reference goals as historical scope. Neither a Stage 3 report nor a source-readiness audit completes a published-data comparison. (Owner post-T16c consequences; ESTIMATOR_PLAN, Parked work register.)
+Retained performance goal: power-off comparisons using a selected audited aircraft, H3 reference data and appropriately reviewed reference-tool evidence; no invented propulsion data or powered climb/cruise requirement. Navion/Cessna remain historical leads, not an approved complete dataset. The earlier static milestone/H3/D9 requirements remain unsatisfied where applicable; they do not block the limited Stage 3 route. (Previous T10 scope; T16_AUDIT §§1-4; owner consequences.)
+Reopen only on explicit owner task/scope, a suitable audited dataset, matched definitions/configuration/condition/reuse terms, independently sourced inputs and adequate model capability, plus H3 cases and D9 if an accuracy acceptance verdict is requested. Review at v0.2 for supersonic work or when a suitable wing-alone/wing-tail dataset is found; neither trigger resumes work automatically. (ESTIMATOR_PLAN, Parked work register; ROADMAP, Experimental validation.)
 Notes: Python is allowed here **only for plotting from CSV**. The owner checks JSBSim's license before any JSBSim files or derived data are committed.
 Done when: a comparison table and plots are committed and docs/ASSUMPTIONS.md "Validation status" is filled in.  [ ]
 
@@ -289,22 +290,23 @@ H3/H4, D8/D9 and queued T10/T11 remain unchanged. Documentation checks only;
 no code, dependency, aircraft data, test, CONVENTIONS.md or VISION.md changes.
 The plan ends with the questions needed before implementation starts.
 
-## Static derivative milestone (current scope: T16c owner direction)
+## Static derivative milestone (parked after T16c owner answers)
 
-Separate from reshaped T10 and from T11. The owner's T16c request changes
-the first experimental comparison to wing-alone, with TN 1270 conditional;
-the earlier whole-aircraft-first sequence is deferred context. T16/T16b/T16c
-are completed source audits, not completed comparisons. No modeling starts
-before the owner's checkpoint. (ESTIMATOR_PLAN.md, Current scope;
-T16C_TN1270_CLOSURE.md §§1/6-7; owner T16c Decisions.) [ ]
+The source checkpoint is answered: park TN 1270 with its NO-GO and remaining
+gaps; defer wing-tail work and F-104 searching (to v0.2); park both wing
+fallbacks. T16/T16b/T16c audits remain complete, but further T16-T28 work and
+the comparison milestone are **parked**, not deleted or marked successful.
+First experimental scope remains wing-alone if suitable data are found later.
+(Owner post-T16c answers 2-5; ESTIMATOR_PLAN, Parked work register.) [ ]
 
-The T16c NO-GO means the v0.1 estimator category is "code-to-code cross-checked,
-not experimentally validated", limited to actual evidence; the next direction
-is Stage 3 after checkpoint responses and separate task scope. If experimental
-work is reopened, retain the stop after the first lift-slope report before
-pitch/neutral-point work. No accuracy pass/fail claim before D9; T10's static
-milestone and H3/D9 blocks remain unsatisfied. (Owner T16c requirement 4;
-closure §§4/6-7; ESTIMATOR_PLAN.md §§Current scope/T23; TASKS §T10.)
+**v0.1 validation status:** "code-to-code cross-checked and analytic-case verified; not experimentally validated".
+The validation page and report disclaimer must use this wording plainly,
+with actual evidence and omissions. Experimental validation is a parallel
+track; candidate gaps and reopening conditions remain documented. Stage 3
+does not imply a complete aircraft estimator: current VLM is wing-only, with
+no tail/fuselage model. Missing whole-aircraft data are not invented to enable
+trim/static-margin/export checks. (Owner post-T16c consequences; ROADMAP,
+Experimental validation/Stage 3 data contract; ESTIMATOR_PLAN, Current scope.)
 
 Other simulator derivatives remain future candidates, each requiring its
 own approval after the checkpoint. Drag, Mach-derivative and
@@ -410,11 +412,43 @@ worked wing, not a complete matched input set. Verdict: NO-GO for a fully
 sourced experimental comparison. (Closure §3; TN 1270 pp. 3-6/Tables I-II;
 TN 1269 p. 20/Table IV/Figs. 1-3.)
 
-The five T16b questions are restated with options and recommendations;
-already supplied owner decisions are marked answered. Remaining replies
-and the pre-modeling checkpoint are pending; Stage 3 requirements are
-documented, not implemented. T17/T10/T11 remain unstarted and D8/D9 unchanged.
-(Closure §§6-7; ESTIMATOR_PLAN.md, Current scope; QUESTIONS.md, T16c entry.)
+The five T16b questions are restated with options and recommendations and
+are now **ANSWERED** by the owner's T16c decisions and follow-up answers 2-5.
+TN 1270 is parked with no further reconstruction. Stage 3 is the next planned
+direction, with new implementation questions in ROADMAP.md; no modeling or
+designer task is started. T17/T10/T11 remain unstarted and D8/D9 unchanged.
+(Closure §§6-7; ESTIMATOR_PLAN, Current scope; QUESTIONS, T16c/Stage 3 entries.)
+
+## Stage 3: proposed designer/report queue (not authorized to implement)
+
+All details, independent tests, scratch mutations, risks, sizes and pre-start
+questions are in [ROADMAP.md](ROADMAP.md#stage-3-proposed-task-plan--owner-answers-required-before-execution).
+Use new S3 IDs; **no T16-T28 renumbering**. Only the owner's named task(s)
+run after the applicable questions are answered; no automatic batch is
+authorized. The core stays pure, and no new dependency is selected by this
+plan. (Owner planning request; AGENTS, Batch mode.)
+
+| ID | Proposed task / dependencies | Status |
+|---|---|---|
+| S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and provenance. | [ ] Proposed |
+| S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Proposed |
+| S3-03 | Explicit component mass/CG/inertia and fixed loading-case buildup; after S3-01. | [ ] Proposed |
+| S3-04 | Isolated-wing estimator adapter with explicit unsupported/not-estimated results; after S3-01. | [ ] Proposed |
+| S3-05 | Complete supplied aircraft inputs and existing simulator-format export; after S3-02/03/04. | [ ] Proposed |
+| S3-06 | Wing loading, thrust-to-weight, declared CG range and domain checks; after S3-03/05. | [ ] Proposed |
+| S3-07 | Existing trim/static-margin wrappers and sampled CG feasibility; after S3-05/06. | [ ] Proposed |
+| S3-08 | Conditional stall speed from independently supplied whole-aircraft CLmax; after S3-03/05/06. | [ ] Proposed |
+| S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Proposed |
+
+### Documentation: checkpoint answers and Stage 3 proposal (completed)
+
+Recorded the owner's answers, exact v0.1 status, parked T10/T16-T28 scopes,
+parallel validation candidates/gaps and deliberate reopening conditions;
+proposed S3 tasks without implementation or invented aircraft numbers.
+Original T25-T28 plans are restored as parked context, with earlier T23/T24
+scope history identified. Documentation checks only; owner learning columns
+remain blank. (ROADMAP/ESTIMATOR_PLAN, current sections; owner post-T16c
+request; LEARNING log.) [x]
 
 ## Documentation: static milestone decisions recorded (2026-11-19)
 

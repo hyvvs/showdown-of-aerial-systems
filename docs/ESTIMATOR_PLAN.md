@@ -2,13 +2,83 @@
 
 ## Current scope and pre-modeling checkpoint — T16c
 
-The owner's T16c request supersedes the earlier whole-aircraft-first sequence: the first experimental comparison is **wing-alone**, with **TN 1270 prepared conditionally**. RM SL56H06 is excluded from that comparison and retained as a candidate source for v0.2 because its tests are supersonic; CRM-HL is excluded because of deployed slats. These are owner decisions, not selections made by the audit. (Owner T16c request, Decisions so far; [T16b](T16B_REFERENCE_SEARCH.md) §§3/5-6; RM SL56H06 pp. 2-5; ONERA guide §6.4 p. 3.)
+The owner has answered T16c questions 2-5: **park TN 1270**, with **NO-GO for a fully sourced experimental comparison** and no further source reconstruction; **defer wing-tail reference work**; **defer F-104 searching to v0.2**, retaining RM SL56H06 and the inventoried flight-data leads; **park R&M 2882 and RM L52G18**. First experimental scope remains wing-alone if a suitable dataset later becomes available. CRM-HL remains excluded from that first comparison. (Owner post-T16c answers; [closure](T16C_TN1270_CLOSURE.md) §§3/7; [T16b](T16B_REFERENCE_SEARCH.md) §§3-6/9.)
 
-**STOP before modeling:** T16/T16b/T16c are documentation audits, not authorization for T17 or another model task. The [T16c closure](T16C_TN1270_CLOSURE.md) ends NO-GO for a fully sourced experimental comparison; its §§3-5 identify the remaining condition, spanwise-prescription and section-input gaps. The owner must answer the remaining questions in its §7 at this pre-modeling checkpoint. No assumptions are adopted by listing them. (Owner T16c request; closure §§1/3/5/7.)
+**Source checkpoint answered; implementation still not started.** The T16c gaps remain: exact finite-wing Mach is unverified; continuous spanwise twist/section transition and a matched independently sourced section-law set are partial. Definitions/reuse are closed, not the missing inputs. No candidate assumption is adopted. T16/T16b/T16c documentation is complete; further work in the entire T16-T28 chain is **parked**, preserving the audits and plans below. (Owner answers 2-5; closure §§3/5/7.)
 
-For this NO-GO, the owner's v0.1 reporting category is **“code-to-code cross-checked, not experimentally validated”**, with only the actual existing cross-check evidence claimed. The next direction is Stage 3, subject to this checkpoint and a separately scoped task; it does not authorize implementation now. The closure's §6 states the required report/interface scope and evidence limits. If an experimental comparison is later reopened, stop again after its first lift-slope report before any pitch/neutral-point work. The earlier Navion whole-aircraft sequence below is retained as **deferred context**, not the current first-comparison requirement. (Owner T16c requirement 4; closure §§4/6-7; previous checkpoint in §T23 below; ROADMAP Stage 3.)
+**v0.1 validation status:** "code-to-code cross-checked and analytic-case verified; not experimentally validated". The validation page and HTML report disclaimer must both say this plainly and identify actual evidence, assumptions and missing capabilities; no AVL/OpenVSP run or experimental agreement is implied. The next development direction is **Stage 3, designer model and report**, planned as S3-01 onward in [ROADMAP.md](ROADMAP.md#stage-3-proposed-task-plan--owner-answers-required-before-execution). Only documentation is authorized now; the new Stage 3 questions must be answered and a task named before implementation. The parked comparison chain is not a prerequisite to this limited designer/report route. (Owner post-T16c consequences; ROADMAP Stage 3/Evidence rules/Questions.)
 
-The static derivative milestone is separate from reshaped [T10](TASKS.md#t10-compare-against-reference-reshaped-and-blocked). T10 retains its power-off stall/glide/trim/static-margin goal and is blocked on this milestone as well as H3/D9. T11 stays separate. Completing the source audits does not complete that milestone, H3/H4 or D8/D9. No accuracy pass/fail claim is permitted before D9. (TASKS §§T10/T11/T16-T16c; DECISIONS §§D8-D9.)
+**T10 is parked**, including the owner's published-derivative comparison direction and the retained earlier power-off stall/glide/trim/static-margin reference goals. Completed audits are not completed comparisons. H3/H4, D8/D9 and T11's v0.2 source gates are unchanged; no experimental accuracy pass/fail claim before D9. This supersedes the earlier sequencing that made the static milestone a blocker to all further v0.1 designer work. (Owner post-T16c consequences; [TASKS §T10](TASKS.md#t10-compare-against-reference-parked); DECISIONS §§D8-D9.)
+
+## Parked work register and reopening conditions
+
+Experimental validation continues as a **parallel track**. The candidate/gap
+register is [ROADMAP.md, Experimental validation](ROADMAP.md#experimental-validation-parallel-track-parked-candidates):
+TN 1270, TN 1378/Report 678, Navion, the parked wing fallbacks, and v0.2
+RM SL56H06/F-104 flight-data leads. Revisit at v0.2 for supersonic data or when
+a suitable wing-alone/wing-tail dataset is found, without an ongoing source
+reconstruction task now. MEMO 2-2-59H's exact F-104 identity remains unverified;
+MEMO 2-3-59L is comparative methodology evidence, not identified F-104 data.
+(Owner answers 2-5; T16b §§3-6; inventory/other_sources, Scope and MEMO sections.)
+
+| Retained ID | Parked scope and what would reopen it |
+|---|---|
+| T10 | Published derivative/reference comparisons, retaining legacy performance goals. Need a selected audited dataset, matched inputs/definitions, capable model, H3/reference cases as applicable, D9 where an accuracy verdict is sought, and an explicitly authorized comparison scope. No Stage 3 result silently completes it. (TASKS §T10; owner consequences.) |
+| T16 (including T16b/T16c) | Completed source/definition audits stay complete; further audit/search is parked. Reopen on new suitable evidence or a specifically authorized new search, not to repeat the rejected TN 1270 reconstruction automatically. (Closure §§3/7; owner answers.) |
+| T17 | Sourced section lift/moment inputs. Reopen on a named model need, independent section data or explicitly approved idealization, a checked formulation and owner task authorization. (Retained §T17.) |
+| T18 | Arbitrary surface orientation/full vector loads. Reopen for a separately specified non-planar/tail capability with independent rotated-load tests. (Retained §T18.) |
+| T19 | Coupled wing-tail/downwash. Need suitable geometry/section inputs and a checked coupled formulation; a new clean wing-tail dataset can motivate review, not automatic implementation. (Retained §T19; T16b §4.) |
+| T20 | Fuselage contribution. Need sourced geometry, applicable body method/limitations and independent body tests. Describing a fuselage in Stage 3 does not implement this task. (Retained §T20.) |
+| T21 | Wing-body interference. Need an explicitly scoped, sourced interaction treatment with double-counting checks. Supplying aircraft totals in Stage 3 does not claim this model exists. (Retained §T21.) |
+| T22 | Finite-Mach treatment. Need an owner-selected regime/condition and verified method; a supersonic v0.2 case needs its own regime-appropriate formulation, not a PG extrapolation. (Retained §T22; A Compressibility; RM SL56H06 pp. 2-5.) |
+| T23 | Current static plan: first lift-slope comparison/checkpoint; original broader control-effectiveness proposal remains in 692c4d0. Reopen only with an explicit choice of that scope, ready source/model inputs and the retained stop after the first comparison. (Retained §T23; historical registry note below.) |
+| T24 | Current static plan: pitch slope/neutral point after checkpoint; original quasi-steady rotation-rate proposal remains in 692c4d0. Need explicit scope, matched references, independent derivative data and approval after any required lift checkpoint. (Retained §T24; historical registry note.) |
+| T25 | Total drag/drag derivatives: independently sourced profile/body/junction data and an applicable integration model; induced drag alone is insufficient. (Restored original plan below.) |
+| T26 | Unsteady terms/omission assessment: independently specified history/rate definitions, applicability and data, not substitution of a quasi-steady rate derivative. (Restored original plan below.) |
+| T27 | Propulsion/reference-state closure: documented power/propeller/inlet state and independently sourced method/data; no real reference-state model is inferred from existing synthetic jet tables. (Restored original plan below.) |
+| T28 | Staged published comparisons: frozen source-matched predictions, traceable omissions and explicit owner selection of derivative stages, after dependent source/model gates. (Restored original plan below.) |
+
+**Reopening is a deliberate owner action, not a date-based resume.** For model
+work, first agree the missing capability, sourced method, independent tests,
+mutation evidence and data/assumption contract. For experimental comparisons,
+also audit geometry, section inputs, units/axes/reference area/chord/moment
+origin, configuration/control/power state, actual condition and reuse terms;
+match the compared observable and state omissions. D9 precedes an accuracy
+acceptance verdict. Reopening one task does not resume the whole chain or
+authorize coefficient transcription without scope. (AGENTS, Batch mode;
+T16b §2; closure §§3-5; owner consequences.)
+
+The original broad T16-T28 plan is retained in commit **692c4d0**; the later
+static rescope is in **5577ebb**. No IDs are reassigned: detailed current
+T17-T24 sections remain below; original T25-T28 text is restored below as
+parked context. The original control/rate scopes associated with T23/T24 are
+preserved in that history and this register, not silently reactivated. S3 IDs
+refer only to the new proposed designer/report tasks. (Repository history;
+owner request to park rather than delete.)
+
+## Stage 3 interface and honest whole-aircraft handling
+
+The detailed proposal and pre-start questions live in ROADMAP.md, S3-01-S3-09.
+Today the estimator supplies **wing-only planar VLM**, with no tail/fuselage
+model. The designer may store their geometry but must mark their aerodynamic
+contributions **not estimated**. Recommend supplied complete aircraft
+coefficient data, with explicit tail/body/interaction coverage and provenance,
+before aircraft trim/static-margin checks or simulator export; missing terms
+remain unavailable, not zero. Basic mass/wing-loading and standalone CLmax
+checks require only their own inputs. Effects included in a supplied total
+are not separately resolved component estimates. A supplied total must not have the wing estimate
+added again. Per-component assembly is an alternative requiring its own
+reference/interaction specification, not an approved new estimator task.
+(Owner Stage 3 requirement; VLM `ASSUMPTIONS`/`VlmOutput`; core `Aircraft`;
+ROADMAP, Proposed honest data contract/S3-04/S3-05/question 2.)
+
+Geometry-only drafts can receive geometry/wing-only results and a partial
+report. Whole-aircraft stall speed needs independently supplied matched
+CLmax; VLM cannot provide it. Existing core static margin is aerodynamic,
+control-fixed and excludes propulsive derivatives; local trim failure is
+reported, not converted to a categorical impossibility claim. No whole-aircraft
+validity, dynamic-stability or safe-flight claim follows from these checks.
+(ROADMAP S3-07/S3-08; core `trim::static_margin`/`TrimError`; C §3.1 p. 28.)
 
 ## Scope and references
 
@@ -93,7 +163,7 @@ A source-based conditional mechanism is available: C §3.1 pp. 25-27 expresses t
 
 ## Proposed static enabling work — separate approval required
 
-No modeling task is executable under the T16c authorization. The following preserves a deferred static build sequence for later owner decisions; each implementation needs independent hand/analytic expectations first and mutation evidence. Rough sizes are relative, not time estimates. Incompressibility/propulsion disclosures do not turn the current wing result into a whole-aircraft estimate. All source gaps remain gates. (Owner T16c request; Current scope section above; AGENTS.md, Batch mode.)
+**All T17-T28 work below is parked by the owner's post-T16c answers.** This preserves a deferred build sequence for later owner decisions; each implementation needs independent hand/analytic expectations first and mutation evidence. Rough sizes are relative, not time estimates. Incompressibility/propulsion disclosures do not turn a wing result into a whole-aircraft estimate. Stage 3 is separately proposed in ROADMAP.md; none of this chain starts through it. (Owner consequences; Parked work register; AGENTS.md, Batch mode.)
 
 ### T17 — Sourced section lift and moment inputs — medium
 
@@ -159,6 +229,46 @@ A reference neutral point inferred from CR's slopes is a **derived comparison**,
 
 Independent tests: prescribed lift and moment laws about distinct origins, with a hand-calculated neutral point; shifting the reporting origin must preserve its physical location. Mutations: reverse the moment arm, use wing-only lift slope with aircraft pitch slope, mix MAC leading-edge and CG datums or invert the ratio/coordinate direction. Risks: cancellation between body and tail moments, uncertain CG/MAC and correlated slope/reference errors. No accuracy pass/fail before D9.
 
+## Retained original T25-T28 plans — parked
+
+The task text below is restored from 692c4d0 without changing its methods,
+tests or risks. It is historical planning, not authorization or a renewed
+source search; the Parked work register above controls reopening. Its broader
+comparison stages do not override the later owner checkpoints. (Owner
+post-T16c consequences; repository history.)
+
+### T25 — Total drag and drag-dependent derivatives — large
+
+- **Purpose/contribution:** add independently sourced section/profile, body/appendage and junction drag to coupled induced drag; support `CD_alpha`, `CD_delta_e`, `CD_M` and drag-sensitive yaw derivatives. Current `CDi` is not total `CD` (repository VLM assumptions/output; J §§6.1.5, 6.2.5; A `CDCL`).
+- **Method/source:** integrate explicitly supplied section polars and a separate body/interference drag model, with Mach/Reynolds/control indexing where supported. J supplies viscous load integration and A a section-polar interface; neither is Navion drag data. A Navion body/junction correlation and off/windmilling propeller drag are **not verified**; no default drag factor or total-aircraft calibration is proposed (CR pp. 100-103; D §2.2.1).
+- **Independent tests:** hand-integrate a prescribed analytic section polar over a simple wing at prescribed loading; differentiate it analytically with respect to angle/control/Mach; add a known synthetic body drag load and check its moment. Compare differential left/right drag moments with a hand cross-product sum. A zero supplied profile term must recover induced-only accounting.
+- **Mutations:** omit profile drag, count junction drag twice, use total `CD` as `CD0`, mix local/global reference areas or differentiate a polar while incorrectly holding its lift argument fixed.
+- **Risks / use:** transition, Reynolds dependence, separation and control drag require data beyond inviscid VLM. Needed for the Navion drag/adverse-yaw targets and eventually glide; not all are required for a first lift-slope comparison. F-104 additionally needs regime-specific wave/base/inlet drag treatment, not this subsonic build-up alone.
+
+### T26 — Separate unsteady terms and bound quasi-steady omissions — large
+
+- **Purpose/contribution:** handle `CL_alpha-dot`/`Cm_alpha-dot` separately from rotation-rate derivatives and decide whether the latter need further unsteady corrections.
+- **Method/source:** begin with C's low-frequency wing-to-tail convection-delay expansion, §4.3 pp. 58-59. It supplies a leading tail-downwash-lag contribution, **not a complete unsteady wing/body solution**. A quasi-steady wake has no such history. General unsteady circulation/added-mass, frequency dependence and an appropriate validation source remain **unverified**; require a further sourced specification if those terms are material or the owner wants the full published target set (A “Unsteady flow”; C cited pages; CR A-6, p. 101).
+- **Independent tests:** prescribe an analytic time-varying downwash and delay, expand it by hand, and derive tail lift and moment rate terms; zero delay removes that particular term. Independently vary pitch rotation and alpha history so a test cannot pass by conflating them. The moment/lift ratio follows the prescribed tail arm, independent of the solver.
+- **Mutations:** replace delayed by instantaneous downwash, reverse delay sign, call `Cm_q` an alpha-dot derivative, apply the delay contribution twice or normalize alpha-dot as roll rate.
+- **Risks / use:** a local compiled derivative does not establish the relevant frequency/method or prove omitted unsteady terms negligible. Needed if Navion alpha-dot rows are selected; it is not necessary to implement wake history for a static `CL_alpha` milestone. F-104 dynamic comparisons have the same distinction. If the complete budget cannot be supported, mark that derivative unsupported rather than declaring this leading model complete.
+
+### T27 — Conditional propulsion/reference-state closure — large if needed
+
+- **Purpose/contribution:** reproduce the source's actual propulsion condition, or obtain a separately documented engine-off reference. Decide whether this task is needed in T16; if it is, it blocks acceptance of dependent comparisons even though it appears after the basic airframe modules in this development order (CR pp. 100-103; TASKS H3/T10).
+- **Method/source:** combine verified propeller thrust/torque/operating data with an actuator-disk inflow baseline and explicit application-point moments, then assess slipstream effects on wing/tail loads. P §§11.7.2-11.7.3 verifies momentum/energy accounting and the ideal non-swirling assumptions; it does not supply the Navion's data, finite-blade swirl, asymmetric propeller effects or detailed local slipstream field. Those need a verified extension before claiming lateral/control derivative closure. D p. 8 likewise restricts its power-effect capability to longitudinal characteristics; it cannot establish all required lateral terms.
+- **Independent tests:** hand-check disk momentum/energy balances, a prescribed local-speed change's effect on a synthetic tail lift law and the thrust force/arm moment. A genuinely non-working ideal disk removes its modeled thrust/induction contribution; this is not evidence that a real stopped/windmilling propeller has no drag.
+- **Mutations:** add thrust twice, omit slipstream's dynamic-pressure effect, reverse the thrust arm or equate idle throttle with engine-off.
+- **Risks / use:** source state/propeller data may be unobtainable; no matching powered derivative can then be validated. Not required for a genuinely documented engine-off Navion airframe comparison, though the corresponding propeller drag/configuration still belongs in T25. Powered F-104 work needs its own jet/inlet/thrust model rather than this propeller model.
+
+### T28 — Stage the published comparison, with traceable omissions — medium
+
+- **Purpose/contribution:** compare the selected aircraft derivatives with independent published targets, with no new physics hidden in the comparison layer. First `CL_alpha`, then `Cm_alpha`; afterward the selected control/lateral/rate subsets, and only then any expanded drag/Mach/unsteady set.
+- **Method/source:** use T16's contract, independently transcribed/checked source records when authorized, per-contribution diagnostics, mesh/perturbation/section-input sensitivity and a frozen prediction before examining a fit. Publish differences and limitations; apply an acceptance threshold only after the owner's D9 choice. Resolve propulsion dependence before accepting any affected stage (CR pp. 100-103 and appendices; TASKS H3/H4/T10; [decision sheet](../data/reference/inventory/go_no_go.md)).
+- **Independent tests:** a separate hand-written comparison record with deliberately different prediction/reference units and reference origins must yield the manually derived discrepancy; mismatched variant, condition, derivative definition or missing input must produce an unavailable comparison. The analytic cases from earlier tasks remain independent anchors. A reference-tool run, if later authorized/licensed and pinned, is a secondary cross-check, not the Navion oracle.
+- **Mutations:** compare a wing contribution with an aircraft total, compare different CGs, substitute a predicted value for the published target, silently zero a missing term or label a combined derivative as an individual one.
+- **Risks / use:** agreement after fitting to the same target is calibration, not independent validation; correlated source errors and missing provenance remain. This milestone does not by itself satisfy queued T10's power-off performance comparisons or T11's complete aircraft requirements.
+
 ## Later AVL cross-check and artifact policy
 
 A version-pinned AVL cross-check is approved **in principle for later**, after license review, as secondary evidence. Record the actual release/hash, input provenance, axes/reference conventions and condition before use. Analytic/hand expectations and published reference data remain the primary evidence. No AVL run or generated result was produced in this update.
@@ -171,6 +281,6 @@ Owner policy: do not commit AVL binaries or raw output unless the license clearl
 
 Current synthetic verification can use the analytic elliptic LLT case, VLM's independent one-panel load/moment solution and hand symmetry/reference/limiting cases. These verify software within its idealizations, not the Navion. Existing finite-aspect-ratio VLM/LLT differences are not an equality oracle; preserve their evidence and tolerances ([LLT tests/reference](../data/reference/estimator/lifting_line.md), [VLM tests/reference](../data/reference/estimator/vlm.md), [T15b records](../data/reference/estimator/t15b_assertions.md)).
 
-The inventories contain no independently separated Navion wing derivative. A wing-only prediction cannot be compared as though it were the published Navion aircraft total. The owner has instead selected a separate wing-alone first comparison, with TN 1270 conditional and presently NO-GO, as recorded in Current scope and T16c §§1/4 (CR pp. 100-103; owner T16c Decisions).
+The inventories contain no independently separated Navion wing derivative. A wing-only prediction cannot be compared as though it were the published Navion aircraft total. The first experimental scope remains wing-alone, but TN 1270 is now parked at NO-GO with no further reconstruction; the owner has chosen the limited-evidence Stage 3 route above. (CR pp. 100-103; owner post-T16c answers; closure §§3/7.)
 
-**Next action is the owner's pre-modeling checkpoint response**, covering the five restated T16b questions and their already-answered parts in T16c §7. No modeling, published-data comparison, T10 or T11 starts from this documentation update. (Owner T16c request; Current scope section above; QUESTIONS.md, T16c entry.)
+**Next action is the owner's response to the new Stage 3 planning questions in ROADMAP.md**, then explicit authorization of a named S3 task. The T16c source checkpoint answers are recorded, not asked again. No implementation, published-data comparison, T10, T11 or T17-T28 work starts from this documentation update. (Owner post-T16c request; ROADMAP, Questions before Stage 3; QUESTIONS.md, Stage 3 entry.)

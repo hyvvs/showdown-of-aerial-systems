@@ -93,6 +93,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | T16c TN 1270 closure | A design assumption in a related paper is not proof of a test model's as-built spanwise geometry (TN 713 p. 3; Report 703 pp. 513-514; TN 1270 p. 4). Published sample section curves can help without supplying a complete matched input set, especially when their angle already includes a correction (TN 1269 pp. 20-21/Table IV/Figs. 1-3). Source readiness, code cross-checks and experimental validation are separate claims (T16C_TN1270_CLOSURE.md §§3/6; NASA/NPARC Overview §Introduction). |  |  |
 
+| 2026-11-20 | Stage 3 planning and checkpoint answers | A semantic component model describes aircraft parts without claiming their aerodynamic effects are estimated (ROADMAP, What exists today/S3-01/S3-04). Component masses determine mass-weighted CG; inertia also needs intrinsic distribution and signed reference shifts (MIT L11 p. 1; L26 pp. 2-3/7-9; S3-03). A lift-limit speed from supplied CLmax, a local trim solution and an aerodynamic static margin answer different conditional questions; they are not experimental validation or a full flight-safety verdict (ROADMAP S3-07/S3-08; Caughey §3.1 p. 28/§3.4 pp. 41-42). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
