@@ -89,6 +89,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | T16 source and definition audit | A partial lift slope holds controls fixed rather than following a retrimmed aircraft; a wing result cannot stand in for coupled aircraft lift (CR A-6; Caughey §3.1 pp. 25-27). Matching geometry, normalization and the actual propeller state matters more than sharing an aircraft family name (T16_AUDIT.md §§1-4). A PG factor gives a conditional scale and direction, but cannot give a share of an unknown total discrepancy (AVL primer §Compressibility; T16_AUDIT.md §5). |  |  |
 
+| 2026-11-20 | T16b layered reference search | A benchmark must match both the measured component and the model's physics; a clean wing, a coupled wing-tail and a supersonic aircraft require different capabilities (T16B_REFERENCE_SEARCH.md §§2-6). A neutral point reconstructed from lift/pitch slopes is a derived reference, and support loads or a different moment origin can change that comparison (Caughey §3.1 pp. 25-28; RM L52G18 p. 3). Public access is distinct from reuse permission, and agreement between programs is cross-checking rather than experimental validation (reference search §§3-6/8; NASA/NPARC Overview §Introduction). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

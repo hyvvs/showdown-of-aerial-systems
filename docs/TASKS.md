@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. Only T16's source audit is newly authorized; later implementation tasks need separate approval.
+H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. T16 and T16b are documentation/source audits; later implementation tasks need separate approval (see their status sections below).
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -293,8 +293,8 @@ The plan ends with the questions needed before implementation starts.
 
 Separate from reshaped T10 and from T11. Approved planning horizon: published
 whole-aircraft lift slope first; pitching-moment slope with neutral-point
-location afterward. Only T16 is authorized to execute. Prerequisite model
-implementation needs separate approval; the current wing-only estimator is
+location afterward. T16 and T16b are completed source audits. Prerequisite model
+implementation still needs separate approval; the current wing-only estimator is
 not a complete Navion model. See `docs/ESTIMATOR_PLAN.md`. [ ]
 
 After the first published lift-slope comparison, STOP for the owner's
@@ -325,8 +325,8 @@ definitions, flight condition and power/propeller state. Resolve or list
 every missing input, source discrepancy and axis/reference ambiguity with
 source/page evidence (CR pp. 100-103, A-1-A-10/B-1; audit §§1-2). [x]
 
-Audit completion does not satisfy the modeling gate. The alternative proposal
-is CRM-HL / ONERA LRM-WBSHV, HLPW-5 Case 2.2: public matching CAD/static data
+Audit completion does not satisfy the modeling gate. The historical alternative proposal
+was CRM-HL / ONERA LRM-WBSHV, HLPW-5 Case 2.2: public matching CAD/static data
 were opened and checked, with section/slat/deformation/conversion and
 CC BY-NC-ND reuse questions explicitly retained (audit §3; ONERA guide
 §§3, 6.4, 8.2.3, 8.3.1). No substitution is selected. The PG arithmetic is
@@ -369,6 +369,29 @@ committing anything derived from AVL. No binaries or raw output unless clearly
 permitted with applicable conditions satisfied; our own sourced summary tables
 are the preferred deliverable. Official release conditions/GPL §0 were checked
 for this plan; a future pinned distribution/artifact review remains required.
+
+## T16b: Layered public-reference search (documentation completed; selection gaps remain)
+
+Completed on 2026-11-20 in `docs/T16B_REFERENCE_SEARCH.md`: three wing-alone
+candidates (§3), two wing-tail candidates (§4), the F-104 model in NACA
+RM SL56H06 (§5), and CRM-HL / ONERA Case 2.2 (§6), each against the owner's
+six criteria, with source/page or section evidence and uncertain readings. [x]
+
+The ranked recommendation is to prepare TN 1270's smooth Fig. 4 wing
+conditionally, after geometry, exact condition and independent section-input
+closure; no candidate is certified ready for an unqualified comparison
+(reference search §§3/7/8; TN 1270 pp. 4-6, Tables I-II, Figs. 1/3/4).
+No fully cleared wing-tail reference was established (§4). RM SL56H06 fails
+the low-Mach requirement: its tests are supersonic (§5; report pp. 2-5).
+The previous CRM-HL proposal is withdrawn for this narrower scope: deployed
+slats and missing component physics fail criteria (4) and (6)
+(§6; ONERA guide §6.4 p. 3; VLM `ASSUMPTIONS`).
+
+Audit §§8-9 distinguish possible AVL/OpenVSP code cross-checks from experimental
+validation and list the questions before modeling. No alternative/reference
+selection, D8/D9 decision, code, tests, coefficient-table transcription or
+modeling task is completed or authorized here. T17/T10/T11 remain unstarted
+(audit §1; ESTIMATOR_PLAN.md opening scope and §§T17/T23).
 
 ## Documentation: static milestone decisions recorded (2026-11-19)
 
