@@ -10,6 +10,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - At H = 5000 m the PDF prints **54019 Pa**, while the equation gives **54019.912103762079 Pa**: difference **+0.912103762079 Pa** (same absolute magnitude), relative difference **1.688486944e-5**. On 2026-11-13 the owner selected **5e-5 relative tolerance for pressure and density**, accommodating the recorded printed-table discrepancy while rejecting the requested lapse-rate, gravity, height-definition and gas-constant mistakes. No other row needs a larger tolerance. All transcribed digits were rechecked and unchanged. Using the exact listed R*, M0 and g0 with 50-digit arithmetic gives 54019.912103762073475... Pa, so does not resolve the discrepancy. Tabulation/printing or undocumented calculation differences remain hypotheses; their cause is unverified. This is not a D9 aircraft-validation tolerance.
 
 ## Aircraft (v0.1)
+- S3-01's `soas-designer` describes and validates semantic component inputs and
+  per-number provenance only. Surface mirroring/body placements are descriptive;
+  tail/fuselage aero, computed wing outputs, mass/CG buildup, designer JSON,
+  aircraft export and HTML reporting are later tasks. Missing data remain
+  explicit draft states, not zero-valued models. Declared sources/coverage and
+  numeric inertia validity do not prove physical truth or experimental validity.
+  Evidence, representation bounds and all scratch faults: `docs/S3_01_SEMANTIC_MODEL.md`.
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
 - T5's version-zero JSON stores SI values with explicit frames, a signed inertia tensor about the CG, and moments about a separately identified aerodynamic reference point. JSON conversion is text-only; filesystem access stays outside the pure core. Unknown fields/versions, invalid shapes, non-finite numbers and invalid required bounds are errors on load and save. Numeric validation is not proof of physical realizability or provenance.

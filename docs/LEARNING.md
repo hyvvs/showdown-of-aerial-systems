@@ -95,6 +95,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | Stage 3 planning and checkpoint answers | A semantic component model describes aircraft parts without claiming their aerodynamic effects are estimated (ROADMAP, What exists today/S3-01/S3-04). Component masses determine mass-weighted CG; inertia also needs intrinsic distribution and signed reference shifts (MIT L11 p. 1; L26 pp. 2-3/7-9; S3-03). A lift-limit speed from supplied CLmax, a local trim solution and an aerodynamic static margin answer different conditional questions; they are not experimental validation or a full flight-safety verdict (ROADMAP S3-07/S3-08; Caughey §3.1 p. 28/§3.4 pp. 41-42). |  |  |
 
+| 2026-11-20 | S3-01 semantic aircraft inputs | A semantic component tree and stable references describe an aircraft without calculating its aerodynamics (S3_01_SEMANTIC_MODEL.md, Representation and validation). Parallel numeric provenance distinguishes supplied/template/missing values without new unit wrappers; an absent tensor is not a zero tensor (Numeric provenance). Independently authored coordinates and scratch faults test frame/sign/reference mistakes, while declaration validation does not verify physical truth (Scratch mutation evidence; CONVENTIONS, Coordinate frames). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

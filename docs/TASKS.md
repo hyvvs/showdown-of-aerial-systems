@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. T10 and the entire T16-T28 experimental/modeling chain are **parked** by the owner's post-T16c answers; completed audits remain complete. Their reopening gates are in ESTIMATOR_PLAN.md, Parked work register. All six Stage 3 choices are now answered with binding conditions in ROADMAP.md; **S3-01 only is authorized after those decisions are recorded**, and is not started in this docs-only commit. Later S3 tasks still need task authorization. The parked comparison chain does not block that limited designer/report work; T0 to T9 are not blocked by owner tasks. (Owner Stage 3 adoption; ROADMAP, recorded decisions.)
+H1 and H2 run alongside development. T10 and the entire T16-T28 experimental/modeling chain are **parked** by the owner's post-T16c answers; completed audits remain complete. Their reopening gates are in ESTIMATOR_PLAN.md, Parked work register. All six Stage 3 choices are answered with binding conditions in ROADMAP.md; **S3-01 is completed**, with its semantic-only scope and evidence below. S3-02 and later tasks remain unstarted and need task authorization. The parked comparison chain does not block that limited designer/report work; T0 to T9 are not blocked by owner tasks. (Owner S3-01 batch; ROADMAP; S3_01_SEMANTIC_MODEL.md.)
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -419,16 +419,16 @@ direction, with new implementation questions in ROADMAP.md; no modeling or
 designer task is started. T17/T10/T11 remain unstarted and D8/D9 unchanged.
 (Closure §§6-7; ESTIMATOR_PLAN, Current scope; QUESTIONS, T16c/Stage 3 entries.)
 
-## Stage 3: recorded designer/report queue (S3-01 only authorized)
+## Stage 3: recorded designer/report queue (S3-01 completed)
 
 All details, independent tests, scratch mutations, risks, sizes and recorded
 owner conditions are in [ROADMAP.md](ROADMAP.md#stage-3-task-plan--recorded-owner-decisions).
 Use S3 IDs; **no T16-T28 renumbering**. All six choices are ANSWERED; the owner
-authorizes **S3-01 only after recording**, not an automatic batch. This turn
-is documentation only; no crate, code or tests are created. The architecture
-is a pure `soas-designer` depending on core/estimator, with CLI-owned I/O and
-no reverse dependency. Only pre-approved dependencies. (Owner choices 1-6;
-AGENTS, Batch mode.)
+authorized **S3-01 only**, now completed, not an automatic batch. The
+implemented architecture is a pure `soas-designer` depending on core/estimator,
+with no reverse dependency or library file I/O. CLI integration is later work;
+S3-02 remains unstarted. Only pre-approved dependencies. (Owner choices 1-6
+and S3-01 batch; AGENTS, Batch mode; S3_01_SEMANTIC_MODEL.md.)
 
 **Binding data rules:** save incomplete drafts, but missing intrinsic inertia
 blocks export. Every computable wing result (including area, aspect ratio,
@@ -463,7 +463,7 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 
 | ID | Task / dependencies | Status |
 |---|---|---|
-| S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and per-number provenance; no static derived wing inputs. | [ ] Authorized after recording; not started |
+| S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and per-number provenance; no static derived wing inputs. | [x] Completed; 16 tests and eight detected scratch faults |
 | S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Planned; not authorized |
 | S3-03 | Explicit component mass/CG/inertia and fixed loading-case buildup; after S3-01. | [ ] Planned; not authorized |
 | S3-04 | Current-geometry wing recomputation with provenance and explicit unsupported/not-estimated results; after S3-01. | [ ] Planned; not authorized |
@@ -473,6 +473,25 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 | S3-08 | Conditional stall speed from independently supplied whole-aircraft CLmax; after S3-03/05/06. | [ ] Planned; not authorized |
 | S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Planned; not authorized |
 | S3-10 | Later box/cylinder/ellipsoid inertia helper with rotation/parallel-axis accounting and explicit approximate qualifier; after S3-03 and report support. | [ ] Later; not authorized |
+
+### S3-01 completion evidence
+
+Tests committed first as `7051e75 Task S3-01: tests`, with the missing-API
+compile failure recorded before implementation. Sixteen tests pass unchanged;
+independent coordinate/field expectations and the per-number synthetic ledger
+cover semantic components, references, draft missing states, every tensor/table
+numeric path, provenance and neutral template identity. All eight listed
+scratch mutations compiled and failed their targeted assertions; no mutant
+is committed. All three gates pass: **193 workspace tests passed, 0 failed,
+0 ignored**, with no tolerance/profile change. TEMP/TMP were inside the
+checkout. Rust's hard-link cache warning and automatic copy fallback were
+disclosed; no filesystem/cache workaround was applied. Details and actual
+failure evidence: [S3_01_SEMANTIC_MODEL.md](S3_01_SEMANTIC_MODEL.md).
+
+Scope remains in-memory descriptive inputs/validation. No designer JSON,
+mass buildup, estimator adapter, aircraft export, report implementation,
+shape approximation or S3-02 work is included. The future export task must
+enforce required missing inputs; it is not claimed implemented here.
 
 ### Documentation: six Stage 3 choices adopted with conditions (completed)
 
