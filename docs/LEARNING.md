@@ -87,6 +87,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-19 | Static milestone planning decisions | Input readiness and physical accuracy are separate verdicts (CR pp. 100-103; T16 audit contract); a PG diagnostic's percentage depends on its denominator and does not establish its share of an unknown total discrepancy (AVL primer §Compressibility; ESTIMATOR_PLAN.md calculation); a neutral point inferred from the same lift/pitch slopes is a derived reference, not an independent measurement (Caughey §3.1 pp. 27-28). |  |  |
 
+| 2026-11-20 | T16 source and definition audit | A partial lift slope holds controls fixed rather than following a retrimmed aircraft; a wing result cannot stand in for coupled aircraft lift (CR A-6; Caughey §3.1 pp. 25-27). Matching geometry, normalization and the actual propeller state matters more than sharing an aircraft family name (T16_AUDIT.md §§1-4). A PG factor gives a conditional scale and direction, but cannot give a share of an unknown total discrepancy (AVL primer §Compressibility; T16_AUDIT.md §5). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

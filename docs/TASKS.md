@@ -310,15 +310,32 @@ own approval after the checkpoint. Drag, Mach-derivative and
 angle-of-attack-rate comparisons are outside the planning horizon.
 No propeller or engine model is to be built for this milestone.
 
-## T16: Navion source and comparison-definition audit (authorized only)
+## T16: Navion source and comparison-definition audit (completed; modeling NO-GO)
 
-Documentation/source audit, not solver implementation; authorized, not yet
-completed by this planning update. Seek documented power-off evidence first.
+Documentation/source audit completed on 2026-11-20; no solver implementation.
+The required power-off search and source/definition audit are recorded in
+`docs/T16_AUDIT.md`, §§1-5. The Navion verdict is NO-GO for estimation against
+CR X-B: later sources add geometry and a propeller-removed case, but do not
+close the aircraft/configuration, normalization, complete geometry/section
+or propulsion-state match (audit §§2-4; CR pp. 100-103; NASA TN D-5857
+pp. 3-6, Fig. 4 p. 12; NASA TN D-6643 pp. 6-7, 19-21).
 Audit exact variant/configuration, wing planform and airfoil/section data,
 tail geometry/position, fuselage dimensions, CG/datum and aerodynamic reference
 definitions, flight condition and power/propeller state. Resolve or list
 every missing input, source discrepancy and axis/reference ambiguity with
-source/page evidence (CR pp. 100-103, A-1-A-10/B-1; existing inventories). [ ]
+source/page evidence (CR pp. 100-103, A-1-A-10/B-1; audit §§1-2). [x]
+
+Audit completion does not satisfy the modeling gate. The alternative proposal
+is CRM-HL / ONERA LRM-WBSHV, HLPW-5 Case 2.2: public matching CAD/static data
+were opened and checked, with section/slat/deformation/conversion and
+CC BY-NC-ND reuse questions explicitly retained (audit §3; ONERA guide
+§§3, 6.4, 8.2.3, 8.3.1). No substitution is selected. The PG arithmetic is
+confirmed at the source Mach, including the proposed alternative's condition;
+the share of an unknown total discrepancy remains unavailable (audit §5).
+The first-comparison contract, T17's limited role and pre-modeling questions
+are documented without thresholds (audit §§6-7; ESTIMATOR_PLAN.md §§T17, T23).
+Documentation checks only; no code, tests, coefficient-table values or source
+artifacts committed. T17/T10 remain unstarted (audit scope and §6).
 
 Required ending: GO or NO-GO for the first whole-aircraft lift-slope estimate,
 distinguishing input readiness from physical accuracy. If geometry is
