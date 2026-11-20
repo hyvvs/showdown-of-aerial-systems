@@ -39,6 +39,15 @@ const QUANTITIES: &[&str] = &[
     "wing_panel_circulation_over_airspeed_m",
     "wing_panel_spanwise_index",
     "wing_panel_chordwise_index",
+    "wing_sampled_leading_edge_x_m",
+    "wing_sampled_leading_edge_z_m",
+    "wing_sampled_twist_rad",
+    "wing_sampled_section_lift_slope_per_rad",
+    "wing_sampled_section_zero_lift_angle_rad",
+    "finite_segment_velocity_per_circulation_per_m",
+    "semi_infinite_velocity_per_circulation_per_m",
+    "horseshoe_velocity_per_circulation_per_m",
+    "thin_airfoil_lift_slope_per_rad",
 ];
 
 fn relabel_parameter(d: &mut Design, name: &str, origin: ProvenanceFlag) {
@@ -46,6 +55,8 @@ fn relabel_parameter(d: &mut Design, name: &str, origin: ProvenanceFlag) {
     let mut meta = d.provenance.remove(old).unwrap();
     meta.flags = vec![origin];
     d.contributions[0].parameters[0].name = name.into();
+    d.contributions[0].parameters[0].quantity =
+        QuantityIdentity::ComputedWing(ComputedWingQuantity::Area);
     d.provenance
         .insert(format!("contributions[tail-law].parameters[{name}]"), meta);
 }
@@ -69,7 +80,7 @@ fn original_casing_and_separator_bypasses_are_rejected() {
 
 #[test]
 fn each_computable_quantity_is_rejected_in_each_scope_origin_and_spelling() {
-    for canonical in QUANTITIES {
+    for (q, canonical) in ComputedWingQuantity::ALL.iter().zip(QUANTITIES) {
         let spellings = [
             canonical.to_string(),
             canonical.to_uppercase(),
@@ -90,6 +101,7 @@ fn each_computable_quantity_is_rejected_in_each_scope_origin_and_spelling() {
                     let mut d = support::fixture();
                     relabel_parameter(&mut d, name, origin);
                     d.contributions[0].scope = scope;
+                    d.contributions[0].parameters[0].quantity = QuantityIdentity::ComputedWing(*q);
                     assert_eq!(
                         d.validate().unwrap_err(),
                         DesignError {
@@ -130,15 +142,6 @@ fn registry_matches_independent_estimator_output_catalogue() {
         .map(|q| q.canonical_name())
         .collect();
     assert_eq!(actual, QUANTITIES);
-    for q in ComputedWingQuantity::ALL {
-        for spelling in [
-            q.canonical_name().to_uppercase(),
-            q.canonical_name().replace('_', "-"),
-            q.canonical_name().replace('_', " "),
-        ] {
-            assert_eq!(ComputedWingQuantity::from_name(&spelling), Some(*q));
-        }
-    }
 }
 
 #[test]

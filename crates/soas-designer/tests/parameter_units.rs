@@ -17,18 +17,23 @@ const PARAMETERS: &[(&str, &str)] = &[
     ("cl_max", "1"),
 ];
 
-fn parameter(name: &str, unit: &str, present: bool) -> Design {
+fn parameter(kind: SuppliedQuantityKind, name: &str, unit: &str, present: bool) -> Design {
     let mut d = support::fixture();
-    let old = "contributions[tail-law].parameters[cm_alpha_per_rad]";
-    d.provenance.remove(old).unwrap();
+    d.provenance
+        .remove("contributions[tail-law].parameters[cm_alpha_per_rad]")
+        .unwrap();
+    d.contributions[0].scope = kind.scope();
+    let positive = d.contributions[1].parameters[0].value;
     let a = &mut d.contributions[0].parameters[0];
+    a.quantity = QuantityIdentity::Supplied(kind);
     a.name = name.into();
     a.unit = unit.into();
+    if kind == SuppliedQuantityKind::WholeAircraftClMax {
+        a.value = positive;
+    }
     if !present {
         a.value = None;
     }
-    // Make metadata agree with the declared unit. Otherwise the old metadata
-    // check would mask the missing name/unit consistency guard.
     d.provenance.insert(
         format!("contributions[tail-law].parameters[{name}]"),
         support::metadata(a.value, unit),
@@ -47,80 +52,83 @@ fn rejects(d: &Design, name: &str, reason: &'static str) {
 }
 
 #[test]
-fn every_model_unit_suffix_accepts_only_its_declared_si_unit() {
-    for &(name, unit) in PARAMETERS {
-        for present in [true, false] {
-            parameter(name, unit, present).validate().unwrap();
+fn every_model_unit_probe_is_checked_against_the_explicit_quantity_kind() {
+    for kind in SuppliedQuantityKind::ALL {
+        for &(name, unit) in PARAMETERS {
+            for present in [true, false] {
+                let d = parameter(*kind, name, unit, present);
+                if unit == kind.unit() {
+                    d.validate().unwrap();
+                } else {
+                    rejects(&d, name, "quantity kind and declared unit disagree");
+                }
+            }
         }
     }
 }
-
 #[test]
-fn every_different_unit_pair_is_rejected_in_both_directions() {
-    for &(name, expected) in PARAMETERS {
-        for &(_, wrong) in PARAMETERS {
-            if expected == wrong {
+fn every_different_kind_unit_pair_is_rejected_in_both_directions() {
+    for kind in SuppliedQuantityKind::ALL {
+        for other in SuppliedQuantityKind::ALL {
+            if kind.unit() == other.unit() {
                 continue;
             }
             for present in [true, false] {
                 rejects(
-                    &parameter(name, wrong, present),
-                    name,
-                    "parameter suffix and declared unit disagree",
+                    &parameter(*kind, "free label", other.unit(), present),
+                    "free label",
+                    "quantity kind and declared unit disagree",
                 );
             }
         }
     }
 }
-
 #[test]
-fn matching_non_si_spelling_does_not_bypass_the_si_boundary() {
-    for (name, unit) in [
-        ("nonwing_length_m", "mm"),
-        ("nonwing_length_m", "ft"),
-        ("nonwing_angle_rad", "deg"),
-        ("nonwing_thrust_n", "n"),
-    ] {
-        rejects(
-            &parameter(name, unit, true),
-            name,
-            "parameter suffix and declared unit disagree",
-        );
+fn non_si_and_wrong_case_units_do_not_bypass_the_si_boundary() {
+    for kind in SuppliedQuantityKind::ALL {
+        for unit in ["mm", "ft", "deg", "n", "furlong"] {
+            rejects(
+                &parameter(*kind, "free label", unit, true),
+                "free label",
+                "quantity kind and declared unit disagree",
+            );
+        }
     }
 }
-
 #[test]
-fn unknown_suffixes_are_rejected_even_when_metadata_agrees() {
-    for (name, unit) in [
-        ("nonwing_length_mm", "mm"),
-        ("nonwing_length_mm", "m"),
-        ("nonwing_length_ft", "ft"),
-        ("nonwing_length_ft", "m"),
-        ("nonwing_angle_deg", "deg"),
-        ("nonwing_angle_deg", "rad"),
-        ("nonwing_value_furlong", "m"),
-        ("nonwing_speed_mps", "m"),
-        ("nonwing_length_M", "m"),
+fn unknown_label_suffixes_have_no_meaning_but_declared_units_still_must_match() {
+    for name in [
+        "nonwing_length_mm",
+        "nonwing_length_ft",
+        "nonwing_angle_deg",
+        "nonwing_value_furlong",
+        "nonwing_speed_mps",
+        "nonwing_length_M",
     ] {
-        rejects(
-            &parameter(name, unit, true),
-            name,
-            "unknown supplied-parameter unit suffix",
-        );
+        for kind in SuppliedQuantityKind::ALL {
+            parameter(*kind, name, kind.unit(), true)
+                .validate()
+                .unwrap();
+            rejects(
+                &parameter(*kind, name, "mm", true),
+                name,
+                "quantity kind and declared unit disagree",
+            );
+        }
     }
 }
-
 #[test]
-fn a_long_suffix_cannot_be_misread_as_its_shorter_suffix() {
-    // kg_m2 must not be interpreted as area; per_rad is not an angle.
-    for (name, wrong) in [
-        ("nonwing_inertia_kg_m2", "m^2"),
-        ("nonwing_slope_per_rad", "rad"),
-    ] {
-        rejects(
-            &parameter(name, wrong, true),
-            name,
-            "parameter suffix and declared unit disagree",
-        );
+fn a_long_or_short_label_suffix_never_selects_the_quantity_unit() {
+    for name in ["nonwing_inertia_kg_m2", "nonwing_slope_per_rad"] {
+        for kind in SuppliedQuantityKind::ALL {
+            parameter(*kind, name, kind.unit(), true)
+                .validate()
+                .unwrap();
+            rejects(
+                &parameter(*kind, name, "m^2", true),
+                name,
+                "quantity kind and declared unit disagree",
+            );
+        }
     }
 }
