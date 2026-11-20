@@ -78,6 +78,8 @@ Sixteen semantic tests pass, with exact comparisons and no new tolerance.
   S3-01b clarification and includes ventral, inverted V and canted examples.
   It does not change D6 signs: reversing endpoints leaves the physical sign
   description unchanged, even though that reversed declaration is invalid.
+  Both endpoints must also be within the inclusive root/tip span planes,
+  with the derived rounding allowance below. Chordwise position is not checked.
 - `MassInput` keeps mass, CG and intrinsic tensor optional independently.
   Tensor axes have explicit roll/pitch/yaw orientation inputs. Present tensors
   use signed entries, finite exact symmetry, positive definiteness and finite
@@ -104,6 +106,55 @@ after edits. Placement/point views validate before returning data. Validation
 returns deterministic `DesignError { field, reason }`, with physical/reference
 checks before numeric-metadata checks. It establishes declared consistency,
 not that supplied citations or physical aircraft properties are true.
+
+## Span containment and rounding allowance (Fix 7)
+
+For root R, tip T and endpoint P in stored body coordinates, let D = T-R.
+The span slab is defined by `(P-R) dot D >= 0` and `(P-T) dot D <= 0`.
+These planes are perpendicular to the actual parent span, including swept,
+canted and ventral declarations; they are not fixed body-y/body-z bounds.
+Both endpoints must pass. This checks spanwise extent only: it does not
+check chordwise position, airfoil volume or attachment to the surface.
+Source: owner's Fix 7 span-extent requirement and earlier actual-span rule.
+
+There is **no fixed metric or percentage tolerance**. For each subtraction,
+the nearest representable value below/above its floating-point result brackets
+the exact result. For multiplication, take all four products of the two
+intervals' endpoints, then round their minimum down and maximum up. For
+addition, round the lower-end sum down and the upper-end sum up. Applying
+this to the actual coordinate differences/products/sums gives two finite
+projection enclosures Qroot and Qtip, in square metres. Accept when
+`Qroot.upper >= 0` and `Qtip.lower <= 0`; thus exact boundary cases are
+included, and an endpoint whose exclusion is larger than calculation
+roundoff is rejected. An indeterminate boundary comparison is accepted
+within that arithmetic envelope, not clamped or treated as exact geometry.
+
+Equivalently, for ordinary rounded projections qr/qt, the derived allowances
+are `max(0, Qroot.upper-qr)` and `max(0, qt-Qtip.lower)` in square metres.
+Divide by the parent span length to express the corresponding allowance in
+metres. These depend on the actual geometry and arithmetic; no empirically
+chosen multiplier, small-aircraft cutoff or measurement uncertainty is added.
+Non-finite enclosure bounds are an explicit error. Existing strict positive
+hinge order and finite-coordinate rules remain unchanged.
+
+The enclosure reasoning is the interval inclusion property and outward
+rounding in [Boost Interval Arithmetic, Interval Arithmetic / Numbers,
+rounding / Operations](https://www.boost.org/doc/libs/latest/libs/numeric/interval/doc/interval.htm#intro).
+The adjacent-value operations are standard-library
+[`f64::next_down`](https://doc.rust-lang.org/std/primitive.f64.html#method.next_down)
+and [`next_up`](https://doc.rust-lang.org/std/primitive.f64.html#method.next_up).
+No Boost dependency or hardware rounding-mode setting is used.
+
+The previous shared fixture violated containment: elevator start projection
+-3 was before its tail root (extent 0..6), and rudder projections -10/-5
+were both before its fin root (extent 0..10), all in square metres. They
+passed the earlier positive-order rule, which did not test span extent.
+Under the owner's narrow approval, only elevator/rudder raw endpoints and
+their independent inventory/ledger were changed to the existing parent
+root/tip points, exactly on both boundaries. Aileron, signs, assertions and
+tolerances remain unchanged. Full suites before/after both pass; exact diffs
+and all fixture consumers are in S3_01C_VERIFICATION. Root/tip and slightly
+outside acceptance tests use their own geometry, never this shared fixture.
 
 ## Numeric provenance and identity
 
@@ -178,20 +229,24 @@ certify arbitrary descriptive/source text as truthful.
 
 ## Formula sources and fixture ledger
 
-Only coordinate reflection `(x,y,z) -> (x,-y,z)` is introduced here: the
-binding body frame is CONVENTIONS.md, Coordinate frames; the same reflection
+The original coordinate reflection `(x,y,z) -> (x,-y,z)` follows the
+binding body frame in CONVENTIONS.md, Coordinate frames; the same reflection
 is in [geometry reference](../data/reference/estimator/geometry.md), Geometry
 contract and formulas. Engine direction preserves the core Engine contract
 ([aircraft format](AIRCRAFT_FORMAT.md), Engine extension). Control sign strings
 are CONVENTIONS, Forces and moments / D6. Tensor checks reuse core
 `dynamics::MassProperties`, not an inertia approximation or new formula.
+The later projection/roundoff rule and its sources are documented above.
 
-All new numbers are labeled SYNTHETIC TEST VALUES in
+The shared fixture's numbers are labeled SYNTHETIC TEST VALUES in
 [semantic_values.md](../crates/soas-designer/tests/fixtures/semantic_values.md),
 with per-path inventory `tests/support::expected_numbers`. Expected coordinates
 and scalar fields are independently authored; expected engine numbers are
 discovered generically from the previously labeled core JSON fixture, not from
 production `Design::numbers`. No real-aircraft or engine data are introduced.
+Follow-up probes, independent containment geometry, settings and computed
+roundoff observations are ledgered separately in
+[closed_kind_values.md](../crates/soas-designer/tests/fixtures/closed_kind_values.md).
 
 ## Computed result registry - current S3-01c2 policy
 

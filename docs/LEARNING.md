@@ -109,6 +109,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01c2 Fix 6 | Positive diagonal entries do not guarantee a positive-definite tensor; a negative quadratic-form witness disproves it even when an inverse exists. A template label cannot exempt a number from source requirements. Tests can pass on correct code immediately while failing deliberately wrong scratch variants, exposing previous coverage gaps (S3_01C_VERIFICATION, Fix 6). |  |  |
 
+| 2026-11-20 | S3-01c2 Fix 7 | Ordering two hinge points does not place them inside a parent span. Dot products with the actual parent direction define inclusive root/tip planes, while interval bounds propagate calculation roundoff without guessing a distance tolerance. Span containment does not establish chordwise containment or physical attachment (S3_01_SEMANTIC_MODEL, Span containment and rounding allowance). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

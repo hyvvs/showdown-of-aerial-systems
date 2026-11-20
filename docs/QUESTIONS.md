@@ -176,3 +176,19 @@ Per the owner's new instruction, a fresh `task/s3-01c2` starts at that main;
 the old branch and its commit are not reused. Continue only Fixes 5-7,
 tests then implementation per fix. S3-02 remains unstarted. Source: owner's
 merge confirmation, local git tree/history and ancestor checks.
+
+## S3-01c2 Fix 7 — shared-fixture containment correction — RESOLVED
+
+The owner authorized changing only elevator/rudder raw hinge endpoints,
+matching independent expected-number entries and ledger, in a separate
+commit, preserving all other values/assertions/signs/tolerances. The old
+points passed hinge order but lay before their parent root planes. Chosen
+new points are exactly each parent's existing root and tip, on the inclusive
+boundaries; aileron is unchanged. No non-coordinate expectation changed.
+
+Both full suites passed (223 tests each), and the numeric snapshot changed
+only nine raw coordinate rows out of 161. The correction is isolated in
+`ae36257`; exact fixture/inventory diffs and all 43 fixture consumers are
+in S3_01C_VERIFICATION. Root/tip and slightly-outside tests use independently
+constructed geometry and do not depend on the corrected shared fixture.
+Status: RESOLVED. No S3-02 work starts.

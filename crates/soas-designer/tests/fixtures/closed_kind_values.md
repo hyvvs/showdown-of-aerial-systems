@@ -86,3 +86,12 @@ shared fixture. All geometry below is SYNTHETIC TEST DATA, not aircraft data.
   multiplication are algorithm structure, not an empirical tolerance. No fixed
   tolerance number is added: the interval rule is derived and sourced in
   S3_01_SEMANTIC_MODEL, Span containment and rounding allowance.
+- Computed rounding observations for the independent 8 m test span at point
+  [0,2,0] m (not input tolerances): Rust scratch trace gives root enclosure
+  [15.999999999999991,16.000000000000018] m² and tip enclosure
+  [-48.00000000000004,-47.999999999999964] m². Relative to rounded projections
+  16/-48, derived outward allowances are 1.7763568394002505e-14 and
+  4.263256414560601e-14 m²; dividing by span 8 gives
+  2.220446049250313e-15 and 5.329070518200751e-15 m. These are results of the
+  documented algorithm on synthetic data, never hard-coded acceptance bounds.
+  Evidence: target/s3-01c2/span-roundoff-trace.txt.

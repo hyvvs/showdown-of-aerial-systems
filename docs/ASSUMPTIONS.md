@@ -4,6 +4,16 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## S3-01b declaration checks
 
+- Fix 7 adds inclusive span-plane containment for both hinge endpoints along
+  the parent's actual root-to-tip vector. Only outward-rounded arithmetic
+  envelopes permit boundary uncertainty; there is no fixed metric tolerance.
+  Chordwise position, airfoil-volume containment and attachment remain
+  unchecked. The prior shared elevator/rudder coordinates violated the new
+  span rule and were corrected separately under the owner's narrow approval;
+  independent geometry tests check the rule. Sources/derivation and exact
+  correction evidence: S3_01_SEMANTIC_MODEL, Span containment and rounding
+  allowance; S3_01C_VERIFICATION; owner Fix 7/fixture approval.
+
 - Fix 6 coverage distinguishes full positive definiteness from positive
   diagonal entries, even for a finite symmetric invertible tensor. Template
   defaults need nonempty source text just as user inputs do. Existing

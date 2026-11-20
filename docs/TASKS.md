@@ -501,9 +501,12 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   coverage (mutations h/i); production guards already exist. Both scratch
   faults fail new assertions; all gates pass, 223 workspace tests passed. [x]
 - Separate owner-authorized elevator/rudder fixture correction, with full
-  suites before/after and only raw hinge coordinates/inventory/ledger changed. [ ]
+  suites before/after (223 passed each) and only nine raw hinge-coordinate
+  rows/inventory/ledger changed. Separate commit `ae36257`. [x]
 - Fix 7: actual-parent span containment with geometry-derived roundoff
-  allowance; independent root/tip and slightly-outside cases, no chordwise rule. [ ]
+  allowance; independent root/tip and slightly-outside cases, no chordwise rule.
+  Six tests pass, four scratch faults caught; all gates pass, 229 workspace
+  tests passed, none failed or ignored. [x]
 
 The earlier blocker is resolved by merged main `850f143`; fresh branch
 `task/s3-01c2` does not reuse old `task/s3-01c`. Details: S3_01C_VERIFICATION.

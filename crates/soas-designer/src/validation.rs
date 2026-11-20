@@ -189,6 +189,37 @@ impl Design {
                 &format!("{p}.hinge"),
                 "hinge endpoints must progress root to tip along parent span",
             )?;
+            let root_m = parent
+                .stations
+                .first()
+                .expect("validated root")
+                .leading_edge_body_m;
+            let tip_m = parent
+                .stations
+                .last()
+                .expect("validated tip")
+                .leading_edge_body_m;
+            for (name, point_m) in [
+                ("hinge_start_body_m", c.hinge_start_body_m),
+                ("hinge_end_body_m", c.hinge_end_body_m),
+            ] {
+                let path = format!("{p}.{name}");
+                let at_root =
+                    outward_projection(point_m, root_m, root_m, tip_m).ok_or_else(|| {
+                        error(&path, "span projection roundoff bounds are not finite")
+                    })?;
+                let at_tip =
+                    outward_projection(point_m, tip_m, root_m, tip_m).ok_or_else(|| {
+                        error(&path, "span projection roundoff bounds are not finite")
+                    })?;
+                // Root/tip planes are inclusive. Only geometry-derived arithmetic
+                // uncertainty is allowed, not a guessed distance tolerance.
+                require(
+                    at_root[1] >= 0.0 && at_tip[0] <= 0.0,
+                    &path,
+                    "hinge endpoint must lie within parent span",
+                )?;
+            }
             require(
                 c.chord_fraction.is_finite() && c.chord_fraction > 0.0 && c.chord_fraction <= 1.0,
                 &format!("{p}.chord_fraction"),
@@ -386,6 +417,41 @@ fn progresses_along(displacement: [f64; 3], span: [f64; 3]) -> bool {
     // Reject overflow explicitly; do not turn invalid geometry into an order.
     let projection: f64 = displacement.into_iter().zip(span).map(|(d, s)| d * s).sum();
     projection.is_finite() && projection > 0.0
+}
+
+/// Enclose exact (point - plane_origin) dot (tip - root) in m² for the given
+/// stored f64 coordinates. Each primitive result is widened to its adjacent
+/// representable bounds; four endpoint products enclose interval multiplication.
+/// Derivation/sources: S3_01_SEMANTIC_MODEL, Span containment and rounding
+/// allowance; Boost Interval Arithmetic, inclusion property/rounding; Rust
+/// f64::next_down/next_up. No hardware rounding-mode change or dependency.
+fn outward_projection(
+    point_m: [f64; 3],
+    plane_origin_m: [f64; 3],
+    root_m: [f64; 3],
+    tip_m: [f64; 3],
+) -> Option<[f64; 2]> {
+    let mut sum = [0.0, 0.0];
+    for axis in 0..3 {
+        let offset = point_m[axis] - plane_origin_m[axis];
+        let span = tip_m[axis] - root_m[axis];
+        let a = [offset.next_down(), offset.next_up()];
+        let b = [span.next_down(), span.next_up()];
+        let products = [a[0] * b[0], a[0] * b[1], a[1] * b[0], a[1] * b[1]];
+        if !a.into_iter().chain(b).chain(products).all(f64::is_finite) {
+            return None;
+        }
+        let low = products
+            .into_iter()
+            .fold(f64::INFINITY, f64::min)
+            .next_down();
+        let high = products
+            .into_iter()
+            .fold(f64::NEG_INFINITY, f64::max)
+            .next_up();
+        sum = [(sum[0] + low).next_down(), (sum[1] + high).next_up()];
+    }
+    sum.into_iter().all(f64::is_finite).then_some(sum)
 }
 fn validate_fuselage(f: &Fuselage, p: &str) -> Result<(), DesignError> {
     finite(&f.nose_body_m, &format!("{p}.nose_body_m"))?;
