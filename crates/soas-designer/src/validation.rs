@@ -167,6 +167,28 @@ impl Design {
                 &format!("{p}.hinge"),
                 "hinge endpoints must differ",
             )?;
+            // The owner-defined order follows the actual parent's root-to-tip
+            // vector, including ventral and canted surfaces. It never changes
+            // ControlKind's physical positive-deflection definition (D6).
+            let parent = self
+                .components
+                .iter()
+                .find_map(|parent| {
+                    if parent.id == c.parent_surface_id
+                        && let ComponentGeometry::Surface(s) = &parent.geometry
+                    {
+                        return Some(s);
+                    }
+                    None
+                })
+                .expect("surface reference validated above");
+            let span = span_direction(parent);
+            let hinge = std::array::from_fn(|i| c.hinge_end_body_m[i] - c.hinge_start_body_m[i]);
+            require(
+                progresses_along(hinge, span),
+                &format!("{p}.hinge"),
+                "hinge endpoints must progress root to tip along parent span",
+            )?;
             require(
                 c.chord_fraction.is_finite() && c.chord_fraction > 0.0 && c.chord_fraction <= 1.0,
                 &format!("{p}.chord_fraction"),
@@ -301,7 +323,10 @@ fn validate_surface(s: &Surface, p: &str) -> Result<(), DesignError> {
         if i > 0 {
             let before = &s.stations[i - 1].leading_edge_body_m;
             let ordered = match s.kind {
-                SurfaceKind::VerticalTail => a.leading_edge_body_m[2] < before[2],
+                SurfaceKind::VerticalTail => progresses_along(
+                    std::array::from_fn(|axis| a.leading_edge_body_m[axis] - before[axis]),
+                    span_direction(s),
+                ),
                 _ => a.leading_edge_body_m[1] > before[1],
             };
             require(ordered, &p, "stations must progress outboard")?;
@@ -322,6 +347,22 @@ fn validate_surface(s: &Surface, p: &str) -> Result<(), DesignError> {
         }
     }
     Ok(())
+}
+fn span_direction(s: &Surface) -> [f64; 3] {
+    // Called only after the surface's minimum station count is established.
+    let root = s
+        .stations
+        .first()
+        .expect("root station")
+        .leading_edge_body_m;
+    let tip = s.stations.last().expect("tip station").leading_edge_body_m;
+    std::array::from_fn(|axis| tip[axis] - root[axis])
+}
+fn progresses_along(displacement: [f64; 3], span: [f64; 3]) -> bool {
+    // Owner's S3-01b control-order clarification: dot(displacement, span) > 0.
+    // Reject overflow explicitly; do not turn invalid geometry into an order.
+    let projection: f64 = displacement.into_iter().zip(span).map(|(d, s)| d * s).sum();
+    projection.is_finite() && projection > 0.0
 }
 fn validate_fuselage(f: &Fuselage, p: &str) -> Result<(), DesignError> {
     finite(&f.nose_body_m, &format!("{p}.nose_body_m"))?;

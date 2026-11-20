@@ -2,6 +2,22 @@
 
 Keep this honest and current. Every simplification the code makes belongs here. Reports and the README link to it.
 
+## S3-01b declaration checks
+
+- The owner-defined control order uses the actual parent root-to-tip vector
+  in body axes, with a strictly positive hinge displacement dot product.
+  It supports ventral, inverted V and canted declarations, without changing
+  the physical deflection signs in CONVENTIONS, Forces and moments. Vertical
+  station order follows that actual span; horizontal stations retain increasing
+  body y. No hinge effectiveness or aerodynamic force is inferred here.
+- Safe angle construction rejects non-finite values before they can enter
+  the semantic model. Other numeric inputs reject non-finite values explicitly;
+  source text and provenance restrictions validate declarations, not the truth
+  of supplied data. Signed tensors require symmetry and positive definiteness
+  separately. Sources: owner S3-01b requirements/clarification;
+  S3_01_SEMANTIC_MODEL.md, Representation and validation; core units/dynamics
+  validation reused without tolerance changes.
+
 ## Environment (v0.1)
 - Flat, non-rotating Earth; constant gravity.
 - International Standard Atmosphere, no wind, no turbulence.

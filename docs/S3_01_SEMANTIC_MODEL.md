@@ -53,7 +53,9 @@ Sixteen semantic tests pass, with exact comparisons and no new tolerance.
 - `Surface` describes main wings and horizontal/vertical tails through
   leading-edge coordinates, chord, incidence, twist and optional independently
   attributed airfoil inputs. Horizontal stations progress toward increasing
-  body y; vertical stations toward decreasing z (up). Mirroring declares only
+  body y. Vertical stations progress along their declared actual root-to-tip
+  vector, allowing dorsal, ventral and canted fins; each consecutive segment
+  must have positive projection along that vector. Mirroring declares only
   nonnegative-y input and reflects about the common body x-z plane. The public
   point view returns the declared points followed by reflected off-plane points,
   retaining symmetry-plane points once. It is not an estimator adapter/mesh.
@@ -69,6 +71,13 @@ Sixteen semantic tests pass, with exact comparisons and no new tolerance.
   endpoints, positive chord fraction not exceeding one, explicit travel limits
   and the binding elevator/aileron/rudder physical sign descriptions. These
   descriptions are command conventions, not geometry-derived effectiveness.
+  Endpoint order follows the actual parent stations in body axes:
+  `(hinge_end - hinge_start) dot (parent_tip - parent_root) > 0`.
+  Coincident endpoints have their own error; a non-finite projection errors
+  rather than silently accepting overflow. The rule comes from the owner's
+  S3-01b clarification and includes ventral, inverted V and canted examples.
+  It does not change D6 signs: reversing endpoints leaves the physical sign
+  description unchanged, even though that reversed declaration is invalid.
 - `MassInput` keeps mass, CG and intrinsic tensor optional independently.
   Tensor axes have explicit roll/pitch/yaw orientation inputs. Present tensors
   use signed entries, finite exact symmetry, positive definiteness and finite

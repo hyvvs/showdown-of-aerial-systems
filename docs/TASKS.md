@@ -487,7 +487,8 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   coordinates changed. Exact inventory diff and fixture-reader list recorded
   in S3_01B_VERIFICATION.md. [x]
 - Fix 2: source/non-finite/provenance/station/inertia/control-order verification,
-  including actual-parent-span ventral/inverted/canted cases. [ ]
+  including actual-parent-span ventral/inverted/canted cases. Tests first,
+  17 scratch faults caught; all gates pass, 210 workspace tests passed. [x]
 - Fix 3: supplied-parameter suffix/unit reconciliation. [ ]
 - Fix 4: template/gallery naming and future loading/missing-mass acceptance
   conditions (documentation only). [ ]

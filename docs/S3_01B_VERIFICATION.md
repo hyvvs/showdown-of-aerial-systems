@@ -83,3 +83,87 @@ fixture consumer, even tests which exit validation before reaching a control:
 
 Later follow-up test files also clone this fixture; their names and coverage
 are recorded below as they are added. No unrelated expected values changed.
+
+## Fix 2: invalid inputs and actual-parent ordering
+
+Tests were committed first as `27ab527`. Original-code runtime summary:
+
+```text
+reversed_and_zero_length_controls_have_specific_errors_for_every_kind ... FAILED
+  left: Ok(())
+ right: Err(DesignError { field: "controls[elevator].hinge",
+   reason: "hinge endpoints must progress root to tip along parent span" })
+actual_parent_span_supports_ventral_inverted_v_and_canted_controls ... FAILED
+  Err(DesignError { field: "components[fin].surface.stations[1]",
+    reason: "stations must progress outboard" })
+test result: FAILED. 10 passed; 2 failed; 0 ignored
+```
+
+The existing ten rejection tests passed immediately; those guards were
+already correct. The production change adds actual-parent hinge ordering
+and permits vertical stations progressing along their actual declared span,
+including a ventral fin. Horizontal surface station ordering is unchanged.
+No aircraft dynamics, physical sign or original expectation is altered.
+
+All twelve tests in `validation_regressions.rs` use the shared fixture and
+therefore join the rudder-entry consumer list above:
+
+| Test | Independent expected check / how a fault fails |
+|---|---|
+| `blank_supplied_sources_and_numeric_source_explanations_have_specific_errors` | Empty/whitespace contribution, section, engine-table and every numeric source explanation must report the exact source field/error. |
+| `computed_provenance_is_rejected_on_every_supplied_and_missing_input` | Independently authored inventory paths reject wing-only and derived origins for supplied or absent inputs. |
+| `nonfinite_surface_coordinates_dimensions_and_section_inputs_are_rejected` | NaN and both infinities at every present station coordinate/chord/section slope have explicit exact errors. |
+| `nonfinite_fuselage_coordinates_and_dimensions_are_rejected` | Nose, length and every sampled section coordinate/dimension reject the same probes. |
+| `nonfinite_mass_cg_and_every_intrinsic_tensor_entry_are_rejected` | Every component's mass, CG coordinate and tensor entry is invalidated separately; populated probe masses copy only ledgered synthetic data. |
+| `every_angle_field_rejects_nonfinite_at_the_typed_constructor` | Independent angle-path list covers incidence, twist, section, controls and all component tensor axes; safe Radians construction rejects non-finite values with NonFiniteAngle. |
+| `nonfinite_engine_placement_table_axes_and_every_sample_are_rejected` | Engine xyz position/direction, dry limit, all table axes and each thrust/fuel sample have exact errors. |
+| `nonfinite_control_and_supplied_parameter_scalars_are_rejected` | Both hinge vectors, fractions and supplied scalar values reject each invalid probe. |
+| `symmetric_non_positive_definite_inertia_is_rejected_separately_from_asymmetry` | Negative final diagonal in an otherwise symmetric tensor is invalid; the original asymmetry test stays unchanged. |
+| `empty_and_unordered_stations_have_specific_errors_for_every_surface_kind` | Wing, horizontal tail and vertical tail each reject empty stations and an out-and-back interior station with exact errors. |
+| `reversed_and_zero_length_controls_have_specific_errors_for_every_kind` | Each control kind separately rejects reversed and coincident endpoints with distinct exact errors. |
+| `actual_parent_span_supports_ventral_inverted_v_and_canted_controls` | Hand dot products for three nonstandard orientations; positive cases pass and their reversals fail the exact order error. |
+
+Green designer summary: **33 passed, 0 failed, 0 ignored** (original 16,
+Fix 1 five, Fix 2 twelve). Red/green logs are local
+`target/s3-01b/fix2-red.txt` and `fix2-green.txt`. New synthetic probes and
+the owner-specified projection equation are ledgered in
+`tests/fixtures/verification_values.md`; no new physical formula or tolerance.
+
+### Fix 2 scratch mutations
+
+Each mutation ran against the unchanged new regression tests in an ignored
+copy containing designer/core/estimator sources, with checkout-local TEMP/TMP
+and separate build storage. Every final mutant compiled and exited 101 with:
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 11 filtered out
+```
+
+| Fault (local log basename under `target/s3-01b/fix2-mutations`) | Test above which fails |
+|---|---|
+| `blank-source`, `blank-metadata-source`: remove text / numeric-source guards | blank source test |
+| `finite-coordinate`: bypass coordinate finite check | nonfinite surface test |
+| `positive-infinity`: allow positive infinite dimensions | nonfinite fuselage test |
+| `engine-position-finite`: bypass core finite-vector check | nonfinite engine test |
+| `engine-sample-finite`: bypass sample finite/nonnegative check | nonfinite engine test |
+| `present-provenance`, `absent-provenance`: bypass origin guard separately | computed provenance test |
+| `minimum-stations`: bypass minimum station count | empty/unordered station test (missing root produces a panic instead of the specified error) |
+| `positive-definite`: retain symmetry/finite checks but bypass Cholesky check | symmetric indefinite tensor test |
+| `unordered-Wing`, `unordered-HorizontalTail`, `unordered-VerticalTail`: bypass each kind's station order separately | empty/unordered station test |
+| `reversed-hinge`: bypass positive projection | reversed/zero hinge test |
+| `fixed-axis-hinge`: add a fixed negative-z requirement | actual-parent ventral/inverted/canted test |
+| `zero-hinge`: bypass distinct-endpoint guard | reversed/zero hinge test (gets order error instead of distinct-endpoint error) |
+| `angle-constructor`: allow non-finite Radians construction | every angle field test |
+
+The first hinge-bypass scratch edit lost array-size inference and failed to
+compile; that is not counted as evidence. It was corrected only in scratch
+to retain the typed projection expression, then the assertion failed as
+required. The fixed-axis mutant likewise retains type inference. No mutant,
+scratch helper or changed test expectation was committed.
+
+Fix 2 gates: formatting, Clippy with warnings denied, and the full workspace
+suite pass: **210 passed, 0 failed, 0 ignored**. A collapsible nested `if`
+was simplified after Clippy's first rejection; no assertion or tolerance
+changed. Full-suite log: `target/s3-01b/fix2-all-tests.txt`; compiler copy
+fallback warnings remain disclosed. No dependency, profile or cache setting
+was changed. Source: the gate outputs and owner-specified scope.

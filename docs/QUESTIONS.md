@@ -144,3 +144,10 @@ When a batch stops, append an entry with the task, what blocked it, and options 
   tests consuming the rudder fixture. If an unrelated assertion/expectation
   would change or a test fails for another reason, stop again without further
   edits. Source: owner's follow-up clarification to this entry.
+
+- **Resolution:** the separately committed correction passed both complete
+  suites (198 tests each); only six rudder coordinate entries changed, with
+  155 other numeric records identical. Exact diff and all fixture consumers
+  are recorded in S3_01B_VERIFICATION.md. Assertions and tolerances are intact.
+  Fix 2 implements the actual-parent rule and tests ventral/inverted/canted
+  cases. This question is answered; no S3-02 work is authorized or started.
