@@ -4,6 +4,14 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## S3-01b declaration checks
 
+- Fix 8 removes the manually duplicated supplied enum/ALL catalogue. Both
+  domains generate enum/list/exhaustive metadata from one declaration, with
+  independent no-wildcard test matches and presence/duplicate checks. This
+  protects classification completeness, not the physical truth of a newly
+  proposed quantity; semantic/source review is still required for extensions.
+  Sources: owner Fix 8; S3_01_SEMANTIC_MODEL, Enum/list completeness;
+  S3_01D_VERIFICATION, scratch additions/removals.
+
 - Fix 7 adds inclusive span-plane containment for both hinge endpoints along
   the parent's actual root-to-tip vector. Only outward-rounded arithmetic
   envelopes permit boundary uncertainty; there is no fixed metric tolerance.

@@ -59,55 +59,38 @@ wing_quantities! {
     ThinAirfoilLiftSlope => "thin_airfoil_lift_slope_per_rad",
 }
 
-// Closed non-wing domain: no catch-all coefficient or wing-result variant.
-// Source: owner's S3-01c Fix 5 examples and the existing tail-law/CLmax inputs.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SuppliedQuantityKind {
-    TailLiftCurveSlope,
-    TailNeutralPointContribution,
-    TailPitchingMomentSlope,
-    FuselagePitchingMomentContribution,
-    InterferenceFactor,
-    WholeAircraftClMax,
+// One declaration generates the enum, complete ALL list and exhaustive
+// metadata mappings. There is no separately maintained supplied-variant list.
+// Independent exhaustive test matches still require deliberate classification
+// of every variant, even if someone edits the generated enum/list separately.
+macro_rules! supplied_quantities {
+    ($($variant:ident => ($name:literal, $scope:ident, $unit:literal)),+ $(,)?) => {
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        pub enum SuppliedQuantityKind { $($variant),+ }
+        impl SuppliedQuantityKind {
+            pub const ALL: &'static [Self] = &[$(Self::$variant),+];
+            pub fn canonical_name(self) -> &'static str {
+                match self { $(Self::$variant => $name),+ }
+            }
+            pub fn scope(self) -> crate::ContributionScope {
+                match self { $(Self::$variant => crate::ContributionScope::$scope),+ }
+            }
+            pub fn unit(self) -> &'static str {
+                match self { $(Self::$variant => $unit),+ }
+            }
+        }
+    };
 }
-impl SuppliedQuantityKind {
-    pub const ALL: &'static [Self] = &[
-        Self::TailLiftCurveSlope,
-        Self::TailNeutralPointContribution,
-        Self::TailPitchingMomentSlope,
-        Self::FuselagePitchingMomentContribution,
-        Self::InterferenceFactor,
-        Self::WholeAircraftClMax,
-    ];
-    pub fn canonical_name(self) -> &'static str {
-        match self {
-            Self::TailLiftCurveSlope => "tail_lift_curve_slope",
-            Self::TailNeutralPointContribution => "tail_neutral_point_contribution",
-            Self::TailPitchingMomentSlope => "tail_pitching_moment_slope",
-            Self::FuselagePitchingMomentContribution => "fuselage_pitching_moment_contribution",
-            Self::InterferenceFactor => "interference_factor",
-            Self::WholeAircraftClMax => "whole_aircraft_cl_max",
-        }
-    }
-    pub fn scope(self) -> crate::ContributionScope {
-        match self {
-            Self::TailLiftCurveSlope
-            | Self::TailNeutralPointContribution
-            | Self::TailPitchingMomentSlope => crate::ContributionScope::Tail,
-            Self::FuselagePitchingMomentContribution => crate::ContributionScope::Fuselage,
-            Self::InterferenceFactor => crate::ContributionScope::Interference,
-            Self::WholeAircraftClMax => crate::ContributionScope::ClMax,
-        }
-    }
-    pub fn unit(self) -> &'static str {
-        match self {
-            Self::TailLiftCurveSlope | Self::TailPitchingMomentSlope => "1/rad",
-            Self::TailNeutralPointContribution => "m",
-            Self::FuselagePitchingMomentContribution
-            | Self::InterferenceFactor
-            | Self::WholeAircraftClMax => "1",
-        }
-    }
+
+// Closed non-wing domain: owner's Fix 5 examples and existing tail-law/CLmax.
+// Extension protocol: docs/S3_01_SEMANTIC_MODEL.md, Enum/list completeness.
+supplied_quantities! {
+    TailLiftCurveSlope => ("tail_lift_curve_slope", Tail, "1/rad"),
+    TailNeutralPointContribution => ("tail_neutral_point_contribution", Tail, "m"),
+    TailPitchingMomentSlope => ("tail_pitching_moment_slope", Tail, "1/rad"),
+    FuselagePitchingMomentContribution => ("fuselage_pitching_moment_contribution", Fuselage, "1"),
+    InterferenceFactor => ("interference_factor", Interference, "1"),
+    WholeAircraftClMax => ("whole_aircraft_cl_max", ClMax, "1"),
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum QuantityIdentity {

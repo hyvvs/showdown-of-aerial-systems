@@ -250,6 +250,41 @@ roundoff observations are ledgered separately in
 
 ## Computed result registry - current S3-01c2 policy
 
+### Enum/list completeness (S3-01d Fix 8)
+
+Both domain declarations in quantities.rs generate their enum, ALL list and
+exhaustive metadata matches from the same macro input. Supplied kinds no
+longer have a separately maintained enum and list. A macro entry necessarily
+appears in the generated list and in each metadata match; there is no wildcard
+arm or runtime reflection/registration fallback.
+
+`tests/enum_completeness.rs` adds independently written exhaustive matches for
+both domains, with a slot for every approved variant and no wildcard. Rust
+checks these matches even if a new enum variant never appears in ALL or
+reaches a runtime loop. Presence/duplicate tests then check that every slot
+is visited exactly once. Existing independent canonical/scope/unit and
+disjointness tests remain unchanged. Together these catch unlisted enum
+variants, forbidden domain additions and removed/duplicate list entries.
+
+**Extension procedure:**
+
+1. Obtain the semantic/source specification for a new quantity; a supplied
+   kind must describe an allowed effect the estimator cannot compute.
+2. Edit only the appropriate domain's macro invocation. Supply canonical ID
+   and, for a supplied kind, its explicit permitted scope and SI unit. Do not
+   hand-edit a generated enum, ALL list or method; never add wildcard arms.
+3. Explicitly classify the new variant in the independent exhaustive test
+   match, with a new unique slot and approved catalogue size. Update the
+   independent expected catalogue, scope/unit/origin tests and disjointness
+   checks. A compiler error is a review checkpoint, not a reason to add `_`.
+4. Run the complete gates and relevant scratch additions/removals. A computed
+   output cannot be authorized merely by giving it a supplied display label.
+
+Sources: owner Fix 8; [Rust E0004](https://doc.rust-lang.org/error_codes/E0004.html)
+for exhaustive matches; [Rust Reference, macro repetitions](https://doc.rust-lang.org/reference/macros-by-example.html#repetitions)
+for emitting the enum/list/matches from one declaration. No dependency or
+new numerical value is introduced. S3-02 remains unstarted.
+
 `QuantityIdentity::ComputedWing(ComputedWingQuantity)` is always rejected as
 a supplied contribution in every scope. The computed and supplied domains
 are different Rust enum types: no computed variant can be inserted into the

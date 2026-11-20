@@ -492,6 +492,19 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 
 ### S3-01 completion evidence
 
+#### S3-01d coverage follow-up (owner-authorized, in order)
+
+- Fix 8: generate enum/list/classification from one declaration and add
+  independent exhaustive tests for both domains. Addition/removal scratch
+  mutations fail; no runtime-list-only completeness assumption. All gates
+  pass: 231 workspace tests passed, none failed or ignored. [x]
+- Fix 9: USER_SUPPLIED source rejection with long labels, long kind labels
+  and Unicode labels; catch verifier mutation k. Document future export and
+  serialized-kind acceptance gates without starting those tasks. [ ]
+
+Branch task/s3-01d starts at task/s3-01c2 (`906afe5`). Scope remains the
+in-memory model and verification; S3-02 and later modeling tasks stay unstarted.
+
 #### S3-01c2 remaining findings (owner-authorized, in order)
 
 - Fix 5: closed supplied-kind list, kind-owned scope/unit rules, free labels,

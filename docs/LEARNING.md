@@ -111,6 +111,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01c2 Fix 7 | Ordering two hinge points does not place them inside a parent span. Dot products with the actual parent direction define inclusive root/tip planes, while interval bounds propagate calculation roundoff without guessing a distance tolerance. Span containment does not establish chordwise containment or physical attachment (S3_01_SEMANTIC_MODEL, Span containment and rounding allowance). |  |  |
 
+| 2026-11-20 | S3-01d Fix 8 | A runtime loop cannot discover a variant omitted from its list; a no-wildcard exhaustive match forces every enum variant to be considered at compile time. One macro declaration can emit the enum, list and metadata consistently. Independent presence/duplicate and disjoint-domain checks protect different failure modes (S3_01_SEMANTIC_MODEL, Enum/list completeness; S3_01D_VERIFICATION). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
