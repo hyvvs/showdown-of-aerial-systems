@@ -30,11 +30,27 @@ The hero demo is an **F-104-class supersonic jet**, targeted for v0.2 (D14). v0.
   this panel method. These tasks stay incompressible/attached/small-angle and do
   not yet add the later compressibility correction or validate hero-wing results.
   Mark those results "validity unassessed" until compared with data. No T10/T11.
-- Validate: the selected Navion or fallback Cessna 172 against power-off reference data and applicable AVL/OpenVSP output, within the v0.1 Mach limit. Flying-wing validation is parked until after v0.2.
-- Exit: published error plots; ASSUMPTIONS.md updated.
+- Current reference direction: wing-alone first, TN 1270 conditional; the T16c
+  source-closure verdict is NO-GO for a fully sourced experimental comparison.
+  For this outcome the owner's v0.1 category is **"code-to-code cross-checked,
+  not experimentally validated"**, tied to actual existing evidence, not an
+  implied AVL/OpenVSP run. RM SL56H06 is a v0.2 source candidate; CRM-HL is
+  excluded from the first comparison. (Owner T16c Decisions/requirement 4;
+  T16C_TN1270_CLOSURE.md §§1/3/6; T16B_REFERENCE_SEARCH.md §§5-6/8.)
+- Next direction is Stage 3 after the owner's pre-modeling checkpoint and a
+  separately scoped task. Experimental error plots remain unavailable while
+  source gates are open; no experimental-validation exit claim is made.
+  Flying-wing validation remains parked until after v0.2. (Owner T16c
+  requirement 4; ESTIMATOR_PLAN.md, Current scope; closure §§4/6-7.)
 
 ### Stage 3: Designer model and report
 - Parametric parts (wing sections, tail, fuselage, engine) as the source of truth; headless CLI producing the aircraft file and an HTML validation report.
+- T16c route: first agree the input/report interface, provenance, evidence
+  labels and unavailable outputs at the checkpoint. Existing isolated-wing
+  capability cannot silently supply missing whole-aircraft or stall outputs;
+  the report must preserve that distinction. No Stage 3 implementation or
+  prerequisite model task is authorized by the audit. (Owner T16c request;
+  T16C_TN1270_CLOSURE.md §6; ESTIMATOR_PLAN.md, Current scope.)
 - Exit: change wingspan 11 m to 9 m, report shows higher stall speed and a warning.
 
 ### Stage 4: Browser demo

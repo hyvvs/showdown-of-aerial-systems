@@ -1,8 +1,14 @@
 # Estimator plan: static derivative milestone
 
-Owner decisions recorded 2026-11-19. **Only T16's source/definition audit is authorized to execute.** The approved planning horizon is whole-aircraft lift slope first, then pitching-moment slope with the neutral-point location. After the first published lift-slope comparison, stop for the owner's checkpoint before starting any later task, including the pitch/neutral-point comparison. Every prerequisite implementation task needs separate approval; this document does not authorize a solver change.
+## Current scope and pre-modeling checkpoint — T16c
 
-The static derivative milestone is separate from reshaped [T10](TASKS.md#t10-compare-against-reference-reshaped-and-blocked). T10 retains its power-off stall/glide/trim/static-margin goal and is blocked on this milestone as well as H3/D9. T11 stays separate. This documentation update does not complete T16, H3/H4 or D8/D9. No accuracy pass/fail claim is permitted before D9.
+The owner's T16c request supersedes the earlier whole-aircraft-first sequence: the first experimental comparison is **wing-alone**, with **TN 1270 prepared conditionally**. RM SL56H06 is excluded from that comparison and retained as a candidate source for v0.2 because its tests are supersonic; CRM-HL is excluded because of deployed slats. These are owner decisions, not selections made by the audit. (Owner T16c request, Decisions so far; [T16b](T16B_REFERENCE_SEARCH.md) §§3/5-6; RM SL56H06 pp. 2-5; ONERA guide §6.4 p. 3.)
+
+**STOP before modeling:** T16/T16b/T16c are documentation audits, not authorization for T17 or another model task. The [T16c closure](T16C_TN1270_CLOSURE.md) ends NO-GO for a fully sourced experimental comparison; its §§3-5 identify the remaining condition, spanwise-prescription and section-input gaps. The owner must answer the remaining questions in its §7 at this pre-modeling checkpoint. No assumptions are adopted by listing them. (Owner T16c request; closure §§1/3/5/7.)
+
+For this NO-GO, the owner's v0.1 reporting category is **“code-to-code cross-checked, not experimentally validated”**, with only the actual existing cross-check evidence claimed. The next direction is Stage 3, subject to this checkpoint and a separately scoped task; it does not authorize implementation now. The closure's §6 states the required report/interface scope and evidence limits. If an experimental comparison is later reopened, stop again after its first lift-slope report before any pitch/neutral-point work. The earlier Navion whole-aircraft sequence below is retained as **deferred context**, not the current first-comparison requirement. (Owner T16c requirement 4; closure §§4/6-7; previous checkpoint in §T23 below; ROADMAP Stage 3.)
+
+The static derivative milestone is separate from reshaped [T10](TASKS.md#t10-compare-against-reference-reshaped-and-blocked). T10 retains its power-off stall/glide/trim/static-margin goal and is blocked on this milestone as well as H3/D9. T11 stays separate. Completing the source audits does not complete that milestone, H3/H4 or D8/D9. No accuracy pass/fail claim is permitted before D9. (TASKS §§T10/T11/T16-T16c; DECISIONS §§D8-D9.)
 
 ## Scope and references
 
@@ -32,7 +38,9 @@ This is a budget of effects to assess, not a measured decomposition of CR's airc
 | Cm_alpha | Wing load moment, tail load/arm and downwash, fuselage pitching moment and interference; finite-Mach and possible propulsion effects. | Planar wing load-moment slope from VLM at its declared reference; LLT has no moment output. | Complete static airframe moment budget, source-axis/reference conversion and the same omission assessments. |
 | Neutral-point location | The whole-aircraft slopes and agreed moment/geometry references. | VLM's isolated-wing neutral point only. | Derive aircraft/reference locations consistently when Cm_alpha is compared; a slope-derived published reference location is not an independent measured datum. |
 
-## T16 audit contract — authorized, not completed by this update
+## T16 audit contract — historical whole-aircraft scope
+
+This is the earlier audit contract; its completed result is [T16_AUDIT.md](T16_AUDIT.md) §§1-7. The current wing-alone direction and pre-modeling checkpoint are stated above; the Navion requirements below are retained for deferred whole-aircraft work. (Owner T16c Decisions; TASKS §T16; Current scope section above.)
 
 **Purpose / size:** establish source sufficiency and the comparison definitions; medium. Search for documented power-off evidence first. No geometry inference from an unlabeled sketch, no aircraft-number transcription beyond separately authorized audit requirements, and no propeller/engine implementation.
 
@@ -85,7 +93,7 @@ A source-based conditional mechanism is available: C §3.1 pp. 25-27 expresses t
 
 ## Proposed static enabling work — separate approval required
 
-Only T16 is executable under the current authorization. The following preserves a static build sequence for later owner decisions; each implementation needs independent hand/analytic expectations first and mutation evidence. Rough sizes are relative, not time estimates. Incompressibility/propulsion disclosures do not turn the current wing result into a whole-aircraft estimate. All source gaps remain gates.
+No modeling task is executable under the T16c authorization. The following preserves a deferred static build sequence for later owner decisions; each implementation needs independent hand/analytic expectations first and mutation evidence. Rough sizes are relative, not time estimates. Incompressibility/propulsion disclosures do not turn the current wing result into a whole-aircraft estimate. All source gaps remain gates. (Owner T16c request; Current scope section above; AGENTS.md, Batch mode.)
 
 ### T17 — Sourced section lift and moment inputs — medium
 
@@ -135,6 +143,8 @@ Independent tests: zero-Mach recovery, the analytic high-span two-dimensional PG
 
 ### T23 — First published lift-slope comparison and mandatory checkpoint — medium, not authorized
 
+**Historical whole-aircraft route:** the first-comparison scope in the following paragraphs is superseded by Current scope above and the conditional wing-alone contract in T16c §4. The stop after a first comparison is retained; neither route is authorized to run now. (Owner T16c Decisions; T16C_TN1270_CLOSURE.md §§4/6-7.)
+
 After separately approved prerequisites and T16's GO, freeze independent geometry/section inputs and produce the **first whole-aircraft Navion CL_alpha comparison** at the matched published condition. An alternative reference requires the owner's explicit approval and a correspondingly identified checkpoint. Report source/prediction definitions, mesh/section-input sensitivity, contributions and omissions, propulsion assessment, the actual-Mach PG factor and its diagnostic share/limits. Do not fit the model to the published target. No accuracy pass/fail before D9 (CR p. 101; C §§2.5-2.6; A §§Compressibility/Stability derivatives).
 
 Independent checks: a prescribed synthetic comparison record with hand-derived unit/reference conversions and signed discrepancy; missing geometry or a mismatched variant/condition must remain unavailable. Mutations: substitute the prediction for the reference, compare an isolated wing with the aircraft total, change normalization/CG or silently zero a missing contribution.
@@ -161,6 +171,6 @@ Owner policy: do not commit AVL binaries or raw output unless the license clearl
 
 Current synthetic verification can use the analytic elliptic LLT case, VLM's independent one-panel load/moment solution and hand symmetry/reference/limiting cases. These verify software within its idealizations, not the Navion. Existing finite-aspect-ratio VLM/LLT differences are not an equality oracle; preserve their evidence and tolerances ([LLT tests/reference](../data/reference/estimator/lifting_line.md), [VLM tests/reference](../data/reference/estimator/vlm.md), [T15b records](../data/reference/estimator/t15b_assertions.md)).
 
-The inventories contain no independently separated Navion wing derivative. A smaller wing-only versus published Navion-aircraft comparison is therefore not the first milestone; an independently sourced isolated-surface benchmark could only be labeled that separate verification/reference exercise (CR pp. 100-103).
+The inventories contain no independently separated Navion wing derivative. A wing-only prediction cannot be compared as though it were the published Navion aircraft total. The owner has instead selected a separate wing-alone first comparison, with TN 1270 conditional and presently NO-GO, as recorded in Current scope and T16c §§1/4 (CR pp. 100-103; owner T16c Decisions).
 
-All prior planning questions are answered for this horizon. **Next authorized work is T16 only**, ending in the sourced go/no-go and, if needed, a fully evidenced alternative proposal. New questions arise only from a missing source, an uncertain omission, the owner's PG hold point or an approval checkpoint. This commit updates requirements; it does not mark the source audit or any published-data comparison complete.
+**Next action is the owner's pre-modeling checkpoint response**, covering the five restated T16b questions and their already-answered parts in T16c §7. No modeling, published-data comparison, T10 or T11 starts from this documentation update. (Owner T16c request; Current scope section above; QUESTIONS.md, T16c entry.)

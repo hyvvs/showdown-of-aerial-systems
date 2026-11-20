@@ -91,6 +91,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | T16b layered reference search | A benchmark must match both the measured component and the model's physics; a clean wing, a coupled wing-tail and a supersonic aircraft require different capabilities (T16B_REFERENCE_SEARCH.md §§2-6). A neutral point reconstructed from lift/pitch slopes is a derived reference, and support loads or a different moment origin can change that comparison (Caughey §3.1 pp. 25-28; RM L52G18 p. 3). Public access is distinct from reuse permission, and agreement between programs is cross-checking rather than experimental validation (reference search §§3-6/8; NASA/NPARC Overview §Introduction). |  |  |
 
+| 2026-11-20 | T16c TN 1270 closure | A design assumption in a related paper is not proof of a test model's as-built spanwise geometry (TN 713 p. 3; Report 703 pp. 513-514; TN 1270 p. 4). Published sample section curves can help without supplying a complete matched input set, especially when their angle already includes a correction (TN 1269 pp. 20-21/Table IV/Figs. 1-3). Source readiness, code cross-checks and experimental validation are separate claims (T16C_TN1270_CLOSURE.md §§3/6; NASA/NPARC Overview §Introduction). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

@@ -3,7 +3,7 @@
 Status: [ ] todo, [~] in progress, [x] done. Do tasks **in order**, one at a time.
 Later tasks are written just in time, after earlier ones teach us what we need.
 `H` tasks are for the human owner; agents may help structure them but must not invent data.
-H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. T16 and T16b are documentation/source audits; later implementation tasks need separate approval (see their status sections below).
+H1 and H2 run alongside development. T10 is reshaped and blocked on the separate static derivative milestone, H3 and D9; T0 to T9 are not blocked by owner tasks. T16, T16b and T16c are documentation/source audits; later implementation tasks need separate approval (see their status sections below).
 H4 is required before T11. v0.1 remains subsonic, with an explicit "Mach > 0.8 not modeled" warning; the F-104-class supersonic hero demo belongs to v0.2.
 
 ---
@@ -289,21 +289,22 @@ H3/H4, D8/D9 and queued T10/T11 remain unchanged. Documentation checks only;
 no code, dependency, aircraft data, test, CONVENTIONS.md or VISION.md changes.
 The plan ends with the questions needed before implementation starts.
 
-## Static derivative milestone (owner decisions 2026-11-19)
+## Static derivative milestone (current scope: T16c owner direction)
 
-Separate from reshaped T10 and from T11. Approved planning horizon: published
-whole-aircraft lift slope first; pitching-moment slope with neutral-point
-location afterward. T16 and T16b are completed source audits. Prerequisite model
-implementation still needs separate approval; the current wing-only estimator is
-not a complete Navion model. See `docs/ESTIMATOR_PLAN.md`. [ ]
+Separate from reshaped T10 and from T11. The owner's T16c request changes
+the first experimental comparison to wing-alone, with TN 1270 conditional;
+the earlier whole-aircraft-first sequence is deferred context. T16/T16b/T16c
+are completed source audits, not completed comparisons. No modeling starts
+before the owner's checkpoint. (ESTIMATOR_PLAN.md, Current scope;
+T16C_TN1270_CLOSURE.md §§1/6-7; owner T16c Decisions.) [ ]
 
-After the first published lift-slope comparison, STOP for the owner's
-checkpoint before any later task starts, including pitch/neutral-point work.
-The owner reviews the discrepancy, omitted contributions, data sufficiency
-and whether to revise the model/reference or require finite-Mach treatment.
-No accuracy pass/fail claim before D9. Finishing this milestone requires
-both the checkpoint and the separately approved pitch/neutral-point stage;
-T10 remains blocked until that and its H3/D9 requirements are satisfied.
+The T16c NO-GO means the v0.1 estimator category is "code-to-code cross-checked,
+not experimentally validated", limited to actual evidence; the next direction
+is Stage 3 after checkpoint responses and separate task scope. If experimental
+work is reopened, retain the stop after the first lift-slope report before
+pitch/neutral-point work. No accuracy pass/fail claim before D9; T10's static
+milestone and H3/D9 blocks remain unsatisfied. (Owner T16c requirement 4;
+closure §§4/6-7; ESTIMATOR_PLAN.md §§Current scope/T23; TASKS §T10.)
 
 Other simulator derivatives remain future candidates, each requiring its
 own approval after the checkpoint. Drag, Mach-derivative and
@@ -392,6 +393,28 @@ validation and list the questions before modeling. No alternative/reference
 selection, D8/D9 decision, code, tests, coefficient-table transcription or
 modeling task is completed or authorized here. T17/T10/T11 remain unstarted
 (audit §1; ESTIMATOR_PLAN.md opening scope and §§T17/T23).
+
+## T16c: TN 1270 bounded closure (documentation completed; modeling NO-GO)
+
+Completed on 2026-11-20 in [T16C_TN1270_CLOSURE.md](T16C_TN1270_CLOSURE.md):
+the five T16b gaps have explicit closure methods/statuses (§3), the exact
+future measured-quantity contract is recorded without data values (§4),
+and candidate assumptions have sourced support with unknown effects stated
+rather than invented bounds (§5). No coefficient-table transcription,
+code, tests, modeling or external-program run. (Closure §§1-5.) [x]
+
+Reference definitions/reuse are closed; spanwise prescriptions and section
+inputs are partial; exact finite-wing Mach remains unverified. TN 1269's
+published sample section plots are new useful evidence for a different
+worked wing, not a complete matched input set. Verdict: NO-GO for a fully
+sourced experimental comparison. (Closure §3; TN 1270 pp. 3-6/Tables I-II;
+TN 1269 p. 20/Table IV/Figs. 1-3.)
+
+The five T16b questions are restated with options and recommendations;
+already supplied owner decisions are marked answered. Remaining replies
+and the pre-modeling checkpoint are pending; Stage 3 requirements are
+documented, not implemented. T17/T10/T11 remain unstarted and D8/D9 unchanged.
+(Closure §§6-7; ESTIMATOR_PLAN.md, Current scope; QUESTIONS.md, T16c entry.)
 
 ## Documentation: static milestone decisions recorded (2026-11-19)
 
