@@ -29,7 +29,8 @@ their synthetic ledgers; no shared fixture or expected number is edited.
 - ASCII display label: 256 repetitions of x. Kind-label cases: existing
   canonical fuselage_pitching_moment_contribution once and repeated 8 times.
   The enum kind remains FuselagePitchingMomentContribution in both cases;
-  there is no new/unknown kind or kind-field serialization.
+  there is no new/unknown kind or kind-field serialization. The identifier is
+  37 ASCII bytes; the eight-copy label is 296 bytes (derived string lengths).
 - Unicode display label: U+7FFC repeated 64 times, 192 UTF-8 bytes. These are
   synthetic string-length settings, not physical numbers or source exceptions.
 - Empty list, empty string, ASCII space/tab/CR/LF, Unicode U+2003/U+00A0

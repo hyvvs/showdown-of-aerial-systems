@@ -490,6 +490,24 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   names, no claim that a denylist is complete, and the explicit report
   disclaimer regardless of name. These tasks remain unstarted.
 
+**Additional kind/write acceptance conditions (owner S3-01d):**
+
+- S3-02 and every later serialized designer format: automatically discover
+  schema-defined kind fields and test unknown, missing, wrong-case, numeric
+  and duplicate kind fields, one mutation at a time. All must reject; do not
+  discover kinds by matching arbitrary label text. Duplicate-key tests must
+  preserve raw input text rather than pass through a map that loses duplicates.
+  Writer validation must also reject invalid/missing kind declarations.
+- S3-05 and every design-writing export: define the operation's required
+  supplied-kind set before implementation. Remove each required kind from a
+  complete independent design and assert rejection before any write, with no
+  changed target. Bypassing this check (mutation i) must fail the test. Draft
+  validity does not imply readiness; absent draft values under valid kinds
+  remain allowed where the operation does not require those values.
+
+These are future acceptance gates only. No serialization, readiness or export
+API is introduced here; S3-02 and S3-05 remain unstarted.
+
 ### S3-01 completion evidence
 
 #### S3-01d coverage follow-up (owner-authorized, in order)
@@ -500,7 +518,9 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   pass: 231 workspace tests passed, none failed or ignored. [x]
 - Fix 9: USER_SUPPLIED source rejection with long labels, long kind labels
   and Unicode labels; catch verifier mutation k. Document future export and
-  serialized-kind acceptance gates without starting those tasks. [ ]
+  serialized-kind acceptance gates without starting those tasks. Three new
+  tests pass on unchanged production guards and fail mutation k; all final
+  gates pass: 234 workspace tests passed, none failed or ignored. [x]
 
 Branch task/s3-01d starts at task/s3-01c2 (`906afe5`). Scope remains the
 in-memory model and verification; S3-02 and later modeling tasks stay unstarted.

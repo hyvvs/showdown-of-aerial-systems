@@ -113,6 +113,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01d Fix 8 | A runtime loop cannot discover a variant omitted from its list; a no-wildcard exhaustive match forces every enum variant to be considered at compile time. One macro declaration can emit the enum, list and metadata consistently. Independent presence/duplicate and disjoint-domain checks protect different failure modes (S3_01_SEMANTIC_MODEL, Enum/list completeness; S3_01D_VERIFICATION). |  |  |
 
+| 2026-11-20 | S3-01d Fix 9 | A source requirement must not depend on label length, kind text or UTF-8 byte count. A valid incomplete draft and an export-ready design are different contracts. Duplicate serialized fields must be tested in raw text because building a generic map can erase the evidence (S3_01D_VERIFICATION, Fix 9; ROADMAP S3-02/S3-05). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

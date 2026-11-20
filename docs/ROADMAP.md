@@ -304,6 +304,22 @@ export/report implementation is included. The requirements below are retained.
   engines, throttle/table definitions, controls and provenance while retaining
   legitimate arrays, as in core/CLI `all_object_shapes`. A hand-maintained
   object list cannot satisfy this condition. (Owner S3-01b Fix 4.)
+  **Kind-field acceptance (owner S3-01d):** the automatic serialized-format
+  test must discover actual kind fields from the agreed schema/typed structure,
+  not from free-label contents or a hand-listed set of paths. For each kind
+  field, separately inject an unknown identifier, remove the field, change
+  its canonical case, substitute a numeric value, and duplicate the kind
+  field; every case must be rejected with a clear field error. Generate
+  duplicate-key cases in raw serialized text: a generic JSON value/map may
+  discard duplicates before the parser sees them. Apply to every designer
+  format/version introduced, preserve the existing unknown/duplicate-field
+  rejection, and retain positive controls for all legitimate kinds.
+  Saving a draft may retain absent values under known kinds; it must not
+  infer a missing kind from a label, value, unit or default. Before any
+  design-writing export, enforce the declared required-kind contract for
+  that operation and test that missing required kinds prevent writing.
+  These are acceptance conditions, not an implemented serializer or a choice
+  of wire-tag layout/version. S3-02 remains unstarted.
 - **Mutations:** accept an object-shaped array; drop source metadata; resolve
   paths against the process directory; ignore a version or unknown field.
 - **Risks:** relative references breaking on relocation, schema drift and
@@ -394,6 +410,19 @@ export/report implementation is included. The requirements below are retained.
   paths. Cross-check loads using hand forces and cross products, not another
   call through the exporter. Read exported text through the existing parser
   as an additional compatibility check, not the sole expected answer.
+  **Required-kind export acceptance (owner S3-01d, mutation i):** before
+  implementation, specify the supplied kinds required by each supported
+  configuration/export operation. Start with an independently authored complete
+  design, remove each required kind in turn (including the entire entry), and
+  assert that export fails with the missing kind identified before any output
+  is written. An invalid/missing kind declaration must also reject. Assert that
+  the target is absent or an existing target remains unchanged after rejection.
+  Demonstrate that bypassing the required-kind check (mutation i) fails this
+  test. In-memory draft validation alone is not export readiness. No missing
+  kind may become zero, a template guess or a best-effort export. This applies
+  to every path that writes a design, not only the first CLI command; future
+  writers inherit the same acceptance gate. Required sets/reference assembly
+  remain this task's specification work, not new decisions in S3-01d.
 - **Mutations:** add wing lift twice; fill a missing derivative with zero;
   swap a control sign; shift a moment twice; detach an engine from its table;
   copy stale coefficients after changing geometry; accept a static template

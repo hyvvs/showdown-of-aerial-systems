@@ -73,3 +73,115 @@ workspace suite **231 passed, 0 failed, 0 ignored**. Logs: target/s3-01d/
 fix8-green.txt, fix8-clippy.txt and fix8-all.txt. The existing compiler-cache
 hard-link warning caused Rust's automatic copy fallback; no cache, profile
 or dependency setting changed. Existing tests and fixture data are unchanged.
+
+## Fix 9: USER_SUPPLIED sources with adversarial labels
+
+Tests first: `3c15e7e Fix 9: tests`. Production source validation was already
+correct and remains byte unchanged. Three new tests pass immediately on it:
+
+```text
+long_user_label_requires_nonempty_sources ... ok
+long_kind_label_requires_nonempty_user_sources ... ok
+unicode_user_label_requires_nonempty_sources ... ok
+test result: ok. 3 passed; 0 failed; 0 ignored
+```
+
+Before committing, the verifier's exact mutation k was applied only in an
+ignored scratch copy. It exempts numeric-source checking when USER_SUPPLIED
+is present and the text after `.parameters[` is longer than 128 bytes. All
+three new tests compile, then fail their exact-error assertions:
+
+```text
+long_user_label_requires_nonempty_sources ... FAILED
+long_kind_label_requires_nonempty_user_sources ... FAILED
+unicode_user_label_requires_nonempty_sources ... FAILED
+  left: Ok(())
+  left: Ok(())
+  left: Ok(())
+test result: FAILED. 0 passed; 3 failed; 0 ignored
+```
+
+Each expected result is the parameter-path DesignError with reason
+`source or missing-input explanation required`; full paths/labels are in
+target/s3-01d/fix9-red-k.txt. Positive controls have valid sources and pass,
+so a label/kind syntax rejection cannot masquerade as a source rejection.
+
+| Test | Independent input and checks |
+|---|---|
+| Long user label | 256 ASCII x characters, explicit TailPitchingMomentSlope/Tail/`1/rad` unit contract; source references and contribution source text reject empty/whitespace values. |
+| Long kind label | Genuine FuselagePitchingMomentContribution canonical ID, once and repeated eight times as display text; scope Fuselage/unit 1. The closed enum kind stays legitimate; no new kind is introduced. |
+| Unicode user label | 64 U+7FFC characters, 192 UTF-8 bytes; demonstrates that byte length versus character count cannot exempt a source. |
+
+Every case checks empty reference lists, empty strings, ASCII whitespace,
+Unicode whitespace, and a mixed valid/empty reference list. Contribution
+source text is checked independently, with valid numeric-source metadata.
+All expected field/reason checks are explicit; no existing test or tolerance
+changes. The only numeric probe value is the previously labeled synthetic
+fixture value, not a real aircraft coefficient. Complete string/count/probe
+ledger: tests/fixtures/registry_source_values.md, Fix 9.
+
+The implementation commit is documentation/evidence only; it does not alter
+an already-correct production guard. Source: owner Fix 9; verifier mutation
+k in target/verifier/scratch/s3_01c2_mutations.py; existing validation.rs
+source contract. Logs: fix9-unmutated.txt and fix9-red-k.txt. All test and
+scratch runs set TEMP/TMP inside this checkout. No mutant is committed.
+
+### Future acceptance conditions recorded, not implemented
+
+- S3-02 / every serialized designer format: automatically discover actual
+  schema-defined kind fields, then separately test unknown, missing,
+  wrong-case, numeric and duplicate kind fields. Duplicate cases must use
+  raw input text so a map cannot discard the duplicate before parsing.
+  Invalid/missing writer-side kind declarations must also reject; no label
+  inference or default kind. Field/tag layout/version remains S3-02 work.
+- S3-05 / every design-writing export: specify the operation's required
+  supplied-kind set before implementation. Remove each required kind from
+  a complete independently authored design and assert failure before any
+  write, with an absent/unchanged target. Bypassing that check (mutation i)
+  must fail the test. No absent kind may be replaced by zero or a guess.
+
+These are attached to ROADMAP S3-02/S3-05 and TASKS, with the semantic-model
+contract updated. They do not invent which kinds future configurations require.
+Current incomplete-draft permission remains for absent values under valid
+kinds, without waiving a kind required by a selected format/operation. No
+serializer, export/readiness API, wire-format fixture or new dependency is
+introduced. S3-02 and S3-05 remain unstarted; no nonexistent export mutation
+or serialized-format check is claimed executed in this batch.
+
+## Final batch verification and file map
+
+All three final gates pass: `cargo fmt --all -- --check`,
+`cargo clippy --all-targets --all-features -- -D warnings`, and full unfiltered
+`cargo test --all`: **234 passed, 0 failed, 0 ignored**. The designer has
+57 tests; the unchanged other crates contribute 177. Logs: target/s3-01d/
+final-fmt.txt, final-clippy.txt, final-all.txt. TEMP/TMP are checkout-local
+for every test/scratch run. Rust's automatic hard-link-to-copy fallback was
+disclosed; no build profile/cache setting or dependency changed.
+
+| Fix | Files touched (relative to checkout) |
+|---|---|
+| 8 | crates/soas-designer/src/quantities.rs; tests/enum_completeness.rs; tests/fixtures/registry_source_values.md; docs/ASSUMPTIONS.md, LEARNING.md, S3_01_SEMANTIC_MODEL.md, S3_01D_VERIFICATION.md, TASKS.md |
+| 9 | crates/soas-designer/tests/source_label_guards.rs; tests/fixtures/registry_source_values.md; docs/ASSUMPTIONS.md, LEARNING.md, ROADMAP.md, S3_01_SEMANTIC_MODEL.md, S3_01D_VERIFICATION.md, TASKS.md |
+
+Unprefixed tests/ paths are under crates/soas-designer/. Fix 9 changes no
+production source. Existing tests, shared fixture/inventory, core/CLI/
+estimator source, manifests/lockfile, physical values, signs and tolerances
+are unchanged. No test is weakened or ignored; no mutant/helper is committed.
+The old manual supplied list is replaced structurally, with the same variants
+and metadata. No S3-02 serialization or S3-05 export implementation starts.
+
+**Least confident about:** exhaustive classification prevents unlisted
+variants escaping tests; it does not certify a proposed kind's physical
+meaning. Nonempty source validation cannot establish source truth. Future
+wire-format and export behavior remains unimplemented and must satisfy the
+new explicit acceptance gates when those tasks are authorized.
+
+**Assumptions made:** current approved catalogues stay at six supplied and
+42 computed variants; any extension needs semantic review and explicit test
+classification. A long kind-derived label remains display text, not a new
+kind. Required-kind sets and wire layout/version are future task specification
+work; no such decision is made in this batch. No owner question is pending.
+
+Task statuses and concepts-only LEARNING entries are updated; owner learning
+columns remain blank. The batch has four local tests/implementation commits,
+with no push, merge or remote change.

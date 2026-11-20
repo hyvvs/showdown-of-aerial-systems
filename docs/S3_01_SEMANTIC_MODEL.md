@@ -197,6 +197,34 @@ fallback to generic supplied data, and no designer parser is introduced.
 Present values require USER_SUPPLIED or TEMPLATE_DEFAULT, optionally with
 OUTSIDE_COVERAGE. Missing draft values remain None with NOT_ESTIMATED.
 
+Source checking is independent of origin-specific label length, kind display
+text and Unicode encoding. USER_SUPPLIED and TEMPLATE_DEFAULT both require
+nonempty source references, with no empty/whitespace-only reference hidden in
+a longer list. Contribution source text must also be nonempty. Fix 9 adds
+long ASCII, long kind-derived and Unicode label regressions; the production
+guard was already correct and remains unchanged. A kind-derived label is
+still only display text: the closed enum kind remains explicit.
+
+### Future serialized-kind and required-kind write gates
+
+No designer format, export or readiness API exists in S3-01. S3-02 must
+automatically reject unknown, missing, wrong-case, numeric and duplicate kind
+fields in every format it introduces; discover actual kind fields through the
+agreed schema, not a label classifier or manually maintained path list.
+Duplicate-key probes must reach the parser as raw text. A writer must reject
+invalid/missing kind declarations, not infer them from labels/units/defaults.
+
+Any export that writes a design must reject a missing required supplied kind
+before writing, with a test removing each required kind from an independently
+complete design. Mutation i, which bypasses that required-kind check, must
+fail the test. S3-05 must specify the required-kind sets for its supported
+operations/configurations before implementation; absence is never implicit
+zero. A valid incomplete draft is not automatically export-ready. Existing
+permission to save missing values under valid kinds is preserved, without
+waiving any kind required by a format/operation. ROADMAP S3-02/S3-05 and
+TASKS carry these owner-requested acceptance conditions; they are not claimed
+implemented or tested through a nonexistent API in this batch.
+
 This owner-authorized design change supersedes the S3-01b name classifier
 and label-suffix unit checks. Tests were migrated to explicit computed kinds
 for rejection and explicit supplied kinds for allowed labels/unit checks;

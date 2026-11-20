@@ -4,6 +4,14 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## S3-01b declaration checks
 
+- Fix 9 tests USER_SUPPLIED source rejection independently of long ASCII,
+  kind-derived and Unicode labels. Empty/whitespace-only references remain
+  invalid; production source checks are unchanged. This checks declaration
+  completeness, not source truth. Future serialized-kind rejection and
+  missing-required-kind export gates are recorded for S3-02/S3-05, not
+  implemented here. Sources: owner Fix 9/future acceptance request;
+  S3_01D_VERIFICATION; ROADMAP S3-02/S3-05.
+
 - Fix 8 removes the manually duplicated supplied enum/ALL catalogue. Both
   domains generate enum/list/exhaustive metadata from one declaration, with
   independent no-wildcard test matches and presence/duplicate checks. This
