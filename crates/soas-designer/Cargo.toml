@@ -1,0 +1,13 @@
+[package]
+name = "soas-designer"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+soas-core = { path = "../soas-core" }
+soas-estimator = { path = "../soas-estimator" }
+nalgebra = { version = "0.34.1", default-features = false, features = ["std"] }
+
+[dev-dependencies]
+serde_json = "1"

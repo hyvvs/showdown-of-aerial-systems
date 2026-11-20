@@ -2,6 +2,42 @@
 
 Keep this honest and current. Every simplification the code makes belongs here. Reports and the README link to it.
 
+## S3-01b declaration checks
+
+- Neutral naming applies to **templates and the gallery**, enforced through
+  a **registry plus review** of names, images, descriptions and implied claims.
+  User designs may name themselves freely. A denylist cannot be complete;
+  the report disclaimer limits claims, independently of a design's name.
+  A neutral name does not establish validation. Current template validation
+  remains a registered-name check; there is no gallery/report implementation
+  in S3-01. Source: owner S3-01b Fix 4 policy; ROADMAP, evidence/naming policy.
+- Future designer JSON/file loading must have an automatic object-shape
+  regression: discover every nested object with no hand-listed paths,
+  independently replace each with an array of its values, and assert rejection.
+  Future mass/CG tests must show that one missing component mass blocks total
+  mass and CG instead of counting as zero. These are S3-02/S3-03 acceptance
+  conditions, not implemented features. Source: owner S3-01b Fix 4;
+  ROADMAP, S3-02/S3-03; core/CLI `all_object_shapes` precedent.
+
+- The owner-defined control order uses the actual parent root-to-tip vector
+  in body axes, with a strictly positive hinge displacement dot product.
+  It supports ventral, inverted V and canted declarations, without changing
+  the physical deflection signs in CONVENTIONS, Forces and moments. Vertical
+  station order follows that actual span; horizontal stations retain increasing
+  body y. No hinge effectiveness or aerodynamic force is inferred here.
+- Safe angle construction rejects non-finite values before they can enter
+  the semantic model. Other numeric inputs reject non-finite values explicitly;
+  source text and provenance restrictions validate declarations, not the truth
+  of supplied data. Signed tensors require symmetry and positive definiteness
+  separately. Sources: owner S3-01b requirements/clarification;
+  S3_01_SEMANTIC_MODEL.md, Representation and validation; core units/dynamics
+  validation reused without tolerance changes.
+- Supplied parameter units use an explicit current-model suffix catalogue,
+  including the existing dimensionless `cl_max` exception. Name, declared
+  unit and numeric provenance must all agree. Unknown suffixes are errors;
+  no conversion or physical coefficient interpretation is guessed. Sources:
+  D4; S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract.
+
 ## Environment (v0.1)
 - Flat, non-rotating Earth; constant gravity.
 - International Standard Atmosphere, no wind, no turbulence.
@@ -10,6 +46,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 - At H = 5000 m the PDF prints **54019 Pa**, while the equation gives **54019.912103762079 Pa**: difference **+0.912103762079 Pa** (same absolute magnitude), relative difference **1.688486944e-5**. On 2026-11-13 the owner selected **5e-5 relative tolerance for pressure and density**, accommodating the recorded printed-table discrepancy while rejecting the requested lapse-rate, gravity, height-definition and gas-constant mistakes. No other row needs a larger tolerance. All transcribed digits were rechecked and unchanged. Using the exact listed R*, M0 and g0 with 50-digit arithmetic gives 54019.912103762073475... Pa, so does not resolve the discrepancy. Tabulation/printing or undocumented calculation differences remain hypotheses; their cause is unverified. This is not a D9 aircraft-validation tolerance.
 
 ## Aircraft (v0.1)
+- S3-01's `soas-designer` describes and validates semantic component inputs and
+  per-number provenance only. Surface mirroring/body placements are descriptive;
+  tail/fuselage aero, computed wing outputs, mass/CG buildup, designer JSON,
+  aircraft export and HTML reporting are later tasks. Missing data remain
+  explicit draft states, not zero-valued models. Declared sources/coverage and
+  numeric inertia validity do not prove physical truth or experimental validity.
+  Evidence, representation bounds and all scratch faults: `docs/S3_01_SEMANTIC_MODEL.md`.
 - Rigid airframe (no flexing, no flutter).
 - Mass properties constant during a run unless a task says otherwise.
 - T5's version-zero JSON stores SI values with explicit frames, a signed inertia tensor about the CG, and moments about a separately identified aerodynamic reference point. JSON conversion is text-only; filesystem access stays outside the pure core. Unknown fields/versions, invalid shapes, non-finite numbers and invalid required bounds are errors on load and save. Numeric validation is not proof of physical realizability or provenance.

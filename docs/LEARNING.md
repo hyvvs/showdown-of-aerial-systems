@@ -95,6 +95,16 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | Stage 3 planning and checkpoint answers | A semantic component model describes aircraft parts without claiming their aerodynamic effects are estimated (ROADMAP, What exists today/S3-01/S3-04). Component masses determine mass-weighted CG; inertia also needs intrinsic distribution and signed reference shifts (MIT L11 p. 1; L26 pp. 2-3/7-9; S3-03). A lift-limit speed from supplied CLmax, a local trim solution and an aerodynamic static margin answer different conditional questions; they are not experimental validation or a full flight-safety verdict (ROADMAP S3-07/S3-08; Caughey §3.1 p. 28/§3.4 pp. 41-42). |  |  |
 
+| 2026-11-20 | S3-01 semantic aircraft inputs | A semantic component tree and stable references describe an aircraft without calculating its aerodynamics (S3_01_SEMANTIC_MODEL.md, Representation and validation). Parallel numeric provenance distinguishes supplied/template/missing values without new unit wrappers; an absent tensor is not a zero tensor (Numeric provenance). Independently authored coordinates and scratch faults test frame/sign/reference mistakes, while declaration validation does not verify physical truth (Scratch mutation evidence; CONVENTIONS, Coordinate frames). |  |  |
+
+| 2026-11-20 | S3-01b Fix 1 | A typed quantity identity stays distinct from its display label; normalized aliases must not bypass a computed-output restriction; independently authored registry coverage prevents a test from merely agreeing with its own registry (S3_01_SEMANTIC_MODEL.md, Computed wing quantity registry). |  |  |
+
+| 2026-11-20 | S3-01b Fix 2 | A positive dot product tests progress along an actual geometric direction, including canted or inverted parents; physical control signs are independent of endpoint storage order. A symmetric tensor can still be physically invalid if it is not positive definite. A private finite angle type rejects invalid values at construction, while source/provenance checks only establish declaration completeness (S3_01B_VERIFICATION.md; S3_01_SEMANTIC_MODEL.md). |  |  |
+
+| 2026-11-20 | S3-01b Fix 3 | Agreement between metadata and a declared unit is insufficient when both contradict the field's unit suffix. Compound suffixes must be resolved before shorter suffixes, and unknown units require an explicit error rather than an inferred conversion. Consistent units do not establish a supplied coefficient's physical meaning (S3_01_SEMANTIC_MODEL.md, Supplied-parameter suffix/unit contract). |  |  |
+
+| 2026-11-20 | S3-01b Fix 4 | Neutral template/gallery naming needs a registry and review, while a name cannot establish validation or replace a report disclaimer. Recursive schema mutation tests discover new object shapes automatically; a total with missing component mass is unknown, not the sum with that mass treated as zero. These are future loading/mass acceptance conditions, not implemented features (ROADMAP S3-02/S3-03; ASSUMPTIONS, S3-01b declaration checks). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

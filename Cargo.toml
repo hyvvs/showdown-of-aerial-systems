@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/soas-core", "crates/soas-cli", "crates/soas-estimator"]
+members = ["crates/soas-core", "crates/soas-cli", "crates/soas-estimator", "crates/soas-designer"]
 resolver = "3"
 
 # Owner-approved T15b test-only optimization for the largest dense VLM cases.

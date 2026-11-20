@@ -109,3 +109,56 @@ When a batch stops, append an entry with the task, what blocked it, and options 
   6. **Evidence/provenance — ANSWERED WITH CONDITION:** labeled synthetic examples, neutral template names, no confidence percentages or implied real-aircraft identity until validated data exist. Every number has machine-readable `provenance_flags` and displays them beside its report value: `ESTIMATED_WING_ONLY`, `USER_SUPPLIED`, `TEMPLATE_DEFAULT`, `NOT_ESTIMATED`, `OUTSIDE_COVERAGE`. Add **`DERIVED_FROM_INPUTS` only because calculated CG/ratios/mixed totals/trim/stall values fit neither supplied nor wing-only origins**; preserve source/dependency paths. The later shape helper adds `approximate: true` with its declared shape assumptions. (Owner choice 6, permitted necessary additions; ROADMAP provenance contract.)
 - **Later-task specification gates, not unanswered S3-01 choices:** S3-05 must inventory required simulator coefficients and specify wing/non-wing assembly, reference normalization, moment shifts and coverage. A required profile/control/rate field outside the permitted supplied categories stays missing until explicitly specified; no new allowed category or zero coefficient is inferred. S3-10 must verify the selected shape/distribution formulas and sources before implementation. These do not block the authorized semantic model. (ROADMAP S3-05/S3-10; AGENTS, current-task stop condition.)
 - **Execution boundary:** record decisions in this docs-only commit, then S3-01 is the authorized next implementation task. This turn writes no code or tests and starts no later task. (Owner choices 1-6 and final documentation-only instruction.)
+
+## S3-01b Fix 2 — rudder fixture versus unchanged inventory expectation
+
+- **Status:** ANSWERED with a narrow exception. The owner authorizes swapping
+  only the rudder's hinge-endpoint entries in the fixture, expected-number
+  inventory and ledger, preserving all assertions/sign expectations/other
+  values/tolerances. Full-suite results must be recorded before and after;
+  the correction has its own commit. No correction was made before approval.
+- **Confirmed before any fixture correction:** `ControlKind::positive_deflection`
+  is defined physically by D6, not hinge order. A test cloned each control,
+  reversed endpoints and checked the same literal physical sign; it passed
+  against original production code. The original sign assertions remain intact.
+- **Owner's clarified ordering:** `(endpoint2-endpoint1) dot (parent tip-root)`
+  must be positive, using actual body-axis geometry, including canted/inverted/
+  ventral surfaces. The original rudder gave -5; reversed endpoints give +5. These
+  are derived from the existing synthetic fixture, not new aircraft numbers.
+- **What blocks:** the existing independent expected-number inventory also
+  pins rudder coordinates. An isolated in-memory reversal, without altering any
+  expected data, fails for `controls[rudder].hinge_end_body_m[2]`: actual
+  `Some(2.0)`, expected `Some(4.0)`. The owner explicitly required STOP if any
+  assertion's expected value would change; that includes this inventory
+  assertion, not only the sign strings. The fixture was untouched at that checkpoint.
+- **Options / trade-offs:** authorize changing only the rudder's expected
+  inventory entries together with its fixture/ledger, preserving every
+  assertion, sign expectation, other fixture number and tolerance (recommended);
+  or stop after Fix 1 with the current fixture unchanged. There is no proposal
+  to weaken/drop the inventory check or accept wrongly ordered hinges.
+- **Actual scratch evidence:** `target/s3-01b/scratch/fixture-preflight.txt`:
+  `rudder_sign_and_projection_preflight ... ok`;
+  `unchanged_inventory_expectation_conflicts_with_rudder_correction ... FAILED`;
+  `test result: FAILED. 1 passed; 1 failed; 0 ignored`.
+- **Execution requirement:** show the exact expected_numbers diff and list all
+  tests consuming the rudder fixture. If an unrelated assertion/expectation
+  would change or a test fails for another reason, stop again without further
+  edits. Source: owner's follow-up clarification to this entry.
+
+- **Resolution:** the separately committed correction passed both complete
+  suites (198 tests each); only six rudder coordinate entries changed, with
+  155 other numeric records identical. Exact diff and all fixture consumers
+  are recorded in S3_01B_VERIFICATION.md. Assertions and tolerances are intact.
+  Fix 2 implements the actual-parent rule and tests ventral/inverted/canted
+  cases. This question is answered; no S3-02 work is authorized or started.
+
+## S3-01b Fix 4 — naming and later acceptance policy
+
+ANSWERED by the owner's explicit policy: templates/gallery use neutral names
+with registry plus review; user designs may name themselves freely; a
+denylist cannot be complete and the report disclaimer limits claims. The
+automatic every-object array-substitution test is mandatory for S3-02;
+single-missing-component mass/CG rejection and its zero-substitution mutation
+are mandatory for S3-03. ROADMAP, TASKS and ASSUMPTIONS record these as later
+acceptance conditions; no loading, mass calculation, gallery or report task
+starts in this batch. No further owner decision is needed for these fixes.

@@ -46,9 +46,9 @@ The hero demo is an **F-104-class supersonic jet**, targeted for v0.2 (D14). v0.
   T16-T28 chain are parked; completed audit evidence is retained. Their
   reopening conditions are in ESTIMATOR_PLAN.md, Parked work register.
   (Owner post-T16c consequences; T15b records; T16c §6.)
-- Stage 3 choices are now recorded with the owner's conditions; **S3-01 only
-  is authorized after this documentation commit**, and remains unstarted in
-  this documentation-only change. All later S3 tasks need separate task
+- Stage 3 choices are recorded with the owner's conditions; **S3-01 is now
+  completed**, limited to the pure semantic model/validation. All later S3
+  tasks remain unstarted and need separate task
   authorization. Experimental validation remains a
   parallel track, not a hidden Stage 3 prerequisite. Flying-wing validation
   stays after v0.2. (Owner post-T16c consequences; Questions before Stage 3.)
@@ -58,9 +58,9 @@ The hero demo is an **F-104-class supersonic jet**, targeted for v0.2 (D14). v0.
   data feed isolated-wing analysis, a simulator export when complete, and an
   HTML engineering report. See **S3-01 to S3-09 below**, plus the later
   approximate-inertia helper S3-10. These IDs preserve the parked T16-T28 IDs.
-  S3-01 alone is authorized for a subsequent implementation task, after the
-  decisions are recorded; this commit contains documentation only.
-  (Owner Stage 3 adoption, choice 1 and documentation-only instruction.)
+  S3-01 alone has been implemented and verified; S3-02 and the later analysis/
+  export/report tasks are not started. (Owner Stage 3 adoption and S3-01 batch;
+  S3_01_SEMANTIC_MODEL.md.)
 - Acceptance: independently checked synthetic end-to-end cases, reproducible
   export/report, and honest unavailable/conditional results after geometry or
   loading changes. **The 11 m to 9 m wingspan demonstration is a required
@@ -128,9 +128,9 @@ Sizes below mean relative implementation/review effort, not calendar promises.
 Adopted architecture: a pure `soas-designer` library depends on `soas-core`
 and `soas-estimator`; CLI owns disk I/O and HTML writing. Neither existing
 library depends on the designer. All six choices below are **ANSWERED**, with
-the owner's conditions binding. **S3-01 only is authorized after this
-documentation commit**; no code is written here, and later tasks are not
-automatically authorized. Only pre-approved dependencies; D4 units/angle
+the owner's conditions binding. **S3-01 only was authorized and is now
+completed**; the later task plans below remain unstarted, not automatically
+authorized. Only pre-approved dependencies; D4 units/angle
 types, D11 inertia signs and the body/file datum remain binding. (Owner plan
 adoption, choice 1; AGENTS, purity/dependencies; CONVENTIONS, Units/Mass properties.)
 
@@ -222,11 +222,16 @@ actual component, not an additional claim of aerodynamic estimation. Missing
 provenance is a validation error, not a reason to silently label a value user
 supplied. (Owner choices 3/6; later S3-10.)
 
-Templates and fixtures use **neutral names** and explicit synthetic labels;
-no name, image, descriptive text or performance claim implies an F-104 or
-another real aircraft until validated matching data exist. The parked real
-source inventory is not a template-data licence or validation result.
-(Owner choice 6; experimental parallel-track register.)
+Neutral naming applies to **templates and the gallery**, enforced through a
+**registry plus review** of names, images, descriptive text and performance
+claims. Templates and fixtures carry explicit synthetic labels and must not
+imply an F-104 or another real aircraft until validated matching data exist.
+User designs may name themselves freely. A denylist cannot be complete;
+the report disclaimer limits claims, regardless of a design's chosen name.
+Neutral naming is not validation. Current registered-template checks do not
+implement a gallery or report. The parked source inventory is not a template
+data licence or validation result. (Owner choice 6 and S3-01b Fix 4 policy;
+experimental parallel-track register; S3-09 report disclaimer.)
 
 **Evidence rules for every task.** Tests first; expected answers from hand
 algebra, separately authored records or an independently stated analytic case,
@@ -239,7 +244,13 @@ model limitations and input completeness separately: a converged solve is not
 physical validation. (AGENTS, Tests first/Batch mode; owner planning request;
 T15b records; T16c §6.)
 
-### S3-01 — Semantic aircraft components — medium, authorized after recording
+### S3-01 — Semantic aircraft components — medium, completed
+
+Implementation/evidence: [S3_01_SEMANTIC_MODEL.md](S3_01_SEMANTIC_MODEL.md).
+Sixteen unchanged semantic tests pass; all eight listed scratch faults fail
+their targeted assertions; 193 workspace tests and fmt/Clippy pass. Missing
+data remain draft inputs, not invented coefficients. No S3-02 or estimator/
+export/report implementation is included. The requirements below are retained.
 
 - **Purpose:** represent what the aircraft contains, independently of the
   solver mesh or simulator table layout.
@@ -287,6 +298,12 @@ T15b records; T16c §6.)
   duplicate-field, missing-reference and unsupported-version rejection.
   Saving an incomplete draft retains missing inertia; injecting a static
   wing-derived result or dropping any numeric-path provenance is rejected.
+  **Acceptance condition:** an automatic object-shape regression must
+  discover every nested object with no hand-listed paths, replace each
+  independently with an array of its values, and assert rejection. Include
+  engines, throttle/table definitions, controls and provenance while retaining
+  legitimate arrays, as in core/CLI `all_object_shapes`. A hand-maintained
+  object list cannot satisfy this condition. (Owner S3-01b Fix 4.)
 - **Mutations:** accept an object-shaped array; drop source metadata; resolve
   paths against the process directory; ignore a version or unknown field.
 - **Risks:** relative references breaking on relocation, schema drift and
@@ -311,9 +328,16 @@ T15b records; T16c §6.)
   signed parallel-axis contributions, rigid translation and reordered inputs
   within a stated roundoff budget. Check incomplete/zero-total-mass cases and
   singular inertia blocking simulator export.
+  **Acceptance condition:** one missing component mass blocks total mass and
+  CG instead of counting as zero. Test a complete independently hand-summed
+  case and the same case with exactly one component mass absent; demand an
+  explicit missing/error aggregate result, never a partial total. If a partial
+  subtotal is displayed, it must be labelled separately and cannot serve as
+  total mass or CG. (Owner S3-01b Fix 4.)
 - **Mutations:** average positions without mass weighting; omit an engine;
   count fuel twice; use the file origin instead of component CG; lose an
-  off-diagonal minus sign or rotate inertia the wrong way.
+  off-diagonal minus sign or rotate inertia the wrong way; replace a missing
+  component mass with zero and show that the missing-mass test fails.
 - **Risks:** unknown structure/payload distribution and point-mass singularity;
   no structural weight estimate or fuel-burn CG model. Sources: MIT L11 p. 1
   and L26 pp. 2-3/7-9 below; convert its positive products to D11 signed entries.
@@ -617,9 +641,10 @@ conditions; no repeat approval is required for S3-01 after recording them.
    added provenance category `DERIVED_FROM_INPUTS` and later approximate
    qualifier are justified in the provenance contract above.
 
-No unanswered choice blocks this documentation update or S3-01. Detailed
+No unanswered choice blocked S3-01, now completed under its separate batch.
+Detailed
 coefficient/reference assembly and any required simulator terms outside the
 allowed supplied categories are **later S3-05 specification gates**; they
-are not silently settled here. This turn records decisions in a docs-only
-commit and writes no code. (Owner documentation-only instruction; S3-05;
-AGENTS, task-specific stop condition.)
+are not silently settled here. The decisions-only commit was 81307f0;
+S3-01's separate implementation does not start S3-02 or later tasks.
+(Owner S3-01 batch; S3-05; AGENTS, task-specific stop condition.)
