@@ -27,3 +27,31 @@ its prescribed synthetic value, units or other expected numeric output.
   Its dot products -5 and +5 are derived observations from those existing
   endpoint/parent coordinates under the owner's clarified ordering formula,
   not additional physical inputs or tolerances.
+
+## Fix 2 — exhaustive invalid-input and ordering probes
+
+All fixture-derived coordinates, dimensions, masses, tensors, section inputs,
+engine tables, controls and parameters retain the synthetic provenance in
+semantic_values.md and the reused core engine ledger. For per-component mass
+probes only, the existing wing mass/CG/tensor/angle tuple is cloned into each
+component; it is synthetic probe data, not a mass estimate. Metadata is
+refreshed solely to make these probe designs valid before invalidation.
+
+| Test setting/value | Meaning and source |
+|---|---|
+| NaN, positive infinity, negative infinity | Deliberate invalid f64 probes, not physical values; each primitive numeric field is checked. Angle fields reject these at the existing Radians constructor, without unsafe construction. |
+| Structural indices 0, 1, 2, 3, 4; lengths 2 and 3 | Existing root/tip, xyz/tensor indices, five-component order and three-control order. No numerical tolerance. |
+| Empty string and whitespace including tab/newline | Deliberately invalid source text and provenance explanations. |
+| Last inertia diagonal -6 | Sign reversal of existing synthetic +6; symmetric, indefinite, separately from the unchanged asymmetry test. |
+| Interior station = tip + (tip - root) | Existing synthetic coordinates extended once, then the original tip follows; deliberate descending interior order for each surface kind. |
+| Empty station list, coincident hinge endpoints, reversed endpoints | Deliberate topology/order invalidations, no new physical values. |
+| Ventral fin tip/end [-7,0,5], root [-6,0,2] | Synthetic test geometry, actual-parent projection 10 from (-1,0,3) dot itself. |
+| Inverted V-tail tip/end [-5,2,5], root [-4,0,2] | Synthetic test geometry, projection 14 from (-1,2,3) dot itself. |
+| Canted fin tip [-7,4,-1], hinge start [-6,0,2], end [-6,4,3] | Synthetic test geometry, projection 13 from (0,4,1) dot (-1,4,-3); positive even though the hinge ends downward. |
+
+The projection equation and root-to-tip ordering requirement are prescribed
+by the owner's clarification. No physical force formula, solver setting or
+tolerance is introduced. Provenance rejection loops use the independently
+authored expected inventory, not the production numeric walker. Testing the
+existing angle type's constructor is necessary because its private value
+cannot represent a non-finite angle through the safe public API.
