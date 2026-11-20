@@ -22,7 +22,8 @@ settings, not measured data. All comparisons are exact; no new tolerance is sele
 | wing.mass.intrinsic_inertia.tensor_kg_m2 | [[4,-0.1,0.2],[-0.1,5,-0.3],[0.2,-0.3,6]] kg m², symmetric positive definite test matrix |
 | wing.mass.intrinsic_inertia.axes_euler_rad | [0.01,0.02,0.03] rad, orientation input only, not transformed in S3-01 |
 | all other mass/CG/inertia fields | absent, not numeric zero; NOT_ESTIMATED |
-| controls[elevator/aileron/rudder].hinge_start/end_body_m | [-1,0,2] / [-2,3,4] m |
+| controls[elevator/aileron].hinge_start/end_body_m | [-1,0,2] / [-2,3,4] m, unchanged |
+| controls[rudder].hinge_start/end_body_m | [-2,3,4] / [-1,0,2] m; only these two endpoint entries are swapped under the owner's S3-01b clarification |
 | each control.chord_fraction / min_rad / max_rad | 0.2 / -0.3 rad / 0.4 rad |
 | contributions[tail-law].parameters[cm_alpha_per_rad] | -0.7 per rad, declared synthetic tail law only |
 | contributions[lift-limit].parameters[cl_max] | 1.4, synthetic supplied whole-aircraft lift cap, never a wing estimate |
@@ -38,3 +39,13 @@ core propulsion Engine contract. Tensor and engine numeric validation reuse the
 existing core rules, including its unchanged unit-vector roundoff bound. No
 mass buildup, inertia shift/rotation, aerodynamic estimation or JSON design format
 is implemented by this task.
+
+S3-01b control-order clarification: hinge endpoints must run root to tip,
+meaning `(end-start) dot (parent tip-root) > 0` using the actual parent's body
+coordinates, not a fixed axis for each surface kind. For the original fin,
+tip-root is [-1,0,-3]; the original rudder projection was -5 and the swapped
+projection is +5. These are algebraic observations from the existing synthetic
+coordinates under the owner's formula, not new physical data or tolerances.
+Positive deflection remains a physical D6 definition independent of hinge order;
+all sign assertions and all other fixture values remain unchanged. This narrow
+fixture/inventory correction is separately authorized and committed.

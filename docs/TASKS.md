@@ -483,8 +483,9 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   restored-prefix scratch mutation rejected. All three gates pass; full suite
   before any rudder correction: **198 passed, 0 failed, 0 ignored**. [x]
 - Separate rudder-fixture correction: narrowly authorized after the sign-order
-  preflight; requires before/after full suites, only swapped rudder endpoints,
-  exact inventory diff and fixture-reader list. [ ]
+  preflight; before/after full suites both 198 passed; only six swapped rudder
+  coordinates changed. Exact inventory diff and fixture-reader list recorded
+  in S3_01B_VERIFICATION.md. [x]
 - Fix 2: source/non-finite/provenance/station/inertia/control-order verification,
   including actual-parent-span ventral/inverted/canted cases. [ ]
 - Fix 3: supplied-parameter suffix/unit reconciliation. [ ]

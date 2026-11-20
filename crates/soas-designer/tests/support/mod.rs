@@ -163,7 +163,7 @@ pub fn fixture() -> Design {
 }
 
 fn control(id: &str, parent: &str, kind: ControlKind) -> ControlSurface {
-    ControlSurface {
+    let mut control = ControlSurface {
         id: id.into(),
         parent_surface_id: parent.into(),
         kind,
@@ -172,7 +172,14 @@ fn control(id: &str, parent: &str, kind: ControlKind) -> ControlSurface {
         chord_fraction: 0.2,
         min_rad: rad(-0.3),
         max_rad: rad(0.4),
+    };
+    if kind == ControlKind::Rudder {
+        std::mem::swap(
+            &mut control.hinge_start_body_m,
+            &mut control.hinge_end_body_m,
+        );
     }
+    control
 }
 
 pub fn metadata(value: Option<f64>, unit: &str) -> NumberProvenance {
@@ -310,6 +317,11 @@ pub fn expected_numbers(_design: &Design) -> Vec<(String, Option<f64>, &'static 
             ("hinge_start_body_m", [-1.0, 0.0, 2.0]),
             ("hinge_end_body_m", [-2.0, 3.0, 4.0]),
         ] {
+            let point = match (id, name) {
+                ("rudder", "hinge_start_body_m") => [-2.0, 3.0, 4.0],
+                ("rudder", "hinge_end_body_m") => [-1.0, 0.0, 2.0],
+                _ => point,
+            };
             for (i, value) in point.iter().enumerate() {
                 push(format!("controls[{id}].{name}[{i}]"), Some(*value), "m");
             }
