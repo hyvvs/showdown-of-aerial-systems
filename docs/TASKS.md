@@ -476,6 +476,24 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 
 ### S3-01 completion evidence
 
+#### S3-01b verification follow-up (in order)
+
+- Fix 1: completed typed registry and spelling-independent computed-wing
+  rejection. Tests first (`12968e4`), original-case runtime failures recorded,
+  restored-prefix scratch mutation rejected. All three gates pass; full suite
+  before any rudder correction: **198 passed, 0 failed, 0 ignored**. [x]
+- Separate rudder-fixture correction: narrowly authorized after the sign-order
+  preflight; requires before/after full suites, only swapped rudder endpoints,
+  exact inventory diff and fixture-reader list. [ ]
+- Fix 2: source/non-finite/provenance/station/inertia/control-order verification,
+  including actual-parent-span ventral/inverted/canted cases. [ ]
+- Fix 3: supplied-parameter suffix/unit reconciliation. [ ]
+- Fix 4: template/gallery naming and future loading/missing-mass acceptance
+  conditions (documentation only). [ ]
+
+S3-02 stays unstarted. The original S3-01 evidence below is retained; current
+registry/follow-up details are in S3_01_SEMANTIC_MODEL.md and QUESTIONS.md.
+
 Tests committed first as `7051e75 Task S3-01: tests`, with the missing-API
 compile failure recorded before implementation. Sixteen tests pass unchanged;
 independent coordinate/field expectations and the per-number synthetic ledger

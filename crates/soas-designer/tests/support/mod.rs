@@ -126,6 +126,7 @@ pub fn fixture() -> Design {
                 source: "synthetic test law".into(),
                 coverage: "synthetic declared condition only".into(),
                 parameters: vec![SuppliedParameter {
+                    quantity: QuantityIdentity::SuppliedNonWing,
                     name: "cm_alpha_per_rad".into(),
                     value: Some(-0.7),
                     unit: "1/rad".into(),
@@ -137,6 +138,7 @@ pub fn fixture() -> Design {
                 source: "synthetic test limit".into(),
                 coverage: "synthetic declared condition only".into(),
                 parameters: vec![SuppliedParameter {
+                    quantity: QuantityIdentity::SuppliedNonWing,
                     name: "cl_max".into(),
                     value: Some(1.4),
                     unit: "1".into(),

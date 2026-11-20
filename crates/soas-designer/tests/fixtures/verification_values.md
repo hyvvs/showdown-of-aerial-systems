@@ -20,3 +20,10 @@ its prescribed synthetic value, units or other expected numeric output.
   is introduced. The control sign definitions come from CONVENTIONS, Forces
   and moments; quantity coverage comes from the owner's Fix 1 requirement and
   planform::WingGeometry, VLM/LLT outputs, Fourier terms and section loadings.
+- Fix 1 adds only explicit `SuppliedNonWing` identity metadata to the original
+  two fixture parameters. Their numbers and the entire expected numeric inventory
+  remain unchanged. The scratch control compatibility experiment uses the
+  original rudder endpoints reversed in memory, not a committed fixture edit.
+  Its dot products -5 and +5 are derived observations from those existing
+  endpoint/parent coordinates under the owner's clarified ordering formula,
+  not additional physical inputs or tolerances.

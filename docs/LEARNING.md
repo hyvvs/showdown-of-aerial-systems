@@ -97,6 +97,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01 semantic aircraft inputs | A semantic component tree and stable references describe an aircraft without calculating its aerodynamics (S3_01_SEMANTIC_MODEL.md, Representation and validation). Parallel numeric provenance distinguishes supplied/template/missing values without new unit wrappers; an absent tensor is not a zero tensor (Numeric provenance). Independently authored coordinates and scratch faults test frame/sign/reference mistakes, while declaration validation does not verify physical truth (Scratch mutation evidence; CONVENTIONS, Coordinate frames). |  |  |
 
+| 2026-11-20 | S3-01b Fix 1 | A typed quantity identity stays distinct from its display label; normalized aliases must not bypass a computed-output restriction; independently authored registry coverage prevents a test from merely agreeing with its own registry (S3_01_SEMANTIC_MODEL.md, Computed wing quantity registry). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

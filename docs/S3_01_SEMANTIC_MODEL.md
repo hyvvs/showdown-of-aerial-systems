@@ -78,7 +78,7 @@ Sixteen semantic tests pass, with exact comparisons and no new tolerance.
   is no export/readiness API in S3-01.
 - `SuppliedContribution` accepts only tail/fuselage/interference/whole-aircraft
   CLmax scopes with source and declared coverage. Explicit Wing/WholeAircraft
-  scope requests and `wing_` parameter overrides are rejected. ClMax accepts
+  scope requests and computed wing quantity identities are rejected. ClMax accepts
   only positive, optionally missing `cl_max`. This is an input ledger, not
   coefficient assembly or a physical interpretation of arbitrary parameter names.
 
@@ -136,7 +136,85 @@ and scalar fields are independently authored; expected engine numbers are
 discovered generically from the previously labeled core JSON fixture, not from
 production `Design::numbers`. No real-aircraft or engine data are introduced.
 
-## Scratch mutation evidence
+## Computed wing quantity registry — S3-01b Fix 1
+
+`SuppliedParameter.quantity` is a mandatory `QuantityIdentity`: either
+`SuppliedNonWing` or `ComputedWing(ComputedWingQuantity)`. The latter is always
+rejected in every scope, regardless of its display name. A known computed-wing
+label cannot be laundered by declaring `SuppliedNonWing`: `from_name` resolves
+canonical labels case-insensitively, ignoring underscores, hyphens and
+whitespace, then rejects that computed identity too. This replaces the old
+case-sensitive prefix test. Quantity validation precedes scope and label
+syntax checks, preserving one specific parameter-path error across spellings:
+`computed wing quantities cannot be supplied`.
+
+The registry is defined in
+[quantities.rs](../crates/soas-designer/src/quantities.rs). Its 33 identities cover
+the owner's named outputs and existing geometry/VLM/LLT numeric outputs:
+
+| Group | Registered identities |
+|---|---|
+| Planform | Area, Span, AspectRatio, TaperRatio, MeanAerodynamicChord, MacLeadingEdgePosition, MacQuarterChordPosition, QuarterChordSweep |
+| Wing coefficients and stability | LiftCoefficient, LiftSlope, InducedDragCoefficient, PitchingMomentCoefficient, PitchingMomentSlope, RollingMomentCoefficient, NeutralPointPosition, SpanEfficiency |
+| Section/loading/Fourier results | SectionLoading, SectionLiftCoefficient, SectionChord, SpanwisePosition, CirculationOverAirspeed, LiftPerSpanOverDynamicPressure, InducedAngle, FourierCoefficient, FourierHarmonic |
+| Reference/mesh/diagnostic outputs | ReferencePointPosition, RelativeCollocationResidual, PanelBoundStartPosition, PanelBoundEndPosition, PanelControlPointPosition, PanelCirculationOverAirspeed, PanelSpanwiseIndex, PanelChordwiseIndex |
+
+Canonical names come from `canonical_name()`; every variant appears in
+`ComputedWingQuantity::ALL`. These are identities, not new aerodynamic
+calculations/defaults or a serializer. Defining coordinates/section inputs
+remain inputs; sampled wing-only results have distinct output identities.
+Declared non-wing semantics do not prove a human's physical claim is true,
+but display text cannot override an explicit computed identity or bypass
+a recognized canonical spelling.
+
+**Extension rule:** for a new computable estimator output, add its variant and
+canonical label, update this coverage table, and update the independently
+authored expected catalogue in `tests/quantity_identity.rs`. Add the same
+four-scope/two-origin/four-spelling rejection cases and opaque-display-label
+typed-identity case. Expected coverage must not be generated from the registry:
+exact catalogue equality detects accidentally dropped entries. Future loading
+must preserve the mandatory identity, not infer authority from display text.
+S3-02 remains unstarted.
+
+Tests were committed first as `12968e4`. Original-code runtime evidence:
+
+```text
+physical_control_sign_is_independent_of_hinge_endpoint_order ... ok
+each_computable_quantity_is_rejected_in_each_scope_origin_and_spelling ... FAILED
+original_casing_and_separator_bypasses_are_rejected ... FAILED
+accepted forbidden quantity: Wing_area_m2, UserSupplied
+test result: FAILED. 1 passed; 2 failed; 0 ignored
+```
+
+Typed-registry tests also failed to compile before that API existed. All five
+new tests then passed alongside the original 16 assertions. The test matrix
+checks all 33 quantities under four scopes, two origins and four spellings;
+another matrix uses typed quantities with arbitrary display names. Fixture
+parameters gained only `SuppliedNonWing` identity metadata; no numeric value
+or existing expected value changed for Fix 1.
+
+An uncommitted scratch copy restored the old case-sensitive prefix guard in
+place of the typed/normalized guard. It compiled and reproduced the assertion
+failure (exit 101):
+
+```text
+original_casing_and_separator_bypasses_are_rejected ... FAILED
+accepted forbidden quantity: Wing_area_m2, UserSupplied
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 4 filtered out
+```
+
+Logs are under `target/s3-01b`: `fix1-red-runtime.txt`, `fix1-red-api.txt`,
+`fix1-green.txt` and `scratch/prefix-mutation.txt`. No mutant is committed.
+
+Fix 1 quality gates pass: formatting, Clippy with warnings denied and the full
+workspace suite, **198 passed, 0 failed, 0 ignored**. This is also the recorded
+full-suite result **before** any rudder endpoint correction. The unchanged VLM
+acceptance executable took 335.44 s on this run, slower than the previous run;
+no test/profile/cache setting was changed to work around it. Compiler cache
+hard-link failures again triggered its automatic copy fallback and were
+disclosed. No fixture number or original assertion changed for Fix 1.
+
+## Scratch mutation evidence — original S3-01
 
 Each fault ran in its own ignored `target/s3-01/mutations/<case>` crate copy,
 with unchanged tests, isolated Cargo target storage and TEMP/TMP under that

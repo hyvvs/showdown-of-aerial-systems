@@ -1,7 +1,10 @@
 //! Pure semantic inputs, not an aircraft estimator or a file format.
 //! Contract, formula sources and limitations: docs/S3_01_SEMANTIC_MODEL.md.
 mod numbers;
+mod quantities;
 mod validation;
+
+pub use quantities::{ComputedWingQuantity, QuantityIdentity};
 
 use soas_core::{propulsion::EngineTable, units::Radians};
 use std::{collections::BTreeMap, error::Error, fmt};
@@ -196,6 +199,8 @@ pub struct SuppliedContribution {
 }
 #[derive(Debug, Clone, PartialEq)]
 pub struct SuppliedParameter {
+    /// Semantic identity is independent of the display label. No implicit default.
+    pub quantity: QuantityIdentity,
     pub name: String,
     pub value: Option<f64>,
     pub unit: String,

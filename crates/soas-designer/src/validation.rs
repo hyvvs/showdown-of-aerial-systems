@@ -180,6 +180,16 @@ impl Design {
         }
         for c in &self.contributions {
             let p = format!("contributions[{}]", c.id);
+            // Quantity identity is checked before label syntax or scope, so
+            // neither separators/casing nor another component scope bypass it.
+            for a in &c.parameters {
+                require(
+                    !matches!(a.quantity, QuantityIdentity::ComputedWing(_))
+                        && ComputedWingQuantity::from_name(&a.name).is_none(),
+                    &format!("{p}.parameters[{}]", a.name),
+                    "computed wing quantities cannot be supplied",
+                )?;
+            }
             require(
                 !matches!(
                     c.scope,
@@ -195,11 +205,6 @@ impl Design {
                 let p = format!("{p}.parameters[{}]", a.name);
                 identity(&a.name, &p, &mut names)?;
                 text(&a.unit, &p)?;
-                require(
-                    !a.name.starts_with("wing_"),
-                    &p,
-                    "static wing output override is forbidden",
-                )?;
                 if let Some(v) = a.value {
                     finite(&[v], &p)?;
                 }
