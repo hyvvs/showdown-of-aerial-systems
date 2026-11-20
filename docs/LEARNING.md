@@ -107,6 +107,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01c2 Fix 5 | A closed semantic kind can constrain meaning, units and scope while a free label cannot. Distinct supplied/computed enum domains prevent computed results being admitted as supplied kinds; independent catalogue tests detect accidental extensions. A defining input and its interpolated result have different authority even if their values coincide (S3_01_SEMANTIC_MODEL, Closed supplied-quantity kinds; S3_01C_VERIFICATION). |  |  |
 
+| 2026-11-20 | S3-01c2 Fix 6 | Positive diagonal entries do not guarantee a positive-definite tensor; a negative quadratic-form witness disproves it even when an inverse exists. A template label cannot exempt a number from source requirements. Tests can pass on correct code immediately while failing deliberately wrong scratch variants, exposing previous coverage gaps (S3_01C_VERIFICATION, Fix 6). |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

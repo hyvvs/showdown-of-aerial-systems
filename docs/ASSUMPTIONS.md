@@ -4,6 +4,13 @@ Keep this honest and current. Every simplification the code makes belongs here. 
 
 ## S3-01b declaration checks
 
+- Fix 6 coverage distinguishes full positive definiteness from positive
+  diagonal entries, even for a finite symmetric invertible tensor. Template
+  defaults need nonempty source text just as user inputs do. Existing
+  production guards are unchanged; independent synthetic counterexamples
+  now catch both verifier faults. Sources: owner Fix 6 and
+  S3_01C_VERIFICATION, mutation h/i; closed_kind_values.md, Fix 6.
+
 - Neutral naming applies to **templates and the gallery**, enforced through
   a **registry plus review** of names, images, descriptions and implied claims.
   User designs may name themselves freely. A denylist cannot be complete;

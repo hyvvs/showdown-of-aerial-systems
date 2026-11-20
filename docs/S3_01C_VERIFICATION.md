@@ -79,3 +79,48 @@ Final Fix 5 gates pass: fmt, Clippy with warnings denied, full workspace
 simplified after Clippy's first rejection; no lint allowance was added.
 The existing incremental hard-link warning triggered Rust's automatic copy
 fallback and was disclosed; no profile/cache setting or dependency changed.
+
+## Fix 6: surviving verifier mutations h and i
+
+Tests commit: `bdeb0c7`. Existing production checks were already correct,
+so the unmutated new tests immediately pass (**2 passed, 0 failed**). Before
+committing them, the exact verifier faults were injected in scratch copies:
+
+```text
+mutation h: positive_diagonal_indefinite_inertia_is_rejected ... FAILED
+ left: Ok(())
+right: Err(DesignError { field: "components[wing].mass.intrinsic_inertia",
+ reason: "invalid signed intrinsic inertia tensor" })
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 1 filtered out
+
+mutation i: template_default_requires_nonempty_source_for_every_numeric_input ... FAILED
+ left: Ok(())
+right: Err(DesignError { field: "components[body].fuselage.length_m",
+ reason: "source or missing-input explanation required" })
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 1 filtered out
+```
+
+Mutation h retains finite/symmetry/finite-inverse checks but replaces the
+Cholesky test with positive diagonal entries. The synthetic test matrix has
+positive diagonals and is invertible, yet has a negative eigenvalue; a hand
+quadratic-form witness is negative. A separate valid tensor in the same test
+ensures positive off-diagonal entries are not simply prohibited. Mutation i
+exempts TEMPLATE_DEFAULT from the nonempty numeric-source check. The new
+test covers every independently inventoried present numeric path, with an
+empty source list, empty string, whitespace and contribution-source blanks.
+Its exact error expectation detects acceptance or a different later error.
+
+Both mutants compiled; neither is committed. Logs:
+`target/s3-01c2/mutations/6-h-diagonals-only.txt`,
+`6-i-template-empty-source.txt`, and `fix6-unmutated.txt`. Tests ran with
+checkout-local TEMP/TMP. Synthetic matrices, hand results and all settings
+are in `tests/fixtures/closed_kind_values.md`, Fix 6. No production change
+is needed; its implementation commit records evidence/docs only rather than
+introducing an artificial bug or replacing a working guard.
+
+Fix 6 gates pass: fmt, Clippy with warnings denied, and full workspace
+**223 passed, 0 failed, 0 ignored**. Log:
+`target/s3-01c2/fix6-before-fixture-all.txt`. This full run was completed
+before any approved elevator/rudder coordinate edit and is also the
+pre-correction checkpoint. The two new tests passed on the original guards;
+no production source change is made in Fix 6.

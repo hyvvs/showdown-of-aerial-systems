@@ -498,7 +498,8 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
   sampled/kernel computed identities, unknown/missing rejection. Six new tests,
   three scratch faults caught; all gates pass, 221 workspace tests passed. [x]
 - Fix 6: positive-diagonal indefinite tensor and template-source mutation
-  coverage (mutations h/i); production guards already exist. [ ]
+  coverage (mutations h/i); production guards already exist. Both scratch
+  faults fail new assertions; all gates pass, 223 workspace tests passed. [x]
 - Separate owner-authorized elevator/rudder fixture correction, with full
   suites before/after and only raw hinge coordinates/inventory/ledger changed. [ ]
 - Fix 7: actual-parent span containment with geometry-derived roundoff
