@@ -369,3 +369,72 @@ fn fix10_aa_and_az_remain_distinct_despite_first_character_collision() {
 fn fix10_pa_and_pb_remain_distinct_despite_first_character_collision() {
     assert_distinct_station_id_pair("pa", "pb");
 }
+
+#[test]
+fn fix11_current_model_accepts_swapped_existing_station_ids_without_history() {
+    for &(kind, tip, mirrored) in CASES {
+        let mut d = design(kind, tip, mirrored);
+        let original_provenance = d.provenance.clone();
+        let stations = &mut surface_mut(&mut d).stations;
+        let (first, rest) = stations.split_at_mut(1);
+        std::mem::swap(&mut first[0].id, &mut rest[0].id);
+        assert_eq!(endpoint_ids(&d), ("root", "tip"));
+        d.validate().unwrap();
+        assert_eq!(d.provenance, original_provenance);
+        let chords: BTreeMap<_, _> = d
+            .numbers()
+            .into_iter()
+            .filter(|n| n.path.ends_with(".chord_m"))
+            .map(|n| (n.path, n.value))
+            .collect();
+        assert_eq!(
+            chords,
+            BTreeMap::from([
+                (
+                    "components[surface-a].surface.stations[root].chord_m".into(),
+                    Some(2.5),
+                ),
+                (
+                    "components[surface-a].surface.stations[tip].chord_m".into(),
+                    Some(1.25),
+                ),
+            ])
+        );
+    }
+}
+
+#[test]
+fn fix11_current_model_accepts_same_unit_source_record_swaps() {
+    for &(kind, tip, mirrored) in CASES {
+        let mut d = design(kind, tip, mirrored);
+        let first = "components[surface-a].surface.stations[tip].chord_m";
+        let last = "components[surface-a].surface.stations[root].chord_m";
+        let first_meta = d.provenance.remove(first).unwrap();
+        let last_meta = d.provenance.remove(last).unwrap();
+        d.provenance.insert(first.into(), last_meta.clone());
+        d.provenance.insert(last.into(), first_meta.clone());
+        d.validate().unwrap();
+        assert_eq!(d.provenance[first].source_refs, last_meta.source_refs);
+        assert_eq!(d.provenance[last].source_refs, first_meta.source_refs);
+        let actual: Vec<_> = d
+            .numbers()
+            .into_iter()
+            .map(|n| (n.path, n.value, n.unit))
+            .collect();
+        assert_eq!(actual, expected("surface-a", tip));
+    }
+}
+
+#[test]
+fn fix11_path_presence_still_rejects_a_missing_station_record() {
+    let mut d = design(SurfaceKind::VerticalTail, VENTRAL_TIP, false);
+    let path = "components[surface-a].surface.stations[tip].chord_m";
+    d.provenance.remove(path).unwrap();
+    assert_eq!(
+        d.validate(),
+        Err(DesignError {
+            field: path.into(),
+            reason: "numeric provenance missing",
+        })
+    );
+}

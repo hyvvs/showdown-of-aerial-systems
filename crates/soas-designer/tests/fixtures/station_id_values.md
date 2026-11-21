@@ -51,3 +51,19 @@ ASCII-lowercased identity or byte-sum-only identity; additional h variants
 use length-only and first-character-only identity. These settings introduce
 no numerical tolerance or physical formula. Full string comparison remains
 the production behavior. Source: owner's Fix 10 request and D18 opaque IDs.
+
+## S3-02-ids2 Fix 11 — current-limit characterization
+
+The three added tests reuse every existing synthetic geometry, value,
+ID label, index and metadata field above. The swapped-ID chord expectations
+are the same 2.5 m and 1.25 m values under the exchanged keys; no geometry
+changes. Source-record swaps exchange the existing two distinct nonempty
+synthetic references with the same m unit. The missing-record control removes
+one existing station chord metadata entry and expects the existing exact
+numeric-provenance-missing error. No new physical value, tolerance, hash,
+source claim or production rule is introduced.
+
+These tests describe today's model-layer checks, not future S3-02b2 binding
+acceptance. The scratch mutation bypasses only missing-path rejection, so
+the control must fail while both documented permissive cases still pass.
+Source: owner's Fix 11 request and follow-up binding-gate clarification.
