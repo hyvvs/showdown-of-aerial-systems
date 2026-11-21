@@ -1,5 +1,12 @@
 # S3-02-ids2: identity comparisons and declaration limits
 
+**Historical report; later decision update (2026-11-21):** the results below
+record Fixes 10/11 as run. The then-open attribution/cap questions are now
+answered by DECISIONS D23/D24: option (c) author-declared attribution, CLOSED
+policy gates/ACCEPTED LIMITS, and a 64-character cap for all designer IDs
+to be implemented in S3-02b1. The historical test output remains unchanged;
+no reader or cap code is implemented by that documentation decision.
+
 Fresh task/s3-02-ids2 starts from main 80ab1bb. The reader is not started.
 No dependency, production Rust source, type, existing assertion, fixture
 physical value or numerical tolerance is changed by this batch.

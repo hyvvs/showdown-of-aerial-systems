@@ -488,8 +488,8 @@ organization, not implementation permission:
 |---|---|
 | S3-02-ids | [x] Completed, separately authorized model prerequisite: required opaque station IDs, surface-local uniqueness and ID-based station provenance; identity-only fixture migration; no codec/other child |
 | S3-02a | [x] Approved documentation contract; no code/tests/fixtures |
-| S3-02b1 | PROPOSED, not authorized: strict pure reader; version, shape, kind, unknown-field and duplicate-key rejection; may be separately authorized without the historical-binding choice, with limits recorded |
-| S3-02b2 | PROPOSED, not authorized: automatic object/kind walkers and edit checks; only policy-dependent binding tests wait for OPEN BIND-01/02/03; unrelated work/walkers need not wait; neither b1 nor b2 alone completes original b acceptance |
+| S3-02b1 | PROPOSED, not authorized: strict pure reader and matching in-memory all-identifier cap (D24), specific error and 63/64/65 tests; D23 author-declared attribution, no hash required on loading |
+| S3-02b2 | PROPOSED, not authorized: automatic object/kind walkers and detectable edit/consistency checks; D23 attribution-policy gate CLOSED, BIND-01/02/03 ACCEPTED LIMITS; neither b1 nor b2 alone completes original b acceptance |
 | S3-02c | PROPOSED, not authorized: pure writer and independent round trips |
 | S3-02d | PROPOSED, not authorized: CLI-owned I/O, explicit replacement, temporary file then rename/replace preserving the original on failure |
 | S3-02e | DEFERRED, not dropped: external tables/references; original scope remains incomplete until e is done or the owner explicitly drops it |
@@ -524,15 +524,27 @@ historical-binding implementation. Three tests demonstrate current ID/source
 swap acceptance and required-path rejection; all pass on unchanged production
 checks. The cleaned missing-path-bypass scratch mutation fails. Three gates
 pass; full suite 252 passed, none failed/ignored. ASSUMPTIONS and S3_02_PLAN
-record current limits, per-category mechanisms, OPEN binding gates/candidates,
-the unapproved 64-character station/component cap, and the future rule to
+recorded the then-open binding candidates and proposed station/component
+cap, plus the future rule to
 commit shared-type changes together with fixture migrations so every commit
 builds. ROADMAP requires the author-declared/not-machine-verified attribution
 notice on both report and validation page. No cap/digest/reader is implemented.
 
-Only policy-dependent S3-02b2 binding tests wait for the attribution choice;
-b1 and unrelated work retain their normal scope and separate authorization.
-The length cap is a proposal requiring approval, not a new reader prerequisite.
+**Later documentation decisions [x] recorded, D23/D24:** option (c) is
+DECIDED; BIND-01/02/03 attribution-policy gates are CLOSED. Structurally
+consistent ID/source swaps are ACCEPTED LIMITS, not defects. Exact notice
+in file-format documentation, every report and the validation page:
+**"Source attribution is declared by the author and is not machine-verified."**
+Loading never requires a hash; an optional separate content-hash command
+may be proposed later. Missing/orphan paths, stale value/null snapshots,
+invalid ordering and ID-based reorder tests remain b2 requirements.
+
+D24 approves 64 characters after ASCII validation for **all** designer
+identifiers. S3-02b1 must have a specific overlong-ID error and independent
+63/64 accepted, 65 rejected tests. Apply the same model cap in the reader
+task, combining any affected model/type and fixture migration in one
+explicitly named commit. No retroactive code change is made here. S3-02b1
+remains PROPOSED until the owner authorizes it; no reader task starts.
 
 **Additional binding acceptance conditions (owner S3-01b Fix 4):**
 

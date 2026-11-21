@@ -1,18 +1,17 @@
 # Questions for the owner
 
-## 2026-11-21 — S3-02b2 historical attribution — OPEN, narrowly scoped
+## 2026-11-21 — S3-02b2 historical attribution — CLOSED, D23
 
 - **Task:** S3-02-ids2 Fix 11 documentation; future S3-02b2 binding tests.
-- **What needs a decision:** BIND-01/02/03 in S3_02_PLAN section 3.3.1:
+- **What needed a decision:** BIND-01/02/03 in S3_02_PLAN section 3.3.1:
   existing-ID reassignment not exposed by snapshots, same-unit record
   swaps without a value mismatch, and source-only/equal-value swaps. Current
   path presence and ordering are not historical verification. A station's
   unequal coordinate vector would fail its future stale snapshot, but no
   structural check can recover source-only history from matching final data.
-- **Owner clarification adopted:** list each open case/mechanism/trade-off;
-  do not invent a detector or block unrelated work. Only policy-dependent
-  S3-02b2 binding tests wait. S3-02b1 can be separately authorized with limits
-  recorded, as can unrelated work; none starts in this batch.
+- **Earlier clarification:** list each case/mechanism/trade-off without
+  inventing a detector or blocking unrelated work. That policy-only hold is
+  now closed by the owner's option (c) choice; no reader starts in this batch.
 - **Options with trade-offs:** record source/value hash (accidental stale
   edits; requires recomputation; editable inline hashes lack a trusted
   history); trusted whole-document digest/signature (detects changes but
@@ -20,26 +19,33 @@
   attribution (honest scope, no historical detector); unique source records
   (visible differences/review, not proof of assignment). Detailed detection,
   missed cases and hand-editing costs are in S3_02_PLAN section 3.3.1.
-- **Recommendation, not decision:** author-declared attribution/disclosure
-  for the provisional first format. Owner choice remains OPEN; no option is
-  selected and the required policy-dependent binding tests are not dropped.
-- **Interim output rule:** every report and the validation page state that
-  source attribution is declared by the author and not machine-verified;
-  ROADMAP S3-09 now carries this requirement and its future mutation checks.
+- **Answer/status:** option (c), DECIDED as D23. BIND-01/02/03 attribution-policy
+  gates CLOSED. Swaps that still meet structural/snapshot requirements are
+  ACCEPTED LIMITS, not defects; attribution is declared by the author, not
+  machine-verified. Keep b2 rejection checks for missing/orphan paths, stale
+  value/null snapshots and invalid order, plus ID-based reorder controls.
+- **Exact notice:** "Source attribution is declared by the author and is not machine-verified."
+  It is required in file-format documentation, every report and the validation
+  page. Loading never requires a hash. An optional separate content-hash
+  validation command may be proposed later; none is authorized here.
 
-## 2026-11-21 — station/component ID length cap — PROPOSED, not approved
+## 2026-11-21 — all designer identifiers length cap — ANSWERED, D24
 
-- **Task:** S3-02-ids2 Fix 11 documentation only.
-- **Proposal:** maximum 64 characters for station/component IDs to bound
-  paths/errors/report size and accidental resource use. This owner-requested
-  number is a proposal, not a standard or implemented validation rule.
-- **Options/trade-offs:** approve this bounded/readable limit (recommended);
-  retain current uncapped length (no compatibility restriction, larger paths
-  possible); or request a different justified bound. ASCII IDs make current
-  character/byte counts equal. Never truncate, hash or rename IDs silently.
-- **Status:** PROPOSED; wait for owner approval before any code or boundary
-  tests. This does not block unrelated work or the current strict-reader
-  contract using existing ID rules.
+- **Task:** documentation decision follow-up; implementation in S3-02b1 only.
+- **Earlier proposal/options:** a 64-character cap for station/component IDs,
+  uncapped length or another justified bound. Bounded paths improve ordinary
+  error/report size; the number is not an external standard or physical limit.
+- **Answer/status:** maximum 64 characters for station IDs and **all other
+  designer-document identifiers**, counted after ASCII-form validation.
+  DECIDED as D24; the earlier station/component-only proposal is superseded.
+- **Reader/model acceptance:** S3-02b1 must identify the overlong field/token
+  with reason "identifier must not exceed 64 characters"; independently test
+  63/64 accepted and 65 rejected with otherwise-valid ASCII IDs. Apply the
+  same limit to the model in that reader task, not retroactively; any affected
+  type/model and fixture migration go in one explicitly named combined commit.
+  Never truncate, hash, case-fold or rename IDs to fit.
+- **Authorization boundary:** no code/tests changed by this decision.
+  S3-02b1 remains PROPOSED until separately authorized.
 
 When a batch stops, append an entry with the task, what blocked it, and options with trade-offs. Do not guess an answer or continue to further tasks.
 

@@ -30,34 +30,42 @@ The approved future file mechanisms have specific limits:
   matching values is structurally indistinguishable from an intentionally
   authored declaration without trusted prior evidence.
 
-S3_02_PLAN section 3.3.1 gives the exhaustive category matrix and OPEN
-BIND-01 (existing-ID history beyond snapshot mismatch), BIND-02 (same-unit
-record reassignment) and BIND-03 (source-only/equal-value reassignment) gates.
-Candidates are a source/value content hash, a trusted whole-document hash or
-signature, explicit acceptance/disclosure of author declarations, or unique
-source records; each has different consistency, trust and editing limits.
-The recommendation is explicit declaration/disclosure for the first format;
-**no mechanism is selected**. Self-contained editable hashes and unique
-records alone do not prove historical ownership or physical source truth.
+S3_02_PLAN section 3.3.1 gives the exhaustive category matrix. D23 selects
+option (c): author-declared attribution, not machine verification. BIND-01
+(existing-ID history beyond snapshot mismatch), BIND-02 (same-unit record
+reassignment) and BIND-03 (source-only/equal-value reassignment) attribution-
+policy gates are **CLOSED**. Swaps satisfying the required internal checks
+are **ACCEPTED LIMITS, not defects**. This does not excuse a missing/orphan
+path, stale value/null snapshot, invalid order or positional rebinding;
+their automatic detection remains required in S3-02b2.
 
-Only the policy-dependent S3-02b2 binding tests wait for the owner choice.
-S3-02b1 strict reading and unrelated work can be separately authorized with
-the limit in their acceptance notes; object/kind checks do not wait on it.
-No reader starts here. Until a mechanism is chosen, every report and the
-validation page must state: **"Source attribution is declared by the author
-and is not machine-verified."** A later mechanism must describe its actual
-scope; source links/origin flags/checksums never imply experimental validation.
+Exact notice required in the designer file-format documentation, every
+report and the validation page:
 
-### Proposed station/component ID length limit
+**"Source attribution is declared by the author and is not machine-verified."**
 
-**PROPOSED, NOT APPROVED:** 64 characters for station and component IDs.
-The owner's proposed value bounds path/error/report size and accidental
-resource use; it is not a physical threshold or externally established
-standard. Current IDs are ASCII, so byte/character counts coincide. Current
-code has no such cap. No length check, truncation, renamed ID or boundary
-test is introduced before owner approval. Display names, sources and other
-ID kinds are not implicitly capped. Full case-sensitive identity comparison
-is retained; a length cap would not justify hash-only equality.
+Loading never requires a hash. An optional separate content-hash validation
+command may be proposed later, not implemented here; it would check its
+specified consistency scope, not historical attribution or physical truth.
+The attribution-policy hold is closed, but S3-02b1 remains PROPOSED until
+individually authorized. No reader starts in this documentation update.
+
+### Approved all-designer-identifier limit — D24, deferred code
+
+The owner approved 64 characters for station IDs and all other identifiers
+in the designer document, counted after ASCII-form validation. This bounds
+accepted identifier/path/report size; it is not a physical threshold or an
+external standard. Character and byte counts coincide for validated ASCII.
+Full case-sensitive equality and existing uniqueness scopes remain binding;
+never truncate, case-fold, hash or rename an ID to fit. Free labels/source
+text are not identifier fields; composite paths contain capped ID tokens.
+
+Current model code is unchanged. S3-02b1 must add both reader and matching
+in-memory limits, with a specific overlong-field/token error and independent
+63/64 accepted, 65 rejected tests. Any affected type/model and fixture
+migration go in the same explicitly named commit; no retroactive model-only
+patch or current boundary test is made. The approved contract specifies
+the exact reason "identifier must not exceed 64 characters".
 
 ### Future shared-type changes and fixture migration
 
@@ -70,10 +78,11 @@ agree it before committing. Preserve existing values/assertions/signs/
 tolerances unless separately authorized, and run gates on the combined
 change. This prospective rule does not rewrite the old station-ID history.
 
-Sources: owner Fix 11 request and subsequent binding-gate clarification;
-DECISIONS D18; S3_02_PLAN section 3; S3_02_IDS2_VERIFICATION evidence. No
-production rule, numerical model, length cap or historical-binding mechanism
-is implemented by this documentation change.
+Sources: owner Fix 11 request, binding-gate clarification and later
+documentation decisions D23/D24; D18; S3_02_PLAN section 3;
+S3_02_IDS2_VERIFICATION evidence. No production rule, numerical model,
+length cap code or historical-verification mechanism is implemented by
+this documentation change.
 
 ## S3-01b declaration checks
 

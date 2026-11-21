@@ -294,13 +294,19 @@ and original external-reference scope remains incomplete until it is done
 or the owner explicitly drops it. The contract supersedes earlier open
 schema recommendations below, while retaining every acceptance condition.
 
-**Fix 11 scope clarification:** current model checks establish path coverage,
-not historical attribution. OPEN BIND gates/candidate mechanisms are in
-S3_02_PLAN section 3.3.1. Only the policy-dependent S3-02b2 binding tests wait
-for a mechanism choice; S3-02b1 can be separately authorized with its
-declaration limits recorded, and object/kind checks need not wait. No reader
-is authorized or started by this follow-up. The proposed 64-character
-station/component ID cap is not approved or implemented.
+**D23/D24 follow-up:** source attribution is author-declared and not
+machine-verified (option c). BIND-01/02/03 attribution-policy gates are
+CLOSED; structurally consistent source/history swaps are ACCEPTED LIMITS,
+not defects. Missing/orphan paths, stale value/null snapshots, invalid
+ordered-array permutations and ID-based reorder checks remain b2 test
+requirements. Loading never requires a hash; an optional separate
+content-hash validation command may be proposed later, not started here.
+The approved cap is 64 characters of already-validated ASCII for every
+designer identifier, not only station/component IDs. S3-02b1 must have a
+specific overlong-ID error and independent 63/64/65 boundary tests. Apply
+the same cap to the model in that task, combining any affected type/model
+and fixture migration in one explicitly named commit. No retroactive code
+change is made; S3-02b1 stays PROPOSED until individually authorized.
 
 - **Purpose:** save the semantic model without confusing it with simulator JSON.
 - **Inputs / outputs:** independently versioned designer JSON, local table
@@ -542,12 +548,13 @@ station/component ID cap is not approved or implemented.
   solver residuals, stale/missing inputs and qualitative confidence flags.
   Show **"code-to-code cross-checked and analytic-case verified; not experimentally validated"**
   verbatim on both outputs, alongside the conceptual-use notice from VISION.
-  Until an attribution mechanism is chosen, both the validation page and
-  every report also state **"Source attribution is declared by the author
-  and is not machine-verified."** Declared sources/origin flags cannot imply
-  historical verification. A later approved/implemented mechanism must name
-  its exact scope and remaining limits; a checksum/signature does not prove
-  physical truth or experimental validation.
+  D23 also requires this exact notice on the validation page and every report:
+  **"Source attribution is declared by the author and is not machine-verified."**
+  Declared sources/origin flags cannot imply historical verification.
+  Loading never requires a hash. A separate optional content-hash command
+  may be proposed later, but its consistency result must not replace the
+  notice or imply machine-verified attribution, physical truth or experimental
+  validation. Structurally consistent source/history swaps are accepted limits.
   No aggregate “safe to fly” verdict; export failure must not suppress a
   useful geometry-only report. CLI command spelling awaits implementation scope.
 - **Independent tests:** hand-authored complete/partial/failed-result records,
@@ -556,14 +563,16 @@ station/component ID cap is not approved or implemented.
   margin, trim failure and Mach warning. A separately written synthetic
   end-to-end expected record checks model-to-report/export agreement.
   Pin the source-attribution notice in both outputs and reject a claim of
-  machine-verified attribution without an implemented, documented mechanism.
+  machine-verified source attribution; an optional hash-consistency result
+  cannot justify such a claim under D23.
 - **Mutations:** omit/alter the disclaimer; hide a missing tail contribution;
   claim an external/experimental comparison that never ran; print unavailable
   as zero or green success; omit escaping; show stale data as current;
   remove a flag beside any numeric value or either mandatory stall notice;
   name or imply a synthetic template is a real aircraft.
-  Removing the source-attribution notice or labelling declared attribution
-  as verified without evidence must fail the report/validation-page tests.
+  Removing/altering the exact attribution notice or labelling author-declared
+  source attribution as machine-verified must fail the report/validation-page
+  tests; an optional hash-consistency result does not discharge the notice.
 - **Risks:** persuasive presentation overstating conditional outputs; no
   confidence percentages or pass thresholds. Every number displays its exact
   machine-readable provenance flag(s), including individual vector/tensor

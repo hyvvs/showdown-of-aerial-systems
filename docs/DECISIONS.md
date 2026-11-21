@@ -21,11 +21,13 @@ Agents: do not make an open decision yourself. Present options with trade-offs a
 | D15 | Designer document family and version (S3-02 Q1) | DECIDED | JSON with `document_type` and an independent `format_version`, starting at `0`, explicitly provisional. Unsupported versions reject; no silent migration. |
 | D16 | Designer variant tags and labels (S3-02 Q2) | DECIDED | Stable canonical string tags with named payload objects. Supplied parameters have an explicit closed `kind`; `name` is label-only and never determines meaning, scope, units or provenance. |
 | D17 | Missing optional designer values (S3-02 Q3) | DECIDED | Explicit `null` in declared optional fields, with required `NOT_ESTIMATED` provenance and an explanation. Missing kind identity always rejects. Draft validity does not imply export readiness. |
-| D18 | Designer numeric provenance (S3-02 Q4) | DECIDED | Parallel map with value-bound provenance: stable record ID plus field first; strictly validated order/index paths second; whole-array or whole-table-axis/sample-block records third, with value/null snapshots only where grouping is insufficient. Stable station IDs on every surface are owner-approved; labels/list positions cannot become record identity. Automatic add/remove/reorder and path/ID-rename checks must reject separated/stale bindings unless records match. If impractical, stop/report for owner reconsideration of value-plus-metadata layout. Full array/object audit and binding trade-offs: S3_02_PLAN section 3. |
+| D18 | Designer numeric provenance (S3-02 Q4) | DECIDED | Parallel map with value-bound provenance: stable record ID plus field first; strictly validated order/index paths second; whole-array or whole-table-axis/sample-block records third, with value/null snapshots only where grouping is insufficient. Stable station IDs on every surface are owner-approved; labels/list positions cannot become record identity. Retain automatic edit/rename checks for missing paths, stale snapshots and ID-preserving reordering; D23 defines author-declared attribution and the accepted historical limits. Full array/object audit and binding trade-offs: S3_02_PLAN section 3. |
 | D19 | Designer engine-table storage/staging (S3-02 Q5) | DECIDED | Inline engine tables first, with local ID references. S3-02e is DEFERRED, not dropped. The original external-reference scope is explicitly staged and is not complete until S3-02e is done or the owner explicitly drops it. |
 | D20 | Designer save/replace policy (S3-02 Q6) | DECIDED | Refuse replacement unless explicitly requested; validate before writing. Stage into a temporary file, then rename/replace, so any failure leaves the original unchanged. No silent overwrite; CLI owns file I/O. |
 | D21 | First designer templates/registry (S3-02 Q7) | DECIDED | The two registered neutral templates, Synthetic wing study and Synthetic aircraft study, explicitly synthetic and possibly incomplete drafts, with a headless registry. No real-aircraft template or rendered gallery. |
 | D22 | Designer mass/loading staging (S3-02 Q8) | DECIDED | S3-03a first on current static components. Payload/fuel items and named loading cases enter only in separately approved S3-03b with a deliberate file-version extension. No implementation is authorized by these decisions. |
+| D23 | Designer source attribution | DECIDED | Owner chose option (c): source attribution is declared by the author and not machine-verified. BIND-01/02/03 attribution-policy gates are CLOSED; structurally valid history/source swap cases are ACCEPTED LIMITS, not defects. Exact notice below is mandatory in file-format documentation, every report and the validation page. Loading never requires a hash. Detectable consistency checks remain S3-02b2 requirements. |
+| D24 | Designer identifier length | DECIDED | Maximum 64 characters for station IDs and all other designer-document identifiers, counted after ASCII-form validation. S3-02b1 must reject longer IDs with a specific error and test 63/64/65 characters. Apply the same model limit in that reader task, not retroactively; combine the type/model change and affected fixture migration in one explicitly named commit. S3-02b1 remains PROPOSED until separately authorized. |
 
 ## D4: Units strategy — option B
 
@@ -57,3 +59,44 @@ detect the required edit; hand-edited values then require matching snapshot
 edits. Reordering stable-ID lists keeps the same bindings and is a positive
 control, not a forced metadata rewrite. The approved wire grouping/IDs are
 not a claim that today's per-element in-memory validator implements them.
+
+## D23: Author-declared source attribution — option (c)
+
+Source: owner's documentation decisions, 2026-11-21. Exact user-facing
+notice, required in the designer file-format documentation, every report
+and the validation page:
+
+**"Source attribution is declared by the author and is not machine-verified."**
+
+- Existing-ID reassignment and same-unit/source-only swaps that still pass
+  all specified structural and value/null snapshot checks are **ACCEPTED
+  LIMITS**, not defects. BIND-01/02/03 are CLOSED as attribution-policy gates;
+  no historical-source verification is claimed implemented.
+- S3-02b2 must still detect missing/orphan paths, stale value/null snapshots,
+  invalid ordered-array permutations and improper positional rebinding.
+  Whole-record reordering retains ID-based ownership as a positive control.
+- Loading never requires a hash, digest or signature. An optional separate
+  content-hash validation command may be proposed later; no command, hash
+  algorithm, dependency or implementation is authorized by this decision.
+  A consistency check would not replace the attribution notice or validate
+  the physical truth of a source.
+
+## D24: All designer identifiers — approved cap, deferred implementation
+
+Source: owner's documentation decisions, 2026-11-21. The cap is 64
+characters of the already-validated ASCII identifier form. It applies to
+all designer IDs and ID references, not only station/component IDs.
+Full case-sensitive identity equality and the existing uniqueness scopes
+remain binding; never truncate, case-fold, hash or rename an ID to fit.
+
+S3-02b1's error must identify the overlong field/token and give the specific
+reason **"identifier must not exceed 64 characters"**. Its independent
+boundary tests must accept otherwise-valid 63- and 64-character IDs and
+reject 65-character IDs. The same bound is added to the in-memory model
+as part of the reader task; today's model is unchanged. Any affected type/
+model change and fixture/construction-site migration belong in one commit
+whose message explicitly says they are together. No separate retroactive
+model-only change or current test/fixture modification is authorized.
+
+These decisions close the two owner questions; they do not start the reader.
+S3-02b1 and the remaining child tasks stay PROPOSED, not authorized.

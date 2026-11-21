@@ -9,10 +9,11 @@ S3-02b1/b2 and all subsequent implementation tasks remain PROPOSED until
 individually authorized; S3-02e is DEFERRED, not dropped. No code, tests or
 fixtures are created by this documentation task.
 
-**Fix 11 clarification:** the later station-ID model checks path presence,
-not attribution history. The OPEN binding gates in section 3.3.1 apply only
-to the policy-dependent S3-02b2 binding tests. S3-02b1 can be separately
-authorized with the limits recorded; no reader starts in this batch.
+**D23/D24 follow-up:** the owner selected author-declared attribution and
+approved the all-identifier cap. BIND-01/02/03 attribution-policy gates are
+CLOSED; source/history swaps that pass the specified consistency checks
+are ACCEPTED LIMITS, not defects. Detectable b2 checks remain required.
+S3-02b1 remains PROPOSED until separately authorized; no reader starts here.
 
 ## 1. What S3-02 currently contains
 
@@ -65,10 +66,9 @@ make the current "small" label optimistic for a single reviewable batch.
 
 Only the S3-02a documentation contract is approved. All implementation child
 IDs below are **PROPOSED, NOT AUTHORIZED**, except DEFERRED S3-02e.
-The historical-attribution choice holds only the policy-dependent b2 binding
-tests. References to b2 in other task dependencies retain the independently
-specified structural/kind checks; they do not create a blanket hold on
-unrelated reader/writer/template work. No task may claim the held tests pass.
+The D23 attribution choice is settled. References to b2 in other task
+dependencies retain the specified structural/kind/consistency checks;
+closing a policy gate does not claim those unimplemented tests pass.
 Sizes describe relative implementation/review effort, not calendar promises.
 Each task needs separate authorization, tests first, the normal gates and
 recorded mutation evidence when implementation is requested. Proposed tests
@@ -111,9 +111,11 @@ tolerances and formula sources must be justified before implementation.
   problem. Reuse existing core/CLI shape-test lessons, not their aircraft schema.
 - **Acceptance limit:** parsing/current-model validation is not historical
   source verification. Preserve IDs, declarations and specified snapshots;
-  report precisely which structural/consistency checks ran. OPEN section
-  3.3.1 gates do not block b1. Do not invent digest fields, a length cap or
-  source-authentication behavior; unknown fields still reject.
+  report precisely which structural/consistency checks ran. D23 requires
+  the exact attribution notice and no mandatory hash. D24 requires the
+  approved 64-character cap for all identifiers, specific field/reason and
+  63/64/65 boundary tests, applied to the model in this reader task with
+  any affected fixtures in the same commit. Unknown fields still reject.
 
 ### S3-02b2 — Automatic walkers and provenance-edit checks — PROPOSED, small/medium
 
@@ -133,6 +135,8 @@ tolerances and formula sources must be justified before implementation.
   a semantically valid edit only with matching provenance. Distinguish
   ID-preserving record reorder, ordered-array validation and whole-array
   records as specified in section 3. No index-only reorder blind spot.
+  Under D23, matching structures/snapshots do not verify source history;
+  preserve the ACCEPTED LIMIT cases as positive controls, not defect tests.
 - **Mutations:** omit a discovered object/kind, collapse duplicate keys,
   bypass order validation, attach metadata by list position, ignore an
   orphan/missing binding, or detach a grouped value from its metadata.
@@ -140,10 +144,10 @@ tolerances and formula sources must be justified before implementation.
   detect every equal-unit permutation. If the required automatic binding
   checks prove impractical, stop and report for owner reconsideration of
   value-plus-metadata layout; never claim completion by shrinking coverage.
-- **Narrow hold:** only binding tests whose expected result needs the OPEN
-  historical-attribution choice wait for that choice. Object/kind walkers
-  and independent structural checks do not wait on it. Neither portion is
-  authorized for implementation by this document.
+- **Policy status:** D23 closes the historical-attribution decision hold.
+  Object/kind walkers, missing-path/stale-snapshot checks and ID-based
+  reorder tests remain required and unimplemented; no portion is authorized
+  for implementation by this document.
 
 ### S3-02c — Pure writer and draft round trips — small
 
@@ -382,6 +386,16 @@ surfaces. Sources: current
 
 ### 3.2 Envelope, fields and canonical tags
 
+This section is the approved designer file-format documentation until the
+reader task creates its implementation-facing format guide. D23 requires
+this exact notice here, in that future guide, every report and the
+validation page:
+
+**"Source attribution is declared by the author and is not machine-verified."**
+
+Loading never requires a hash. A separate optional content-hash validation
+command may be proposed later; it is not part of loading or an approved task.
+
 JSON only; document_type is the exact string `soas-designer`;
 format_version is the integer `0`, independently versioned and provisional.
 Missing/wrong-type/wrong-discriminator/unsupported-version envelopes reject;
@@ -527,12 +541,14 @@ not silently invent per-cell metadata. Snapshots increase file size and
 require hand-edited array values to have matching snapshot edits. They cannot
 detect a deliberately coordinated false source or prove physical truth.
 
-**Required automatic edit acceptance:** b2 discovers the array/binding
+**Required automatic edit acceptance (D18/D23):** b2 discovers the array/binding
 classes from the agreed schema. For each data array, test insertion,
 deletion and permutation, plus field-path and ID renames where applicable.
-An edit that separates values from their provenance must reject until the
-records/keys/references/snapshots match; semantic order/dimension failures
-still reject even after metadata changes. Pure ID-preserving list reorder is
+An edit leaving missing/orphan keys, invalid references or stale snapshots
+must reject; semantic order/dimension failures still reject even after
+metadata changes. Source/history swaps with all prescribed checks satisfied
+are ACCEPTED LIMITS under D23 and must not be labelled defects or silently
+claimed detectable. Pure ID-preserving list reorder is
 a positive control: unchanged ID-keyed records already match, so no pointless
 map edit is required and no source can move to another ID. A source is bound
 to a named vector/tensor as a whole, never to a moving list index. Metadata-
@@ -540,7 +556,13 @@ only arrays receive their own flag/source/reference validity probes rather
 than recursive provenance. If any required case proves impractical, stop
 and report to the owner; do not weaken the check or choose a new layout.
 
-### 3.3.1 Fix 11: path presence, consistency and OPEN historical-binding gates
+### 3.3.1 D23: declared attribution, consistency and CLOSED policy gates
+
+**DECIDED: option (c). Attribution gate CLOSED.** The owner accepts
+author-declared source attribution; it is not machine-verified. BIND-01,
+BIND-02 and BIND-03 below are CLOSED policy questions. Their undetectable
+swap/history cases are **ACCEPTED LIMITS, not defects**. Closing the gate
+does not implement or remove the remaining structural/consistency tests.
 
 **Current model behavior, demonstrated by tests:** each numeric path needs
 valid metadata, with correct units/flags, nonblank source text and valid
@@ -549,7 +571,8 @@ the model. Exchanging the existing first/last station IDs without moving
 geometry can leave the same complete path set and still validate. Swapping
 the two existing chord source records, both with unit m, can also validate.
 Unique IDs/source strings and a complete map do not establish historical
-binding. These are limits, not successful S3-02b2 binding checks. See
+binding. These are accepted limits, not defects or successful historical
+verification. See
 [Fix 11 evidence](S3_02_IDS2_VERIFICATION.md#fix-11--path-presence-and-historical-attribution-limits).
 
 The following table accounts for every array category in section 3.1. File
@@ -572,13 +595,13 @@ originally attributed a source to a value.
 | metadata.input_paths | Existing binding-key references and no self-reference. | Exchanging two valid dependency references can still resolve; coverage does not prove the author intended those dependencies. |
 | metadata.value_snapshot arrays, tensor rows and sample levels | Compare the snapshot against the bound defining value, using the same shapes/closed cell objects. No recursive provenance about snapshots. | Coordinated edits still match; an unchanged value/null with a different source still matches. |
 
-**OPEN gates for S3-02b2 (no mechanism chosen):**
+**Attribution-policy gates CLOSED under D23 — accepted limits:**
 
-| Gate | Plain-language synthetic example | Current/file checks that help | Uncovered case / decision needed |
+| Closed gate | Plain-language synthetic example | Detection requirements retained | ACCEPTED LIMIT, not a defect |
 |---|---|---|---|
-| BIND-01: existing-ID reassignment beyond snapshot mismatch | Exchange two already existing IDs while leaving the records in place; all referenced IDs still exist. | Full-ID paths reject missing/new/orphan keys. A station's different coordinate vector will fail its future stale M3 snapshot. | M1 alone cannot detect reassignment. Scalar-only or identical-payload cases, and coordinated snapshot edits, need an explicit policy about history. Never infer it from names. |
-| BIND-02: same-unit record reassignment | Exchange two existing chord metadata records; both still declare metres and valid source text. | Missing paths/wrong units reject. Where a whole record contains a snapshot, moving it to a different value rejects if that snapshot no longer matches. | Scalars currently have no snapshots; equal-value/null records still match. Mere source-record uniqueness is insufficient. |
-| BIND-03: source-only/equal-value reassignment | Keep every value/null and snapshot, but exchange the two source declarations. | Empty text, invalid flags and malformed records reject. | No structural check can recover the original attribution from the final valid document. A matching value is not proof of its stated source. Owner must choose the policy/mechanism below. |
+| BIND-01: CLOSED, existing-ID reassignment beyond snapshot mismatch | Exchange two already existing IDs while leaving the records in place; all referenced IDs still exist. | Full-ID paths reject missing/orphan keys. A station's different coordinate vector must fail its stale M3 snapshot. | M1 alone cannot establish historical assignment. Scalar-only/identical-payload cases or coordinated, valid snapshot edits can pass. Attribution remains declared; never infer history from names. |
+| BIND-02: CLOSED, same-unit record reassignment | Exchange two existing chord metadata records; both still declare metres and valid source text. | Missing paths/wrong units reject. A moved snapshot paired with a different current value must reject. | Scalars without snapshots and equal-value/null records can still pass. Source-record uniqueness does not establish historical ownership. |
+| BIND-03: CLOSED, source-only/equal-value reassignment | Keep every value/null and snapshot, but exchange the two source declarations. | Empty text, invalid flags and malformed records reject. | Matching values/snapshots do not prove a source declaration. Source-only swaps with all required checks satisfied are accepted author declarations, not defects. |
 
 The last case is not a missing string comparison: the identical final
 document could have been authored intentionally or produced by a source
@@ -586,7 +609,8 @@ swap. A validator sees the same bytes in both cases. Without trusted prior
 evidence it cannot distinguish those histories. Inline fingerprints can
 check internal consistency, but cannot independently certify attribution.
 
-**Candidate mechanisms — options only, not decisions.** A hash is a content
+**Historical option comparison — (c) selected by D23.** Options (a), (b)
+and (d) are not loading requirements. A hash is a content
 fingerprint; to prove historical change it needs a trusted comparison value.
 None of the candidates establishes that a cited experiment actually measured
 the declared quantity. Full String identity remains required; a fingerprint
@@ -596,47 +620,69 @@ must never replace collision-safe identity equality.
 |---|---|---|---|
 | (a) Hash of a provenance record's source text and bound value/null, stored with the record | Stale accidental edits if the stored fingerprint is not updated; complete record moves to unequal values can fail recomputation. | Same-value moves can still match if owner ID/path is not included. Including the owner would need approval. Anyone able to edit both content and an untrusted inline hash can recompute it. Algorithm, canonical representation, versioning and any dependency need approval; no authenticity claim. | Every covered value/source edit needs recomputation; an editing tool or an exact manual procedure is needed. |
 | (b) Hashed or signed whole-document digest | A mismatch with a trusted external digest detects an edit. A signature requires a trusted signing key. Coverage could include all IDs, values and sources. | An editable digest stored only in the same document is recomputable. A whole-document check does not tell an intended correction from an error or prove source truth. Text versus canonical-content hashing, anchors/keys and dependencies are unsettled. | Recompute/re-sign after every covered edit; raw-text hashing also reacts to formatting. Key/trust management adds work. |
-| (c) Accept and disclose author-declared attribution | Makes the claim honest while retaining all structural/unit/order/snapshot checks and human source review. | Deliberately accepts the historical-attribution limit; would require the owner's explicit adjustment of policy-dependent binding acceptance. It does not detect the source-only swap. | Lowest: normal edits plus visible source/assumption declarations; every report and format document must carry the limit. |
+| (c) SELECTED: accept and disclose author-declared attribution | Makes the claim honest while retaining all structural/unit/order/snapshot checks and human source review. | D23 explicitly accepts the historical-attribution limit. It does not detect source-only swaps; these are accepted limits rather than defect assertions. | Normal edits plus visible source/assumption declarations; every report and format document must carry the exact notice. |
 | (d) Unique source records per value/approved aggregate | Duplicate/reused source-record identities can be rejected; distinct visible content can help human review notice a swap. | Swapping two distinct valid records still preserves uniqueness. Need a trusted owner link to prove assignment. Numeric per-cell records would conflict with D18 table grouping and require another decision; never add them silently. | More records/labels and reference maintenance, even when many values legitimately cite one source. |
 
-**Recommendation, not selection:** (c) for the first provisional format,
-with explicit author-declared attribution, rather than implying historical
-verification. If accidental-edit detection is also desired, consider (a)
-as an additional limited check after its representation is approved. No
-candidate is selected or implemented here. The owner's choice must close
-the applicable BIND gates and specify the corresponding b2 assertions;
-existing gates are not silently removed or weakened.
+**Recorded owner choice:** (c), with no mandatory hash on loading. A separate
+optional command that checks content hashes may be proposed later; no such
+command, algorithm, dependency or file field is approved here. It would
+check its specified consistency scope, not machine-verify source attribution.
 
-**Dependency boundary:** only policy-dependent S3-02b2 binding tests wait
-for this choice. S3-02b1 strict reading and other unrelated work can be
-separately authorized; object/kind walkers need not wait either. Reader
-acceptance must state that source attribution is declared and not
-machine-verified, retain structural checks and avoid unsupported history
-claims. A later selected mechanism that changes fields needs explicit
-version handling, not a permissive extension bucket. No reader starts now.
+**S3-02b2 requirements retained:** automatically reject missing/orphan
+paths, invalid references, stale value/null snapshots and prohibited
+ordered-array permutations. Test whole-record reordering as an ID-preserving
+positive control; test that positional rebinding fails. Valid source/history
+swaps that satisfy those checks are accepted-limit positive controls, not
+required rejections. A swap leaving a stale snapshot is still an error.
+Object/kind walkers and all other strict rejection requirements are unchanged.
 
-Until a mechanism is chosen, every report and the validation page must say
+**Dependency boundary:** the attribution-policy hold is CLOSED. S3-02b1
+remains PROPOSED until the owner separately authorizes it, with D24's new
+cap requirements; b2 is also unimplemented and not authorized. No reader
+starts in this batch, and gate closure is not a claim that tests ran.
+
+The file-format documentation, every report and the validation page must say
 **"Source attribution is declared by the author and is not machine-verified."**
-If a mechanism is later chosen/implemented, describe its exact scope and
-remaining limits; a checksum/signature does not validate aircraft physics.
-ROADMAP S3-09 carries this output and mutation-test requirement.
+Any future optional hash-check command must describe its exact scope and
+remaining limits; it never becomes a loading prerequisite or replaces the
+notice. A checksum/signature does not validate aircraft physics. ROADMAP
+S3-09 carries the output and mutation-test requirement.
 
-### 3.3.2 Proposed ID length cap — owner decision needed
+### 3.3.2 D24: approved all-identifier cap, implementation in S3-02b1
 
-**PROPOSED, NOT APPROVED:** at most 64 characters for station and component
-IDs, retaining exact case-sensitive full-string comparison. Current IDs
-are ASCII, so character and byte counts coincide. The purpose is to bound
-path/error/report length and resource use for accidental extreme identifiers,
-not to claim a physically meaningful or externally standardized threshold.
-The value comes from the owner's Fix 11 proposal request.
+**DECIDED, not implemented today:** maximum 64 characters for station IDs
+and **all other identifiers in the designer document**. Validate the ASCII
+identifier form first, then count its characters; byte and character counts
+coincide only after that validation. Retain exact case-sensitive full-string
+comparison and the existing uniqueness scopes. Do not truncate, hash,
+case-fold, trim or rename an identifier to fit.
 
-Options: approve this cap; retain current uncapped length; or ask for a
-different justified limit. Recommend the proposed cap for readability and
-bounded paths, pending owner approval and a compatibility decision. There
-is **no length validation code or boundary test added now**. Do not truncate,
-hash, case-fold or rename existing IDs automatically. Other ID kinds and
-free display-name/source text are not implicitly capped. This proposal
-does not block unrelated work or b1 using today's declared ID rules.
+This includes component, station, control, engine/table, contribution and
+supplied-parameter identifiers, identifier-reference fields such as table_id
+and parent_surface_id, and revision identifiers such as non-null
+geometry_revision. Any other identifier introduced by the agreed schema
+gets the same cap; b1's field inventory/tests must not hand-pick only
+station/component IDs. A composite provenance/dependency address may exceed
+64 characters overall; the cap applies to its identifier tokens, not the
+whole address. Free label/name/source/citation text is not an ID; fixed
+protocol tags still use their exact closed allowed-value rules.
+
+S3-02b1 must reject an overlong identifier with its specific field/token
+and reason **"identifier must not exceed 64 characters"**. Its independent
+tests cover all identifier-bearing locations with otherwise-valid ASCII
+IDs at 63 and 64 characters accepted and 65 characters rejected. References
+and provenance must be independently consistent in the positive controls,
+so a dangling reference cannot mask the boundary check. Blank/invalid-ASCII
+identity and duplicate-ID tests remain unchanged requirements.
+
+The in-memory model gets the same bound **in the reader task**, not as a
+retroactive model-only patch. If the change affects types/fixtures or their
+construction sites, commit the model/type change and all migration together,
+with an explicit combined-change message, so every commit builds. No length
+code, boundary test or fixture migration is made by this docs-only decision.
+The purpose remains bounded accepted paths/error/report size and resource
+use; 64 and the boundary lengths come from the owner's decision, not a
+physical threshold or external standard. S3-02b1 is still PROPOSED.
 
 ### 3.3.3 Future type/fixture changes must compile together
 
@@ -671,13 +717,15 @@ see [station-ID evidence](S3_02_IDS_VERIFICATION.md).
 | Envelope/version | Identify document_type or format_version and the unsupported/missing/wrong-type value; never migrate or assume a version. |
 | Closed fields/tags | Identify unknown, missing, wrong-case or numeric tag/field. Duplicate keys identify the duplicated field, including dynamic provenance keys; raw text must reach the duplicate detector. |
 | IDs/references | Identify missing/duplicate identity, dangling parent/table/input reference or renamed path with stale metadata. No label-based recovery. |
+| Identifier length (D24, S3-02b1) | After ASCII validation, identify the overlong field/token and give reason "identifier must not exceed 64 characters". No truncation/normalization; 63/64 accepted and 65 rejected in independent controls. |
 | Provenance/binding | Identify missing/orphan/duplicate key, wrong unit/flag/source, order violation or snapshot mismatch at the described field. No inferred USER_SUPPLIED/default or silent snapshot update while reading. |
 | Semantic inputs | Retain specific field/reason for finite/positive/order/shape, scope/unit, tensor, control and source failures. Existing sign, hinge-span and unchanged numerical checks still apply. |
 | Writer validation | Invalid/unknown/missing kinds, non-finite values, missing bindings or snapshots reject before text is offered to a file writer; never convert invalid numbers to null or create guessed metadata. |
 | CLI I/O/replacement | Include the failing path/operation. Validate first; refuse an existing target without explicit replacement. Write a temporary file then rename/replace; any failure leaves the original unchanged, or the target absent if it did not exist. Never delete the original first. |
 
-Error categories/path/reason are the contract; a particular Rust enum or
-exact punctuation is not mandated. Pure text conversion stays in
+Error categories/path/reason are the contract, including D24's specific
+overlong-ID reason; a particular Rust enum or diagnostic wrapper punctuation
+is not mandated. Pure text conversion stays in
 soas-designer and filesystem access stays in soas-cli. Runtime declarations
 for pre-approved serde/serde_json are later authorized work, not new
 dependencies added by this document. No command spelling or external-table
@@ -702,9 +750,11 @@ reader/writer under test. No real-aircraft data or threshold is invented.
 | Full semantic draft | Every object/array kind above, all surface/control kinds, inline engine tables, all six supplied kinds, distinct IDs, units, sources and group bindings; separately written expected semantic/metadata record. | b1 |
 | Incomplete draft | Each declared nullable physical input absent in turn, retained NOT_ESTIMATED explanation; missing kind/ID remains an error; no fabricated zero or export-ready claim. | b1/c |
 | Direct rejection set | Syntax, named-object arrays, all envelope/tag/unknown/duplicate/type failures, missing references/provenance, nonfinite/invalid semantic inputs and forbidden wing results. Duplicate cases are raw text. | b1 |
+| Identifier cap (D24) | Independently consistent declarations/references at 63/64/65 ASCII characters for every identifier-bearing location. Accept 63/64 and reject 65 with the specified field/reason; matching model checks land in the reader task with any affected migration in one commit. | b1 |
 | Automatic object walker | Discover every object in the full document, including map records, units and snapshot objects, without hand-listed paths; replace each separately by its values array and reject; legal array controls remain accepted. | b2 |
 | Automatic kind walker | Discover actual schema kind fields; unknown/missing/wrong-case/numeric/duplicate mutation individually for each; all legitimate kinds pass controls. Labels resembling kinds do not become discovered fields. | b2 |
 | Automatic provenance edits | Discover all data-array classes and path/ID bindings; add/remove/reorder, rename paths/IDs, stale versus matching maps/snapshots, orphan/missing keys and ID-reorder positive controls. Strictly ordered section/node permutations reject by validation. | b2 |
+| D23 attribution limits | Source/history swaps satisfying every specified structural/snapshot check remain accepted-limit controls. Missing paths, stale snapshots and wrong positional rebinding must still reject; loading without a hash must work. Never claim machine-verified attribution. | b1/b2 |
 | Binding edge cases | Whole vertical-tail station reversal with IDs cannot reattach metadata; grouped vector/tensor/sample-block permutations reject stale snapshots; engine axis/sample dimensions and named cell shapes remain checked. | b1/b2 |
 | Writer and round trip | Separately specified fields/records plus read/write/read; every ID, source, null, unit, datum, grouped snapshot and reference retained. Invalid in-memory declarations cannot serialize as valid documents. | c |
 | CLI transaction | Explicit temporary locations, invalid/new/existing targets, explicit replace versus refusal, staged-write and rename failure; original bytes unchanged on every failure. TEMP/TMP inside checkout. | d |

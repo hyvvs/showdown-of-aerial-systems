@@ -123,6 +123,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-21 | S3-02-ids2 Fix 11 | A complete path map does not prove which source originally described a value; structurally valid ID/source swaps can pass. A value snapshot detects a mismatch, while a trusted digest/signature needs an external trust basis and still does not establish physical truth. Shared-type changes and their fixture migrations belong in one buildable commit; a proposed identifier cap is not an implemented rule. |  |  |
 
+| 2026-11-21 | D23/D24 documentation decisions | An accepted attribution limit is a stated boundary, while missing paths and stale value snapshots remain detectable errors. After ASCII validation, character and byte counts coincide, so an identifier cap has an unambiguous boundary. Approving a rule does not implement it: the reader and matching model/fixture changes still need separate task authorization. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These
