@@ -2,6 +2,31 @@
 
 When a batch stops, append an entry with the task, what blocked it, and options with trade-offs. Do not guess an answer or continue to further tasks.
 
+## 2026-11-21 — S3-02a contract questions — ANSWERED
+
+- **Task:** S3-02a, documentation only; no implementation authorized.
+- **What needed an answer:** S3_02_PLAN Q1-Q8 (version, tags, missing
+  values, provenance, engine tables, replacement, templates and loading),
+  plus how to bind metadata when equal-unit arrays are edited and when
+  vertical-tail station ordering permits a full reversal.
+- **Options/trade-offs recorded:** path-only maps can silently reattach
+  sources; per-number snapshots add duplication/manual edits; inline
+  metadata changes the layout. The owner chose the ID/order/aggregate
+  hierarchy with snapshots only where necessary. Stable IDs require
+  coordinated renames; ordered arrays reject permutations; grouped sources
+  are less granular; snapshots need matching hand edits.
+- **Answer:** Q1-Q8 adopted with the owner's conditions, recorded as
+  DECISIONS D15-D22 and S3_02_PLAN section 4. Record-ID plus field binding
+  comes first; validated strict order/index paths second; whole-array or
+  table-axis/sample-block records third. No per-cell engine-table metadata.
+  The owner approved stable station IDs for all surfaces after the
+  vertical-tail ordering limitation was reported. Automatic array edit and
+  path/ID-rename checks remain mandatory; report impracticality instead of
+  weakening them. The universal snapshot-first suggestion was not adopted.
+- **Status:** ANSWERED; S3-02a is the approved documentation contract.
+  S3-02b1/b2 and later implementation remain PROPOSED and need separate
+  authorization; S3-02e is DEFERRED, not dropped. No code/tests are started.
+
 ## Entry format
 
 - **Task:** task ID and title.

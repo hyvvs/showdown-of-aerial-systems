@@ -18,6 +18,14 @@ Agents: do not make an open decision yourself. Present options with trade-offs a
 | D12 | Wind and stability axes | DECIDED | Option A: instantaneous stability and wind axes as defined in CONVENTIONS.md; wind-axis force components `(-drag, +side, -lift)`. |
 | D13 | Near-zero airspeed | DECIDED | Option A: one named constant `MIN_AIRSPEED_FOR_ANGLES_MPS`, initially `0.1 m/s`, an owner-selected placeholder to revisit. Below it, alpha and beta are zero; otherwise alpha is `atan2(w, u)` and beta is `asin(clamp(v/V, -1, 1))`. Non-finite inputs are an explicit error, never silently clamped. |
 | D14 | Hero aircraft | DECIDED | Supersonic jet, F-104-class. The hero demo is targeted for v0.2; v0.1 stays subsonic. |
+| D15 | Designer document family and version (S3-02 Q1) | DECIDED | JSON with `document_type` and an independent `format_version`, starting at `0`, explicitly provisional. Unsupported versions reject; no silent migration. |
+| D16 | Designer variant tags and labels (S3-02 Q2) | DECIDED | Stable canonical string tags with named payload objects. Supplied parameters have an explicit closed `kind`; `name` is label-only and never determines meaning, scope, units or provenance. |
+| D17 | Missing optional designer values (S3-02 Q3) | DECIDED | Explicit `null` in declared optional fields, with required `NOT_ESTIMATED` provenance and an explanation. Missing kind identity always rejects. Draft validity does not imply export readiness. |
+| D18 | Designer numeric provenance (S3-02 Q4) | DECIDED | Parallel map with value-bound provenance: stable record ID plus field first; strictly validated order/index paths second; whole-array or whole-table-axis/sample-block records third, with value/null snapshots only where grouping is insufficient. Stable station IDs on every surface are owner-approved; labels/list positions cannot become record identity. Automatic add/remove/reorder and path/ID-rename checks must reject separated/stale bindings unless records match. If impractical, stop/report for owner reconsideration of value-plus-metadata layout. Full array/object audit and binding trade-offs: S3_02_PLAN section 3. |
+| D19 | Designer engine-table storage/staging (S3-02 Q5) | DECIDED | Inline engine tables first, with local ID references. S3-02e is DEFERRED, not dropped. The original external-reference scope is explicitly staged and is not complete until S3-02e is done or the owner explicitly drops it. |
+| D20 | Designer save/replace policy (S3-02 Q6) | DECIDED | Refuse replacement unless explicitly requested; validate before writing. Stage into a temporary file, then rename/replace, so any failure leaves the original unchanged. No silent overwrite; CLI owns file I/O. |
+| D21 | First designer templates/registry (S3-02 Q7) | DECIDED | The two registered neutral templates, Synthetic wing study and Synthetic aircraft study, explicitly synthetic and possibly incomplete drafts, with a headless registry. No real-aircraft template or rendered gallery. |
+| D22 | Designer mass/loading staging (S3-02 Q8) | DECIDED | S3-03a first on current static components. Payload/fuel items and named loading cases enter only in separately approved S3-03b with a deliberate file-version extension. No implementation is authorized by these decisions. |
 
 ## D4: Units strategy — option B
 
@@ -27,3 +35,25 @@ Agents: do not make an open decision yourself. Present options with trade-offs a
 - Non-SI units (degrees, knots, feet) appear only at the UI/report boundary, converted by tested functions.
 - Adding any further newtype, or the `uom` crate, requires the owner's approval.
 - Revisit `uom` only if unit bugs keep recurring.
+
+## D15-D22: S3-02 owner answers and authorization boundary
+
+Source: the owner's answers to S3_02_PLAN Q1-Q8, 2026-11-21. The approved
+field/version/tag/error/fixture contract is in
+[S3_02_PLAN.md, section 3](S3_02_PLAN.md#3-s3-02a-approved-document-contract).
+These decisions approve **S3-02a documentation only**. The reader is split
+into S3-02b1 (strict reader) and S3-02b2 (automatic structural/kind walkers
+and provenance-edit checks); both and every later implementation task remain
+PROPOSED until individually authorized. S3-02e alone is DEFERRED, retaining
+its original scope. No dependency, code, test or file format implementation
+is approved by this documentation update.
+
+For D18 the owner rejected a universal per-number snapshot as the first
+answer. Apply the ID/order/aggregate hierarchy, with no per-cell engine-table
+metadata. The owner subsequently approved station IDs on all surfaces
+because current vertical-tail ordering is not permutation-proof. Grouped
+vectors/tensors/sample blocks need snapshots where grouping alone cannot
+detect the required edit; hand-edited values then require matching snapshot
+edits. Reordering stable-ID lists keeps the same bindings and is a positive
+control, not a forced metadata rewrite. The approved wire grouping/IDs are
+not a claim that today's per-element in-memory validator implements them.

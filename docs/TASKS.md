@@ -427,7 +427,8 @@ Use S3 IDs; **no T16-T28 renumbering**. All six choices are ANSWERED; the owner
 authorized **S3-01 only**, now completed, not an automatic batch. The
 implemented architecture is a pure `soas-designer` depending on core/estimator,
 with no reverse dependency or library file I/O. CLI integration is later work;
-S3-02 remains unstarted. Only pre-approved dependencies. (Owner choices 1-6
+S3-02 implementation remains unstarted; its S3-02a documentation contract is
+now approved. Only pre-approved dependencies. (Owner choices 1-6
 and S3-01 batch; AGENTS, Batch mode; S3_01_SEMANTIC_MODEL.md.)
 
 **Binding data rules:** save incomplete drafts, but missing intrinsic inertia
@@ -464,7 +465,7 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 | ID | Task / dependencies | Status |
 |---|---|---|
 | S3-01 | Semantic aircraft components: wings, tails, fuselage, engines/table references, controls, datum and per-number provenance; no static derived wing inputs. | [x] Completed; 16 tests and eight detected scratch faults |
-| S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Planned; not authorized |
+| S3-02 | Independently versioned designer JSON/text conversion and CLI loading; after S3-01. | [ ] Implementation not authorized; S3-02a documentation approved; external-reference scope staged to DEFERRED S3-02e |
 | S3-03 | Explicit component mass/CG/inertia and fixed loading-case buildup; after S3-01. | [ ] Planned; not authorized |
 | S3-04 | Current-geometry wing recomputation with provenance and explicit unsupported/not-estimated results; after S3-01. | [ ] Planned; not authorized |
 | S3-05 | Complete assembled wing-plus-allowed-supplied inputs and freshly generated simulator export; after S3-02/03/04. | [ ] Planned; not authorized |
@@ -474,12 +475,31 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 | S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Planned; not authorized |
 | S3-10 | Later box/cylinder/ellipsoid inertia helper with rotation/parallel-axis accounting and explicit approximate qualifier; after S3-03 and report support. | [ ] Later; not authorized |
 
-**PROPOSED split — NOT AUTHORIZED:** [S3_02_PLAN.md](S3_02_PLAN.md) proposes
-S3-02a–f (contract, reader, writer, CLI I/O, conditional external tables and
-template/registry companion work) and S3-03a–d (mass/CG, loading and inertia
-steps). These are proposal labels, not active task authorizations or completed
-work. Original parent requirements/statuses remain unchanged; implementation
-needs owner decisions and a separately named task authorization.
+**S3-02a documentation APPROVED; implementation PROPOSED, NOT AUTHORIZED:**
+[S3_02_PLAN.md section 3](S3_02_PLAN.md#3-s3-02a-approved-document-contract)
+is the approved field/version/tag/error/fixture contract. Q1-Q8 are ANSWERED
+in DECISIONS D15-D22, including the later ID/order/aggregate binding and
+stable-station-ID clarifications. The reader split is adopted as task
+organization, not implementation permission:
+
+| Child task | Status / retained scope |
+|---|---|
+| S3-02a | [x] Approved documentation contract; no code/tests/fixtures |
+| S3-02b1 | PROPOSED, not authorized: strict pure reader; version, shape, kind, unknown-field and duplicate-key rejection |
+| S3-02b2 | PROPOSED, not authorized: automatic every-object/every-kind walkers plus array edit, path/ID rename and binding checks; neither b1 nor b2 alone completes original b acceptance |
+| S3-02c | PROPOSED, not authorized: pure writer and independent round trips |
+| S3-02d | PROPOSED, not authorized: CLI-owned I/O, explicit replacement, temporary file then rename/replace preserving the original on failure |
+| S3-02e | DEFERRED, not dropped: external tables/references; original scope remains incomplete until e is done or the owner explicitly drops it |
+| S3-02f | PROPOSED, not authorized: two neutral synthetic drafts and headless registry; no rendered gallery |
+| S3-03a-d | PROPOSED, not authorized: static totals first; payload/fuel/named loading only in separately approved S3-03b with deliberate file-version extension |
+
+S3-02b2 must automatically exercise added/removed/reordered array elements
+and renamed paths/IDs. Stale/missing/orphan bindings reject; ID-preserving
+reorder already has matching records and must not reattach sources. Strict
+section/node order and grouped-array snapshots cover the other classes.
+If these tests prove impractical, stop/report for owner reconsideration;
+never weaken them. The array/object audit and exact coverage are in S3-02a.
+Parent requirements remain; no later task is authorized by these decisions.
 
 **Additional binding acceptance conditions (owner S3-01b Fix 4):**
 
@@ -513,7 +533,7 @@ needs owner decisions and a separately named task authorization.
   remain allowed where the operation does not require those values.
 
 These are future acceptance gates only. No serialization, readiness or export
-API is introduced here; S3-02 and S3-05 remain unstarted.
+API is introduced here; S3-02 implementation and S3-05 remain unstarted.
 
 ### S3-01 completion evidence
 

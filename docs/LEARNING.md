@@ -115,6 +115,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-20 | S3-01d Fix 9 | A source requirement must not depend on label length, kind text or UTF-8 byte count. A valid incomplete draft and an export-ready design are different contracts. Duplicate serialized fields must be tested in raw text because building a generic map can erase the evidence (S3_01D_VERIFICATION, Fix 9; ROADMAP S3-02/S3-05). |  |  |
 
+| 2026-11-21 | S3-02a approved document contract | Stable record IDs keep sources attached when lists reorder; a validated ordering rule and an ID are different guarantees. Whole-array provenance reduces metadata size, while consistency snapshots detect stale edits and require matching hand edits. An approved file contract does not authorize implementation or make a saved draft ready for simulator export. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

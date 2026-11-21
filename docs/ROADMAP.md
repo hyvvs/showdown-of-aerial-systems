@@ -285,6 +285,15 @@ export/report implementation is included. The requirements below are retained.
 
 ### S3-02 — Versioned designer document and loading — small, after S3-01
 
+**Documentation update (2026-11-21):** S3-02a is the approved contract in
+[S3_02_PLAN.md section 3](S3_02_PLAN.md#3-s3-02a-approved-document-contract),
+with owner answers recorded as D15-D22. Strict reader S3-02b1 and automatic
+walkers/binding checks S3-02b2 are separate PROPOSED tasks; no implementation
+is authorized. Inline tables come first; S3-02e is DEFERRED, not dropped,
+and original external-reference scope remains incomplete until it is done
+or the owner explicitly drops it. The contract supersedes earlier open
+schema recommendations below, while retaining every acceptance condition.
+
 - **Purpose:** save the semantic model without confusing it with simulator JSON.
 - **Inputs / outputs:** independently versioned designer JSON, local table
   references and source metadata; output parsed/validated model or clear
@@ -318,8 +327,9 @@ export/report implementation is included. The requirements below are retained.
   infer a missing kind from a label, value, unit or default. Before any
   design-writing export, enforce the declared required-kind contract for
   that operation and test that missing required kinds prevent writing.
-  These are acceptance conditions, not an implemented serializer or a choice
-  of wire-tag layout/version. S3-02 remains unstarted.
+  These are acceptance conditions, not an implemented serializer. The
+  approved wire-tag/version contract is now S3-02a; implementation remains
+  unstarted and requires separate task authorization.
 - **Mutations:** accept an object-shaped array; drop source metadata; resolve
   paths against the process directory; ignore a version or unknown field.
 - **Risks:** relative references breaking on relocation, schema drift and
