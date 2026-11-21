@@ -300,3 +300,72 @@ fn root_tip_direction_uses_positions_not_the_meaning_of_id_names() {
         d.validate().unwrap();
     }
 }
+
+// Fix 10 uses the existing independently specified geometry/values, changing
+// only opaque ID labels. Every added label/digest example is in the ledger.
+fn assert_distinct_station_id_pair(first: &str, last: &str) {
+    for &(kind, tip, mirrored) in CASES {
+        let mut d = design(kind, tip, mirrored);
+        let stations = &mut surface_mut(&mut d).stations;
+        stations[0].id = first.into();
+        stations[1].id = last.into();
+        let mut records: Vec<_> = expected("surface-a", tip)
+            .into_iter()
+            .map(|(path, value, unit)| {
+                let path = path
+                    .replace(".stations[tip]", &format!(".stations[{first}]"))
+                    .replace(".stations[root]", &format!(".stations[{last}]"));
+                (path, value, unit)
+            })
+            .collect();
+        records.sort_by(|a, b| a.0.cmp(&b.0));
+        d.provenance = records
+            .iter()
+            .map(|(path, value, unit)| (path.clone(), metadata(path, *value, unit)))
+            .collect();
+        d.validate().unwrap();
+        assert_eq!(endpoint_ids(&d), (first, last));
+        let actual: Vec<_> = d
+            .numbers()
+            .into_iter()
+            .map(|n| (n.path, n.value, n.unit))
+            .collect();
+        assert_eq!(actual, records);
+        assert_ne!(
+            d.provenance[&format!("components[surface-a].surface.stations[{first}].chord_m")]
+                .source_refs,
+            d.provenance[&format!("components[surface-a].surface.stations[{last}].chord_m")]
+                .source_refs
+        );
+    }
+}
+
+#[test]
+fn fix10_uppercase_a_and_lowercase_a_are_distinct_station_ids() {
+    assert_distinct_station_id_pair("A", "a");
+}
+
+#[test]
+fn fix10_ab_and_ba_remain_distinct_despite_byte_sum_collision() {
+    assert_distinct_station_id_pair("ab", "ba");
+}
+
+#[test]
+fn fix10_ac_and_ca_remain_distinct_despite_byte_sum_collision() {
+    assert_distinct_station_id_pair("ac", "ca");
+}
+
+#[test]
+fn fix10_abc_and_cba_remain_distinct_despite_byte_sum_collision() {
+    assert_distinct_station_id_pair("abc", "cba");
+}
+
+#[test]
+fn fix10_aa_and_az_remain_distinct_despite_first_character_collision() {
+    assert_distinct_station_id_pair("aa", "az");
+}
+
+#[test]
+fn fix10_pa_and_pb_remain_distinct_despite_first_character_collision() {
+    assert_distinct_station_id_pair("pa", "pb");
+}

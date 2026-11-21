@@ -26,3 +26,28 @@ obtained from Design::numbers. That inventory supplies test metadata only;
 production traversal and validation remain the behavior under test. References
 are the owner's stable-station-ID instructions, DECISIONS D18 and the approved
 S3_02_PLAN section 3. No new physical formula is introduced.
+
+## S3-02-ids2 Fix 10 — exact identity, synthetic labels only
+
+All six pairs below are SYNTHETIC TEST LABELS, not real identifiers or
+physical data. Every pair is accepted on each of the four existing surface
+cases, retaining distinct full-ID numeric paths and source records. Expected
+paths are remapped from the independently authored inventory, never obtained
+from production traversal. Geometry, physical values, structural indices and
+exact comparisons reuse the preceding ledger without change.
+
+| Synthetic ID pair | Byte lengths | Unsigned ASCII byte sums | First characters | Deliberately weak comparisons that collide |
+|---|---|---|---|---|
+| A / a | 1 / 1 | 65 / 97 | A / a | ASCII case-folding; length |
+| ab / ba | 2 / 2 | 195 / 195 | a / b | Byte sum; length |
+| ac / ca | 2 / 2 | 196 / 196 | a / c | Byte sum; length |
+| abc / cba | 3 / 3 | 294 / 294 | a / c | Byte sum; length |
+| aa / az | 2 / 2 | 194 / 219 | a / a | First character; length |
+| pa / pb | 2 / 2 | 209 / 210 | p / p | First character; length |
+
+The sums/lengths are hand-checkable properties of these literal ASCII labels,
+not identity algorithms to implement. Scratch mutations b and h substitute
+ASCII-lowercased identity or byte-sum-only identity; additional h variants
+use length-only and first-character-only identity. These settings introduce
+no numerical tolerance or physical formula. Full string comparison remains
+the production behavior. Source: owner's Fix 10 request and D18 opaque IDs.
