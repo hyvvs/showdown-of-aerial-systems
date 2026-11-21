@@ -93,6 +93,20 @@ pub struct Surface {
     pub incidence_rad: Radians,
     pub stations: Vec<Station>,
 }
+/// Station identity must be supplied explicitly, never synthesized from position.
+/// This example intentionally omits it and must not compile. All example
+/// numbers are synthetic structural values: tests/fixtures/station_id_values.md.
+///
+/// ```compile_fail,E0063
+/// use soas_core::units::Radians;
+/// use soas_designer::Station;
+/// let _missing_id = Station {
+///     leading_edge_body_m: [0.0; 3],
+///     chord_m: 1.0,
+///     twist_rad: Radians::new(0.0).unwrap(),
+///     airfoil: None,
+/// };
+/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct Station {
     /// Defining coordinates, not derived span/area/MAC values.
