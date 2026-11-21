@@ -294,6 +294,14 @@ and original external-reference scope remains incomplete until it is done
 or the owner explicitly drops it. The contract supersedes earlier open
 schema recommendations below, while retaining every acceptance condition.
 
+**Fix 11 scope clarification:** current model checks establish path coverage,
+not historical attribution. OPEN BIND gates/candidate mechanisms are in
+S3_02_PLAN section 3.3.1. Only the policy-dependent S3-02b2 binding tests wait
+for a mechanism choice; S3-02b1 can be separately authorized with its
+declaration limits recorded, and object/kind checks need not wait. No reader
+is authorized or started by this follow-up. The proposed 64-character
+station/component ID cap is not approved or implemented.
+
 - **Purpose:** save the semantic model without confusing it with simulator JSON.
 - **Inputs / outputs:** independently versioned designer JSON, local table
   references and source metadata; output parsed/validated model or clear
@@ -534,6 +542,12 @@ schema recommendations below, while retaining every acceptance condition.
   solver residuals, stale/missing inputs and qualitative confidence flags.
   Show **"code-to-code cross-checked and analytic-case verified; not experimentally validated"**
   verbatim on both outputs, alongside the conceptual-use notice from VISION.
+  Until an attribution mechanism is chosen, both the validation page and
+  every report also state **"Source attribution is declared by the author
+  and is not machine-verified."** Declared sources/origin flags cannot imply
+  historical verification. A later approved/implemented mechanism must name
+  its exact scope and remaining limits; a checksum/signature does not prove
+  physical truth or experimental validation.
   No aggregate “safe to fly” verdict; export failure must not suppress a
   useful geometry-only report. CLI command spelling awaits implementation scope.
 - **Independent tests:** hand-authored complete/partial/failed-result records,
@@ -541,11 +555,15 @@ schema recommendations below, while retaining every acceptance condition.
   parsed report assertions for missing/stale data, source links, negative
   margin, trim failure and Mach warning. A separately written synthetic
   end-to-end expected record checks model-to-report/export agreement.
+  Pin the source-attribution notice in both outputs and reject a claim of
+  machine-verified attribution without an implemented, documented mechanism.
 - **Mutations:** omit/alter the disclaimer; hide a missing tail contribution;
   claim an external/experimental comparison that never ran; print unavailable
   as zero or green success; omit escaping; show stale data as current;
   remove a flag beside any numeric value or either mandatory stall notice;
   name or imply a synthetic template is a real aircraft.
+  Removing the source-attribution notice or labelling declared attribution
+  as verified without evidence must fail the report/validation-page tests.
 - **Risks:** persuasive presentation overstating conditional outputs; no
   confidence percentages or pass thresholds. Every number displays its exact
   machine-readable provenance flag(s), including individual vector/tensor

@@ -121,6 +121,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-21 | S3-02-ids2 Fix 10 | Case-sensitive identifiers can differ only by letter case and still name different records. A byte sum, length or first character loses information, so equal digests do not establish equal IDs. Positive acceptance tests detect uniqueness rules that incorrectly reject valid distinct records. |  |  |
 
+| 2026-11-21 | S3-02-ids2 Fix 11 | A complete path map does not prove which source originally described a value; structurally valid ID/source swaps can pass. A value snapshot detects a mismatch, while a trusted digest/signature needs an external trust basis and still does not establish physical truth. Shared-type changes and their fixture migrations belong in one buildable commit; a proposed identifier cap is not an implemented rule. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

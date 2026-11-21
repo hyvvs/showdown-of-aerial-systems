@@ -2,6 +2,79 @@
 
 Keep this honest and current. Every simplification the code makes belongs here. Reports and the README link to it.
 
+## S3-02-ids2: provenance coverage and attribution limits (Fix 11)
+
+The current in-memory provenance checks establish numeric-path presence and
+declared unit/flag/source/reference validity, **not historical binding**.
+Swapping existing station IDs without moving geometry can leave the same
+complete path set and still validate. Swapping existing same-unit source
+records can also validate. Independent characterization tests demonstrate
+both cases; source text can be nonempty and distinct yet attributed wrongly.
+No trusted previous assignment is stored in the model.
+
+The approved future file mechanisms have specific limits:
+
+- ID paths preserve identity during whole-record reordering and reject
+  missing/orphan keys. They cannot generally detect exchange of already
+  existing IDs or source declarations. For stations, the future leading-edge
+  vector snapshot would detect an ID-only swap with different coordinates
+  and unchanged snapshots; that snapshot is not implemented in today's model.
+- Strict ordering rejects permutations of fuselage sections/table nodes.
+  It does not compare source history; ordered values with swapped sources
+  can still pass. Table axes have whole-axis metadata without value snapshots.
+- Whole-vector/tensor/angle/sample-block value/null snapshots detect
+  different values paired with stale snapshots, not an unchanged value/null
+  with a different source. Engine sources apply to axes/blocks, not cells.
+- Flag/source/dependency metadata validation checks declarations and valid
+  references; it does not authenticate attribution. A source-only swap with
+  matching values is structurally indistinguishable from an intentionally
+  authored declaration without trusted prior evidence.
+
+S3_02_PLAN section 3.3.1 gives the exhaustive category matrix and OPEN
+BIND-01 (existing-ID history beyond snapshot mismatch), BIND-02 (same-unit
+record reassignment) and BIND-03 (source-only/equal-value reassignment) gates.
+Candidates are a source/value content hash, a trusted whole-document hash or
+signature, explicit acceptance/disclosure of author declarations, or unique
+source records; each has different consistency, trust and editing limits.
+The recommendation is explicit declaration/disclosure for the first format;
+**no mechanism is selected**. Self-contained editable hashes and unique
+records alone do not prove historical ownership or physical source truth.
+
+Only the policy-dependent S3-02b2 binding tests wait for the owner choice.
+S3-02b1 strict reading and unrelated work can be separately authorized with
+the limit in their acceptance notes; object/kind checks do not wait on it.
+No reader starts here. Until a mechanism is chosen, every report and the
+validation page must state: **"Source attribution is declared by the author
+and is not machine-verified."** A later mechanism must describe its actual
+scope; source links/origin flags/checksums never imply experimental validation.
+
+### Proposed station/component ID length limit
+
+**PROPOSED, NOT APPROVED:** 64 characters for station and component IDs.
+The owner's proposed value bounds path/error/report size and accidental
+resource use; it is not a physical threshold or externally established
+standard. Current IDs are ASCII, so byte/character counts coincide. Current
+code has no such cap. No length check, truncation, renamed ID or boundary
+test is introduced before owner approval. Display names, sources and other
+ID kinds are not implicitly capped. Full case-sensitive identity comparison
+is retained; a length cap would not justify hash-only equality.
+
+### Future shared-type changes and fixture migration
+
+Any future model change altering a type used by fixtures must commit the
+type change and all affected fixture/construction-site migration **together**,
+with a commit message explicitly saying so, so every commit builds.
+Tests-first commits must compile; intended failing assertions are different
+from an uncompilable tree. If a buildable test strategy is unclear, stop and
+agree it before committing. Preserve existing values/assertions/signs/
+tolerances unless separately authorized, and run gates on the combined
+change. This prospective rule does not rewrite the old station-ID history.
+
+Sources: owner Fix 11 request and subsequent binding-gate clarification;
+DECISIONS D18; S3_02_PLAN section 3; S3_02_IDS2_VERIFICATION evidence. No
+production rule, numerical model, length cap or historical-binding mechanism
+is implemented by this documentation change.
+
 ## S3-01b declaration checks
 
 - Fix 9 tests USER_SUPPLIED source rejection independently of long ASCII,

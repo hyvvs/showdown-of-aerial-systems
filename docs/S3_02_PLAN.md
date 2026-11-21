@@ -9,6 +9,11 @@ S3-02b1/b2 and all subsequent implementation tasks remain PROPOSED until
 individually authorized; S3-02e is DEFERRED, not dropped. No code, tests or
 fixtures are created by this documentation task.
 
+**Fix 11 clarification:** the later station-ID model checks path presence,
+not attribution history. The OPEN binding gates in section 3.3.1 apply only
+to the policy-dependent S3-02b2 binding tests. S3-02b1 can be separately
+authorized with the limits recorded; no reader starts in this batch.
+
 ## 1. What S3-02 currently contains
 
 The current queue calls S3-02 an independently versioned designer document
@@ -60,6 +65,10 @@ make the current "small" label optimistic for a single reviewable batch.
 
 Only the S3-02a documentation contract is approved. All implementation child
 IDs below are **PROPOSED, NOT AUTHORIZED**, except DEFERRED S3-02e.
+The historical-attribution choice holds only the policy-dependent b2 binding
+tests. References to b2 in other task dependencies retain the independently
+specified structural/kind checks; they do not create a blanket hold on
+unrelated reader/writer/template work. No task may claim the held tests pass.
 Sizes describe relative implementation/review effort, not calendar promises.
 Each task needs separate authorization, tests first, the normal gates and
 recorded mutation evidence when implementation is requested. Proposed tests
@@ -100,6 +109,11 @@ tolerances and formula sources must be justified before implementation.
   meaning from a label; discard grouping/IDs while translating wire records.
 - **Risks:** permissive struct decoding and diagnostics that report the wrong
   problem. Reuse existing core/CLI shape-test lessons, not their aircraft schema.
+- **Acceptance limit:** parsing/current-model validation is not historical
+  source verification. Preserve IDs, declarations and specified snapshots;
+  report precisely which structural/consistency checks ran. OPEN section
+  3.3.1 gates do not block b1. Do not invent digest fields, a length cap or
+  source-authentication behavior; unknown fields still reject.
 
 ### S3-02b2 — Automatic walkers and provenance-edit checks — PROPOSED, small/medium
 
@@ -126,6 +140,10 @@ tolerances and formula sources must be justified before implementation.
   detect every equal-unit permutation. If the required automatic binding
   checks prove impractical, stop and report for owner reconsideration of
   value-plus-metadata layout; never claim completion by shrinking coverage.
+- **Narrow hold:** only binding tests whose expected result needs the OPEN
+  historical-attribution choice wait for that choice. Object/kind walkers
+  and independent structural checks do not wait on it. Neither portion is
+  authorized for implementation by this document.
 
 ### S3-02c — Pure writer and draft round trips — small
 
@@ -282,7 +300,8 @@ binding clarification, applied in that order:
 
 ### 3.1 Exhaustive array and object inventory
 
-IDs in this table mean explicit immutable identity fields, not display labels.
+IDs in this table mean explicitly declared stable identities, not display
+labels; today's mutable in-memory model cannot establish their history.
 "Owned" means a singleton named object inherits its parent ID/field address;
 it does not need a new ID. Structural metadata is validated but does not
 recursively require provenance about its own provenance. The tables enumerate
@@ -520,6 +539,117 @@ to a named vector/tensor as a whole, never to a moving list index. Metadata-
 only arrays receive their own flag/source/reference validity probes rather
 than recursive provenance. If any required case proves impractical, stop
 and report to the owner; do not weaken the check or choose a new layout.
+
+### 3.3.1 Fix 11: path presence, consistency and OPEN historical-binding gates
+
+**Current model behavior, demonstrated by tests:** each numeric path needs
+valid metadata, with correct units/flags, nonblank source text and valid
+references. There is no trusted previous ID-to-value/source assignment in
+the model. Exchanging the existing first/last station IDs without moving
+geometry can leave the same complete path set and still validate. Swapping
+the two existing chord source records, both with unit m, can also validate.
+Unique IDs/source strings and a complete map do not establish historical
+binding. These are limits, not successful S3-02b2 binding checks. See
+[Fix 11 evidence](S3_02_IDS2_VERIFICATION.md#fix-11--path-presence-and-historical-attribution-limits).
+
+The following table accounts for every array category in section 3.1. File
+mechanisms remain future requirements, not claims about the current model.
+They detect specific internal inconsistencies; none alone establishes who
+originally attributed a source to a value.
+
+| Contract array category | Exact specified detection mechanism | What can still pass / historical limit |
+|---|---|---|
+| components, controls, engine_tables, contributions and contribution.parameters | M1 full ID plus field; uniqueness, reference resolution and exact key coverage. Whole-record reorder preserves the same mapping. M3 child snapshots may detect different numeric arrays under a swapped ID. | Exchanging already existing IDs can preserve all keys/references. Scalar data have no value snapshot; identical numeric payloads also give no snapshot discrepancy. No general historical detector is specified. |
+| surface.stations, all kinds | M1 station ID under surface ID. Future M3 leading-edge-vector snapshot detects an ID-only swap with different coordinates and stale metadata, by comparing each ID's actual vector with its snapshot. | Today's model has no snapshots. Key coverage alone permits ID swaps. Updating snapshots together with a declaration, or moving source-only content, leaves no evidence of the previous assignment. ID spelling cannot choose a physical position. |
+| fuselage.sections | M2 strictly increasing aft_m rejects a nonidentity permutation of section records; index-path coverage detects missing/orphan records. | Data can remain ordered while same-unit source records exchange. Order validation compares geometry, not source history; scalar records have no snapshot. |
+| table.mach_nodes, geometric_altitude_nodes_m, throttle_nodes | M2 strict increase rejects node permutations; table dimensions/core bounds reject incompatible shapes. M3 supplies one record per axis, not per node. | There is no axis value snapshot in this contract. An ordered, dimension-consistent edit or same-unit source-only change is not historical verification. |
+| table.samples and both nested slice/row arrays | M3 one whole sample-block snapshot compares every named cell/value, with axis dimensions and closed mixed units. Unequal-cell/slice permutation with a stale snapshot rejects. | Matching snapshots or a source-only edit still validate structurally. No per-cell source assignment exists; never invent per-cell provenance to claim history. |
+| leading_edge_body_m, nose_body_m, cg_body_m, engine.position_body_m/direction_body_unit, both hinge vectors | M3 one complete vector/null record with exact value/null snapshot; fixed axis slots, shape and current geometric checks. Different-value permutations with stale snapshots reject. | Equal-value permutations change no value; source-only changes leave the snapshot valid. Whole-vector attribution does not encode separate coordinate histories. |
+| tensor_kg_m2 outer array and each row | M3 one complete tensor snapshot plus shape/symmetry/positive-definiteness checks. A changed tensor with a stale snapshot rejects. | An unchanged tensor with different declared sources still matches; tensor validity cannot verify attribution. |
+| axes_euler_rad | M3 complete angle-vector snapshot in declared roll/pitch/yaw slots. | Matching values/null do not identify which source should have been declared. |
+| metadata.provenance_flags | Declared flag domain/order/uniqueness and input-presence rules. | A permitted origin flag is an author declaration, not evidence of historical ownership. |
+| metadata.source_refs | Nonempty list, every source/explanation nonblank; part of its owner record. | Swapping valid source text only is invisible to value snapshots, order and key coverage. No source lookup/authentication is specified. |
+| metadata.input_paths | Existing binding-key references and no self-reference. | Exchanging two valid dependency references can still resolve; coverage does not prove the author intended those dependencies. |
+| metadata.value_snapshot arrays, tensor rows and sample levels | Compare the snapshot against the bound defining value, using the same shapes/closed cell objects. No recursive provenance about snapshots. | Coordinated edits still match; an unchanged value/null with a different source still matches. |
+
+**OPEN gates for S3-02b2 (no mechanism chosen):**
+
+| Gate | Plain-language synthetic example | Current/file checks that help | Uncovered case / decision needed |
+|---|---|---|---|
+| BIND-01: existing-ID reassignment beyond snapshot mismatch | Exchange two already existing IDs while leaving the records in place; all referenced IDs still exist. | Full-ID paths reject missing/new/orphan keys. A station's different coordinate vector will fail its future stale M3 snapshot. | M1 alone cannot detect reassignment. Scalar-only or identical-payload cases, and coordinated snapshot edits, need an explicit policy about history. Never infer it from names. |
+| BIND-02: same-unit record reassignment | Exchange two existing chord metadata records; both still declare metres and valid source text. | Missing paths/wrong units reject. Where a whole record contains a snapshot, moving it to a different value rejects if that snapshot no longer matches. | Scalars currently have no snapshots; equal-value/null records still match. Mere source-record uniqueness is insufficient. |
+| BIND-03: source-only/equal-value reassignment | Keep every value/null and snapshot, but exchange the two source declarations. | Empty text, invalid flags and malformed records reject. | No structural check can recover the original attribution from the final valid document. A matching value is not proof of its stated source. Owner must choose the policy/mechanism below. |
+
+The last case is not a missing string comparison: the identical final
+document could have been authored intentionally or produced by a source
+swap. A validator sees the same bytes in both cases. Without trusted prior
+evidence it cannot distinguish those histories. Inline fingerprints can
+check internal consistency, but cannot independently certify attribution.
+
+**Candidate mechanisms — options only, not decisions.** A hash is a content
+fingerprint; to prove historical change it needs a trusted comparison value.
+None of the candidates establishes that a cited experiment actually measured
+the declared quantity. Full String identity remains required; a fingerprint
+must never replace collision-safe identity equality.
+
+| Candidate | Detects | Misses / dependencies | Hand-editing cost |
+|---|---|---|---|
+| (a) Hash of a provenance record's source text and bound value/null, stored with the record | Stale accidental edits if the stored fingerprint is not updated; complete record moves to unequal values can fail recomputation. | Same-value moves can still match if owner ID/path is not included. Including the owner would need approval. Anyone able to edit both content and an untrusted inline hash can recompute it. Algorithm, canonical representation, versioning and any dependency need approval; no authenticity claim. | Every covered value/source edit needs recomputation; an editing tool or an exact manual procedure is needed. |
+| (b) Hashed or signed whole-document digest | A mismatch with a trusted external digest detects an edit. A signature requires a trusted signing key. Coverage could include all IDs, values and sources. | An editable digest stored only in the same document is recomputable. A whole-document check does not tell an intended correction from an error or prove source truth. Text versus canonical-content hashing, anchors/keys and dependencies are unsettled. | Recompute/re-sign after every covered edit; raw-text hashing also reacts to formatting. Key/trust management adds work. |
+| (c) Accept and disclose author-declared attribution | Makes the claim honest while retaining all structural/unit/order/snapshot checks and human source review. | Deliberately accepts the historical-attribution limit; would require the owner's explicit adjustment of policy-dependent binding acceptance. It does not detect the source-only swap. | Lowest: normal edits plus visible source/assumption declarations; every report and format document must carry the limit. |
+| (d) Unique source records per value/approved aggregate | Duplicate/reused source-record identities can be rejected; distinct visible content can help human review notice a swap. | Swapping two distinct valid records still preserves uniqueness. Need a trusted owner link to prove assignment. Numeric per-cell records would conflict with D18 table grouping and require another decision; never add them silently. | More records/labels and reference maintenance, even when many values legitimately cite one source. |
+
+**Recommendation, not selection:** (c) for the first provisional format,
+with explicit author-declared attribution, rather than implying historical
+verification. If accidental-edit detection is also desired, consider (a)
+as an additional limited check after its representation is approved. No
+candidate is selected or implemented here. The owner's choice must close
+the applicable BIND gates and specify the corresponding b2 assertions;
+existing gates are not silently removed or weakened.
+
+**Dependency boundary:** only policy-dependent S3-02b2 binding tests wait
+for this choice. S3-02b1 strict reading and other unrelated work can be
+separately authorized; object/kind walkers need not wait either. Reader
+acceptance must state that source attribution is declared and not
+machine-verified, retain structural checks and avoid unsupported history
+claims. A later selected mechanism that changes fields needs explicit
+version handling, not a permissive extension bucket. No reader starts now.
+
+Until a mechanism is chosen, every report and the validation page must say
+**"Source attribution is declared by the author and is not machine-verified."**
+If a mechanism is later chosen/implemented, describe its exact scope and
+remaining limits; a checksum/signature does not validate aircraft physics.
+ROADMAP S3-09 carries this output and mutation-test requirement.
+
+### 3.3.2 Proposed ID length cap — owner decision needed
+
+**PROPOSED, NOT APPROVED:** at most 64 characters for station and component
+IDs, retaining exact case-sensitive full-string comparison. Current IDs
+are ASCII, so character and byte counts coincide. The purpose is to bound
+path/error/report length and resource use for accidental extreme identifiers,
+not to claim a physically meaningful or externally standardized threshold.
+The value comes from the owner's Fix 11 proposal request.
+
+Options: approve this cap; retain current uncapped length; or ask for a
+different justified limit. Recommend the proposed cap for readability and
+bounded paths, pending owner approval and a compatibility decision. There
+is **no length validation code or boundary test added now**. Do not truncate,
+hash, case-fold or rename existing IDs automatically. Other ID kinds and
+free display-name/source text are not implicitly capped. This proposal
+does not block unrelated work or b1 using today's declared ID rules.
+
+### 3.3.3 Future type/fixture changes must compile together
+
+For a future model change that alters a type used by fixtures, put the type
+change and **all required fixture/construction-site migration in one commit**.
+The commit message must explicitly say that it contains the type change and
+fixture migration together. Every commit must build. Tests-first commits
+must compile against their current tree; an intended failing assertion is
+different from an uncompilable tree. If a buildable tests-first design is
+not specified, stop and agree the workflow before committing a broken API.
+Keep fixture numbers/assertions/signs/tolerances unchanged unless separately
+authorized, and run the gates on the combined change. This is prospective;
+the old station-ID commit history is retained. No shared type changes here.
 
 This approved wire binding differs from today's in-memory per-element
 traversal. Future b1 must preserve the station/parameter IDs and grouped
