@@ -119,6 +119,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-21 | S3-02-ids stable station identity | An opaque station ID keeps a source attached when list positions change; the first and last positions still define root and tip. Identity can be unique within one surface while reused on another, because provenance includes the parent surface ID. A compile-fail example checks missing required fields, while exact error tests distinguish identity rejection from a later unrelated provenance error. |  |  |
 
+| 2026-11-21 | S3-02-ids2 Fix 10 | Case-sensitive identifiers can differ only by letter case and still name different records. A byte sum, length or first character loses information, so equal digests do not establish equal IDs. Positive acceptance tests detect uniqueness rules that incorrectly reject valid distinct records. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

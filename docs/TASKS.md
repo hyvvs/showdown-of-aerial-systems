@@ -511,6 +511,14 @@ none failed/ignored; three gates pass. All five isolated scratch mutations
 fail. Fixture migration adds only IDs, with unchanged expected_numbers and
 all existing assertions/values/signs/tolerances; all 51 consumers are listed.
 
+S3-02-ids2 Fix 10 [x] completed: case-sensitive/full-string regressions added;
+production already correct, tests pass immediately. Six synthetic pairs
+remain distinct, including A/a and weak-digest collisions. Case-fold,
+byte-sum, length-only and first-byte-only scratch variants fail after a
+package clean before each mutation. Three gates pass; 249 tests passed,
+none failed/ignored. Gates/evidence:
+[S3_02_IDS2_VERIFICATION.md](S3_02_IDS2_VERIFICATION.md). No reader started.
+
 **Additional binding acceptance conditions (owner S3-01b Fix 4):**
 
 - S3-02 designer JSON/file loading: an automatic object-shape regression
