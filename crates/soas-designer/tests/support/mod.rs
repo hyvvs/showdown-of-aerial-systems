@@ -16,6 +16,7 @@ pub fn fixture() -> Design {
             incidence_rad: rad(0.02),
             stations: vec![
                 Station {
+                    id: "0".into(),
                     leading_edge_body_m: root,
                     chord_m: 2.0,
                     twist_rad: rad(0.0),
@@ -27,6 +28,7 @@ pub fn fixture() -> Design {
                     }),
                 },
                 Station {
+                    id: "1".into(),
                     leading_edge_body_m: tip,
                     chord_m: 1.0,
                     twist_rad: rad(-0.03),

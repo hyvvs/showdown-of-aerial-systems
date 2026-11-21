@@ -1,5 +1,14 @@
 # S3-01 numeric ledger — SYNTHETIC TEST VALUES ONLY
 
+S3-02-ids migration: the first/last stations on wing, tail and fin explicitly
+receive opaque string IDs "0"/"1", each unique only within its surface.
+These strings are identities, not numbers, positions or geometric meanings;
+they are not generated or interpreted as indices. They intentionally leave
+the independently authored expected_numbers paths exactly unchanged. Only ID
+fields are added to support::fixture; every physical value, expected number,
+assertion, sign and tolerance is unchanged. New independent station_ids tests
+use adversarial alphabetic IDs to distinguish ID-based from index-based paths.
+
 No number represents any real aircraft, airfoil, loading or engine. `support::expected_numbers`
 is the per-path inventory; its explicit paths and the tables below jointly label EVERY
 new numeric value. The fixture's provenance is populated from that independently authored

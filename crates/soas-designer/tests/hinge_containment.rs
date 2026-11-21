@@ -23,12 +23,14 @@ fn own_design(kind: SurfaceKind, tip: [f64; 3], start: [f64; 3], end: [f64; 3]) 
                 incidence_rad: zero,
                 stations: vec![
                     Station {
+                        id: "0".into(),
                         leading_edge_body_m: [0.0; 3],
                         chord_m: 2.0,
                         twist_rad: zero,
                         airfoil: None,
                     },
                     Station {
+                        id: "1".into(),
                         leading_edge_body_m: tip,
                         chord_m: 2.0,
                         twist_rad: zero,

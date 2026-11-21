@@ -95,3 +95,9 @@ shared fixture. All geometry below is SYNTHETIC TEST DATA, not aircraft data.
   2.220446049250313e-15 and 5.329070518200751e-15 m. These are results of the
   documented algorithm on synthetic data, never hard-coded acceptance bounds.
   Evidence: target/s3-01c2/span-roundoff-trace.txt.
+## S3-02-ids identity-only fixture migration
+
+The independent hinge_containment geometry adds opaque station IDs "0" and
+"1" to its existing two Station records. No coordinate, expected number,
+assertion, physical sign or tolerance changes. IDs are required defining
+labels with no geometric interpretation, not generated list indices.

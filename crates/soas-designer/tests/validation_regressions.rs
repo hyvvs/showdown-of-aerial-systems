@@ -424,6 +424,7 @@ fn empty_and_unordered_stations_have_specific_errors_for_every_surface_kind() {
         let mut d = fixture();
         let s = surface(&mut d, i);
         let mut middle = s.stations[1].clone();
+        middle.id = "extra".into();
         for axis in 0..3 {
             middle.leading_edge_body_m[axis] +=
                 s.stations[1].leading_edge_body_m[axis] - s.stations[0].leading_edge_body_m[axis];

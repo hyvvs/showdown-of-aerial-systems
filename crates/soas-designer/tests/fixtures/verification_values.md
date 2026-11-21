@@ -81,3 +81,10 @@ zero. All units and settings below are schema tests, not aircraft values.
 - Parameter/component index 0 is the existing tail-law parameter; true/false
   selects present versus absent state. All original fixture data, expectations
   and tolerances remain unchanged.
+## S3-02-ids identity-only setup migration
+
+The existing unordered-interior-station regression clones a station solely
+to make an invalid ordering. Assign the clone the unique opaque ID "extra"
+so that its original ordering error remains the error under test. This adds
+identity only; all coordinates, indices, expected error assertions and
+numeric values remain unchanged. No duplicate-ID guard is bypassed.
