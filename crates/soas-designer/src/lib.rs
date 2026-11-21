@@ -109,6 +109,8 @@ pub struct Surface {
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct Station {
+    /// Opaque identity, unique within the surface. Root/tip are list positions.
+    pub id: String,
     /// Defining coordinates, not derived span/area/MAC values.
     pub leading_edge_body_m: [f64; 3],
     pub chord_m: f64,

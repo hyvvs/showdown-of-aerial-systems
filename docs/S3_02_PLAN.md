@@ -525,7 +525,13 @@ This approved wire binding differs from today's in-memory per-element
 traversal. Future b1 must preserve the station/parameter IDs and grouped
 provenance through load/save, adapting semantic storage/validation explicitly
 where necessary; rebuilding per-index metadata and discarding original
-bindings is forbidden. No such code change is made or authorized here.
+bindings is forbidden. Recording this contract alone does not authorize code.
+
+**Later station-only authorization (2026-11-21):** S3-02-ids implements
+required in-memory station IDs and ID-based station numeric paths, with an
+identity-only fixture migration. This is a prerequisite model change, not
+S3-02b1/b2 or codec work. Other wire changes above remain unimplemented;
+see [station-ID evidence](S3_02_IDS_VERIFICATION.md).
 
 ### 3.4 Error contract and write boundary
 

@@ -117,6 +117,8 @@ After each task, the agent adds the date, task and **Concepts introduced** only,
 
 | 2026-11-21 | S3-02a approved document contract | Stable record IDs keep sources attached when lists reorder; a validated ordering rule and an ID are different guarantees. Whole-array provenance reduces metadata size, while consistency snapshots detect stale edits and require matching hand edits. An approved file contract does not authorize implementation or make a saved draft ready for simulator export. |  |  |
 
+| 2026-11-21 | S3-02-ids stable station identity | An opaque station ID keeps a source attached when list positions change; the first and last positions still define root and tip. Identity can be unique within one surface while reused on another, because provenance includes the parent surface ID. A compile-fail example checks missing required fields, while exact error tests distinguish identity rejection from a later unrelated provenance error. |  |  |
+
 ## T4 concepts introduced: equations of motion in plain language
 
 An aircraft can move in three directions and rotate about three axes. These

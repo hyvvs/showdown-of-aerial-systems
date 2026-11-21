@@ -370,8 +370,10 @@ fn validate_surface(s: &Surface, p: &str) -> Result<(), DesignError> {
         p,
         "need at least root and tip stations",
     )?;
+    let mut station_ids = BTreeSet::new();
     for (i, a) in s.stations.iter().enumerate() {
         let p = format!("{p}.stations[{i}]");
+        identity(&a.id, &format!("{p}.id"), &mut station_ids)?;
         finite(&a.leading_edge_body_m, &format!("{p}.leading_edge_body_m"))?;
         positive(a.chord_m, &format!("{p}.chord_m"))?;
         if i > 0 {

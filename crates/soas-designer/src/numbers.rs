@@ -31,8 +31,8 @@ impl Design {
                         Some(s.incidence_rad.value()),
                         "rad",
                     );
-                    for (i, s) in s.stations.iter().enumerate() {
-                        let p = format!("{p}.stations[{i}]");
+                    for s in &s.stations {
+                        let p = format!("{p}.stations[{}]", s.id);
                         n.vector(
                             &format!("{p}.leading_edge_body_m"),
                             Some(s.leading_edge_body_m),

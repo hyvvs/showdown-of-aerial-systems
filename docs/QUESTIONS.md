@@ -218,18 +218,20 @@ in S3_01C_VERIFICATION. Root/tip and slightly-outside tests use independently
 constructed geometry and do not depend on the corrected shared fixture.
 Status: RESOLVED. No S3-02 work starts.
 
-## 2026-11-21 — S3-02 stable station IDs: prerequisite base — OPEN
+## 2026-11-21 — S3-02 stable station IDs: prerequisite base — RESOLVED
 
 - **Task:** task/s3-02-ids, stable station ID model change only.
-- **What blocked:** the owner requested a branch from main using the
-  approved S3-02a contract. Main is still at 72ac5bf: it contains
+- **What blocked originally:** the owner requested a branch from main using the
+  approved S3-02a contract. Main was still at 72ac5bf: it contained
   soas-designer but not S3_02_PLAN.md or DECISIONS D15-D22. The contract
   commit d16745a is on docs/s3-02-plan and is not an ancestor of main.
 - **Options with trade-offs:** wait for the owner to merge the reviewed
   documentation into main (recommended; preserves the requested base), or
   explicitly authorize creating task/s3-02-ids from docs/s3-02-plan
   (available contract immediately, but changes the requested base).
-- **Status:** OPEN; owner answer requested. No task branch, model/test
-  change, fixture migration or commit has been made. This blocker log is
-  uncommitted on the current docs/s3-02-plan branch. Stop before implementation
-  under AGENTS.md Batch mode; do not start any S3-02 child task.
+- **Status:** RESOLVED after the owner's merge confirmation. Verified main
+  at 6c63ab2 contains d16745a as an ancestor, S3_02_PLAN.md in its tree and
+  DECISIONS D15-D22; 6c63ab2 also commits this original blocker log. Created
+  fresh task/s3-02-ids from that main. Continue only the authorized station-ID
+  model/tests and separate fixture/ledger migration; no reader/writer or other
+  S3-02 child is authorized.

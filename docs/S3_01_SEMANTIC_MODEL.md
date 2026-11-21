@@ -5,8 +5,10 @@
 `soas-designer` is a pure in-memory library depending on core/estimator, with
 no file I/O, clock, threads, random state or reverse dependency. It describes
 components and validates input structure; it does not generate an aerodynamic
-model, calculate mass/CG, export an aircraft, or define designer JSON. S3-02
-and all later tasks remain unstarted. The owner contract is ROADMAP.md,
+model, calculate mass/CG, export an aircraft, or define designer JSON. S3-02a
+is now an approved documentation contract; the separately authorized
+S3-02-ids change adds stable station identity only. Reader/writer and other
+S3-02 implementation tasks remain unstarted. The owner contract is ROADMAP.md,
 Recorded owner decisions / S3-01 / Machine-readable number provenance.
 
 Tests-first commit: `7051e75 Task S3-01: tests`. It contains only tests,
@@ -232,6 +234,38 @@ all former unit strings remain probes, all original semantic/numeric/sign
 assertions remain, and no tolerance is loosened. See S3_01C_VERIFICATION.md.
 
 ### Numeric provenance records
+
+**S3-02-ids model update (2026-11-21).** Every Station has a required
+`id: String`, unique within its parent surface, using the existing nonempty
+ASCII-letter/digit/hyphen/underscore identity rule. Empty/whitespace-only
+IDs reject; omission is a compile-time missing-field error, not an inferred
+default. The same ID is allowed on another surface. The ID carries no
+meaning: root/tip are the first/last list positions and actual coordinates,
+not ID names or lexical order. Physical station order, hinge order,
+containment, sign expectations and numerical checks are unchanged.
+
+Current in-memory station paths are
+`components[surface-id].surface.stations[station-id].field`, including
+section inputs and the existing vector-element suffixes. Numeric traversal
+never substitutes a station's index, including on mirrored surfaces.
+Original geometry-error diagnostics still identify offending list positions;
+new identity errors add `.id` at that position. Mirroring still reflects
+declared physical points; it does not create a second independent station ID
+or source. Missing/orphan metadata remains an error.
+
+A full vertical/ventral station reversal can still pass the existing
+direction-relative ordering rule. Comparing the first/last IDs detects that
+role change while each station's source remains attached to its same ID;
+this task does not add a new reversal prohibition. Independent tests use
+IDs `tip` at the first position and `root` at the last to prove names do not
+select positions. Identity coverage cannot certify a source as truthful.
+
+Only station identity is implemented here. The approved **file** contract's
+geometry-wrapper address prefix, supplied-parameter IDs, grouped array/table
+records, snapshots and strict JSON codec are later work. Existing in-memory
+per-number provenance elsewhere is retained. Sources: DECISIONS D18;
+S3_02_PLAN section 3; owner's station-ID-only authorization. Full evidence,
+unchanged fixture/expected-number diffs and consumers: S3_02_IDS_VERIFICATION.md.
 
 `numbers()` traverses all typed numeric inputs, including engine table nodes/
 samples and each tensor element, and sorts paths. Every path requires parallel
