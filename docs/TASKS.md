@@ -474,6 +474,13 @@ CLmax. (Owner choice 5/acceptance instruction; ROADMAP, Geometry-change acceptan
 | S3-09 | Headless HTML report and validation/evidence page with exact disclaimer; after S3-02/04/06/07/08. | [ ] Planned; not authorized |
 | S3-10 | Later box/cylinder/ellipsoid inertia helper with rotation/parallel-axis accounting and explicit approximate qualifier; after S3-03 and report support. | [ ] Later; not authorized |
 
+**PROPOSED split — NOT AUTHORIZED:** [S3_02_PLAN.md](S3_02_PLAN.md) proposes
+S3-02a–f (contract, reader, writer, CLI I/O, conditional external tables and
+template/registry companion work) and S3-03a–d (mass/CG, loading and inertia
+steps). These are proposal labels, not active task authorizations or completed
+work. Original parent requirements/statuses remain unchanged; implementation
+needs owner decisions and a separately named task authorization.
+
 **Additional binding acceptance conditions (owner S3-01b Fix 4):**
 
 - S3-02 designer JSON/file loading: an automatic object-shape regression
